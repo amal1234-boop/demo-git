@@ -1,62 +1,28 @@
 <?php
 declare(strict_types=1);
 
-$dataDir = __DIR__ . '/../data';
-if (!is_dir($dataDir)) {
-    mkdir($dataDir, 0775, true);
-}
+// Identifiants MySQL — valeurs par défaut d'un XAMPP/WAMP/MAMP fraîchement
+// installé (utilisateur root, sans mot de passe). Modifie ces 5 constantes
+// si ta configuration locale est différente, ou définis les variables
+// d'environnement correspondantes (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS).
+//
+// Le schéma (base + tables) n'est PAS créé ici : importe database.sql dans
+// phpMyAdmin une bonne fois pour toutes, ce fichier se contente ensuite de
+// s'y connecter.
+const DB_HOST = 'localhost';
+const DB_PORT = '3306';
+const DB_NAME = 'cadence';
+const DB_USER = 'root';
+const DB_PASS = '';
 
-$dbFile = $dataDir . '/budget.sqlite';
+$dbHost = getenv('DB_HOST') ?: DB_HOST;
+$dbPort = getenv('DB_PORT') ?: DB_PORT;
+$dbName = getenv('DB_NAME') ?: DB_NAME;
+$dbUser = getenv('DB_USER') ?: DB_USER;
+$dbPass = getenv('DB_PASS') ?: DB_PASS;
 
-$pdo = new PDO('sqlite:' . $dbFile);
+$pdo = new PDO("mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4", $dbUser, $dbPass);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$pdo->exec('PRAGMA foreign_keys = ON');
-
-$pdo->exec("
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    name TEXT,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-)");
-
-$pdo->exec("
-CREATE TABLE IF NOT EXISTS transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    type TEXT NOT NULL CHECK(type IN ('revenu','depense')),
-    category TEXT NOT NULL,
-    label TEXT NOT NULL,
-    amount REAL NOT NULL,
-    date TEXT NOT NULL,
-    note TEXT
-)");
-
-$pdo->exec("
-CREATE TABLE IF NOT EXISTS goals (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    name TEXT NOT NULL,
-    category TEXT NOT NULL,
-    target_amount REAL NOT NULL,
-    current_amount REAL NOT NULL DEFAULT 0,
-    deadline TEXT,
-    icon TEXT
-)");
-
-$pdo->exec("
-CREATE TABLE IF NOT EXISTS challenges (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    title TEXT NOT NULL,
-    description TEXT,
-    target_days INTEGER NOT NULL,
-    progress_days INTEGER NOT NULL DEFAULT 0,
-    status TEXT NOT NULL DEFAULT 'actif',
-    last_checkin TEXT,
-    badge TEXT
-)");
 
 /**
  * Pré-remplit le compte d'un nouvel utilisateur avec un jeu de données de

@@ -9,10 +9,10 @@ l'après-carrière.
 
 - **Frontend** : HTML / CSS / JavaScript (vanilla, sans dépendance externe)
 - **Backend** : PHP (API JSON dans `php/api.php`)
-- **Stockage** : base SQL (SQLite via PDO), schéma relationnel avec une table
-  `users` et les données (`transactions`, `goals`, `challenges`) rattachées à
-  chaque compte par une clé étrangère `user_id`. La base est créée et ses
-  tables initialisées automatiquement au premier appel (`data/budget.sqlite`).
+- **Stockage** : base **MySQL/MariaDB** (via PDO), schéma relationnel défini
+  dans [`database.sql`](database.sql) : une table `users`, et les données
+  (`transactions`, `goals`, `challenges`) rattachées à chaque compte par une
+  clé étrangère `user_id`.
 
 ## Comptes & authentification
 
@@ -46,16 +46,25 @@ Chaque athlète a son propre compte et ses propres données :
 
 ## Lancer le site en local
 
-Prérequis : PHP 8+ avec l'extension `pdo_sqlite` (activée par défaut dans la
-plupart des distributions PHP).
+Prérequis : un serveur PHP 8+ avec l'extension `pdo_mysql`, et un serveur
+MySQL/MariaDB avec phpMyAdmin (typiquement fournis par **XAMPP**, **WAMP**
+ou **MAMP**).
 
-```bash
-php -S localhost:8000
-```
-
-Puis ouvrir [http://localhost:8000](http://localhost:8000) : la page
-d'accueil propose de créer un compte, ce qui donne accès au tableau de bord
-avec un jeu de données de démo prêt à l'emploi.
+1. **Importer le schéma** : dans phpMyAdmin, onglet **Importer**, choisis le
+   fichier [`database.sql`](database.sql) et valide. Ça crée la base
+   `cadence` avec ses 4 tables (`users`, `transactions`, `goals`,
+   `challenges`). Tu peux ensuite les parcourir directement dans phpMyAdmin.
+2. **Vérifier les identifiants** dans `php/config.php` (en haut du fichier) :
+   par défaut `localhost` / port `3306` / utilisateur `root` / pas de mot de
+   passe, ce qui correspond à une install XAMPP/WAMP standard. Adapte ces
+   constantes si ta configuration diffère.
+3. **Lancer le serveur PHP** (si ce n'est pas déjà fait par XAMPP/WAMP) :
+   ```bash
+   php -S localhost:8000
+   ```
+4. Ouvrir [http://localhost:8000](http://localhost:8000) : la page d'accueil
+   propose de créer un compte, ce qui donne accès au tableau de bord avec un
+   jeu de données de démo prêt à l'emploi.
 
 ## Structure du projet
 
@@ -68,12 +77,12 @@ css/style.css           Thème visuel partagé par toutes les pages
 css/landing.css         Styles propres à la page d'accueil
 css/auth.css            Styles propres aux pages inscription/connexion
 js/app.js               Logique front de l'application (appels API, onglets)
-php/config.php          Connexion PDO + schéma SQL + seed de démo par compte
+database.sql            Schéma SQL à importer dans phpMyAdmin
+php/config.php          Connexion PDO à MySQL + seed de démo par compte
 php/auth.php            Garde de session réutilisée par l'API
 php/register.php        Endpoint d'inscription
 php/login.php           Endpoint de connexion
 php/logout.php          Endpoint de déconnexion
 php/api.php             API JSON (transactions, objectifs, défis), par compte
 assets/                 Captures d'écran utilisées sur la page d'accueil
-data/                   Contient la base SQLite générée (ignorée par git)
 ```

@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+
 session_start();
 header('Content-Type: application/json; charset=utf-8');
-require __DIR__ . '/config.php';
 
 function respond($data, int $code = 200): void
 {
@@ -27,6 +29,8 @@ if (strlen($password) < 8) {
 }
 
 try {
+    require __DIR__ . '/config.php';
+
     $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
@@ -44,5 +48,6 @@ try {
 
     respond(['success' => true]);
 } catch (Throwable $e) {
-    respond(['error' => 'Erreur serveur', 'detail' => $e->getMessage()], 500);
+    error_log('[cadence] register: ' . $e->getMessage());
+    respond(['error' => "Erreur serveur : impossible de joindre la base de données. Vérifie que MySQL est démarré."], 500);
 }
