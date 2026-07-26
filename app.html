@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podium Budget — Gestion budgétaire pour athlète de haut niveau</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Retour à l'accueil Podium Budget">
+    <span class="brand-icon">🏅</span>
+    <div>
+      <h1>Podium Budget</h1>
+      <p class="tagline">Ton budget, ta stratégie de podium</p>
+    </div>
+  </a>
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="dashboard">Tableau de bord</button>
+    <button class="tab-btn" data-tab="transactions">Revenus &amp; Dépenses</button>
+    <button class="tab-btn" data-tab="objectifs">Objectifs</button>
+    <button class="tab-btn" data-tab="defis">Défis</button>
+    <button class="tab-btn" data-tab="persona">Persona</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="tab-panel active">
+    <div class="panel-header">
+      <h2>Tableau de bord — <span id="dashboardMonthLabel"></span></h2>
+      <div class="month-picker">
+        <label for="monthSelector">Mois :</label>
+        <input type="month" id="monthSelector">
+      </div>
+    </div>
+
+    <dl class="stat-grid">
+      <div class="stat-card revenu">
+        <dt class="stat-label">Revenus du mois</dt>
+        <dd class="stat-value" id="statRevenus">0 €</dd>
+      </div>
+      <div class="stat-card depense">
+        <dt class="stat-label">Dépenses du mois</dt>
+        <dd class="stat-value" id="statDepenses">0 €</dd>
+      </div>
+      <div class="stat-card solde">
+        <dt class="stat-label">Solde</dt>
+        <dd class="stat-value" id="statSolde">0 €</dd>
+      </div>
+      <div class="stat-card taux">
+        <dt class="stat-label">Taux d'épargne</dt>
+        <dd class="stat-value" id="statTaux">0 %</dd>
+      </div>
+    </dl>
+
+    <div class="dashboard-columns">
+      <div class="card">
+        <h3>Répartition des dépenses</h3>
+        <ul id="categoryChart" class="bar-chart"></ul>
+        <p class="empty-hint" id="categoryEmpty" hidden>Aucune dépense enregistrée ce mois-ci.</p>
+      </div>
+
+      <div class="card">
+        <h3>Progression globale des objectifs</h3>
+        <div class="track-lane">
+          <div class="track-fill" id="globalGoalFill"></div>
+          <span class="track-runner" id="globalGoalRunner">🏃</span>
+        </div>
+        <p id="globalGoalText" class="track-caption"></p>
+      </div>
+    </div>
+
+    <div class="dashboard-columns">
+      <div class="card gauge-card">
+        <h3>💪 Forme financière</h3>
+        <p class="subtitle">Ton score de forme, calculé comme une charge d'entraînement : épargne, objectifs et défis combinés.</p>
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 120 120" role="img" aria-label="Jauge de forme financière">
+            <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+            <circle class="gauge-value" id="formGaugeCircle" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <div class="gauge-center">
+            <span class="gauge-number" id="formScoreNumber">–</span>
+            <span class="gauge-sub">/100</span>
+          </div>
+        </div>
+        <p class="track-caption" id="formScoreLabel"></p>
+      </div>
+
+      <div class="card">
+        <h3>🩹 Simulateur résistance blessure</h3>
+        <p class="subtitle">Si une blessure ou une contre-performance coupait tes revenus dès demain...</p>
+        <div class="fuel-gauge">
+          <div class="fuel-fill" id="runwayFill"></div>
+        </div>
+        <p class="track-caption" id="runwayText"></p>
+      </div>
+    </div>
+
+    <div class="card versus-card">
+      <h3>⚔️ Toi vs Toi — match du mois</h3>
+      <div class="versus-row">
+        <div class="versus-side" id="versusCurrentSide">
+          <span class="versus-label">Ce mois</span>
+          <span class="versus-value" id="versusCurrentValue">–</span>
+        </div>
+        <span class="versus-vs">VS</span>
+        <div class="versus-side" id="versusPreviousSide">
+          <span class="versus-label">Mois dernier</span>
+          <span class="versus-value" id="versusPreviousValue">–</span>
+        </div>
+      </div>
+      <p class="track-caption" id="versusText"></p>
+    </div>
+  </section>
+
+  <!-- TRANSACTIONS -->
+  <section id="transactions" class="tab-panel">
+    <div class="panel-header">
+      <h2>Revenus &amp; Dépenses</h2>
+    </div>
+
+    <form id="transactionForm" class="card form-grid">
+      <div class="field">
+        <label for="txType">Type</label>
+        <select id="txType" required>
+          <option value="revenu">Revenu</option>
+          <option value="depense">Dépense</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="txCategory">Catégorie</label>
+        <select id="txCategory" required></select>
+      </div>
+      <div class="field">
+        <label for="txLabel">Libellé</label>
+        <input type="text" id="txLabel" placeholder="Ex : Prime podium championnat" required>
+      </div>
+      <div class="field">
+        <label for="txAmount">Montant (€)</label>
+        <input type="number" id="txAmount" min="0.01" step="0.01" required>
+      </div>
+      <div class="field">
+        <label for="txDate">Date</label>
+        <input type="date" id="txDate" required>
+      </div>
+      <button type="submit" class="btn primary">Ajouter</button>
+    </form>
+
+    <div class="card roundup-card" id="roundupCard" hidden>
+      <h3>🔁 Arrondi d'entraînement</h3>
+      <p id="roundupText"></p>
+      <div class="goal-actions">
+        <label for="roundupGoalSelect" class="sr-only">Objectif qui recevra l'arrondi</label>
+        <select id="roundupGoalSelect"></select>
+        <button type="button" class="btn primary small" id="roundupSendBtn">Envoyer l'arrondi</button>
+        <button type="button" class="btn ghost small" id="roundupSkipBtn">Ignorer</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="tx-table">
+        <thead>
+          <tr><th>Date</th><th>Type</th><th>Catégorie</th><th>Libellé</th><th>Montant</th><th>Action</th></tr>
+        </thead>
+        <tbody id="txTableBody"></tbody>
+      </table>
+      <p class="empty-hint" id="txEmpty" hidden>Aucune opération ce mois-ci.</p>
+    </div>
+  </section>
+
+  <!-- OBJECTIFS -->
+  <section id="objectifs" class="tab-panel">
+    <div class="panel-header">
+      <h2>Objectifs d'épargne</h2>
+      <button class="btn primary" id="newGoalBtn">+ Nouvel objectif</button>
+    </div>
+
+    <form id="goalForm" class="card form-grid" hidden>
+      <div class="field">
+        <label for="goalName">Nom de l'objectif</label>
+        <input type="text" id="goalName" placeholder="Ex : Fonds reconversion" required>
+      </div>
+      <div class="field">
+        <label for="goalCategory">Catégorie</label>
+        <select id="goalCategory">
+          <option value="reconversion">Reconversion</option>
+          <option value="blessure">Fonds blessure / coup dur</option>
+          <option value="projet">Projet post-carrière</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="goalTarget">Montant cible (€)</label>
+        <input type="number" id="goalTarget" min="1" step="1" required>
+      </div>
+      <div class="field">
+        <label for="goalDeadline">Échéance (optionnel)</label>
+        <input type="date" id="goalDeadline">
+      </div>
+      <button type="submit" class="btn primary">Créer l'objectif</button>
+    </form>
+
+    <ul id="goalsList" class="goals-list"></ul>
+  </section>
+
+  <!-- DEFIS -->
+  <section id="defis" class="tab-panel">
+    <div class="panel-header">
+      <h2>Défis d'épargne</h2>
+      <p class="subtitle">Comme à l'entraînement : un défi validé, c'est une répétition de plus vers l'objectif.</p>
+    </div>
+    <ul id="challengesList" class="challenges-list"></ul>
+  </section>
+
+  <!-- PERSONA -->
+  <section id="persona" class="tab-panel">
+    <div class="panel-header">
+      <h2>Persona &amp; User Stories</h2>
+    </div>
+
+    <article class="card persona-card">
+      <div class="persona-head">
+        <span class="persona-emoji">🏃‍♀️</span>
+        <div>
+          <h3>Léa, 24 ans — Athlète de haut niveau (demi-fond)</h3>
+          <p class="persona-sub">Sportive de haut niveau, revenus irréguliers (aides fédérales, sponsoring, primes de compétition), carrière courte et incertaine, très disciplinée et habituée à suivre sa progression comme des chronos.</p>
+        </div>
+      </div>
+      <ul class="persona-traits">
+        <li>Revenus variables et imprévisibles selon les résultats et la saison sportive.</li>
+        <li>Dépenses spécifiques : équipement, coaching, kiné, déplacements en compétition, nutrition.</li>
+        <li>Doit préparer sa reconversion : carrière sportive courte, fin souvent brutale (blessure, sélection).</li>
+        <li>Motivée par la performance, les objectifs chiffrés, la régularité et la compétition avec elle-même.</li>
+      </ul>
+    </article>
+
+    <div class="card">
+      <h3>User stories</h3>
+      <ul class="story-list">
+        <li><strong>US1 —</strong> En tant qu'athlète, je veux enregistrer mes revenus irréguliers (sponsors, primes, aides) pour connaître ma trésorerie réelle à tout moment.</li>
+        <li><strong>US2 —</strong> En tant qu'athlète, je veux catégoriser mes dépenses spécifiques au sport pour comprendre où va mon argent.</li>
+        <li><strong>US3 —</strong> En tant qu'athlète, je veux des objectifs d'épargne dédiés (reconversion, blessure, projet) pour sécuriser mon avenir après le sport.</li>
+        <li><strong>US4 —</strong> En tant qu'athlète, je veux visualiser ma progression comme un chrono à battre, avec des barres de progression et un taux d'épargne clair.</li>
+        <li><strong>US5 —</strong> En tant qu'athlète, je veux relever des défis d'épargne façon entraînement (répétitions, séries) pour rester motivée sur la durée.</li>
+        <li><strong>US6 —</strong> En tant qu'athlète, je veux voir la répartition de mes dépenses par catégorie pour ajuster mon budget avant une période de compétition.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Fonctionnalités motivantes intégrées</h3>
+      <ul class="story-list">
+        <li>🏃 Barres de progression "piste d'athlétisme" pour chaque objectif d'épargne.</li>
+        <li>🔥 Défis à séries (streaks) avec badges, comme des séances d'entraînement validées.</li>
+        <li>🎯 Objectifs pensés pour la carrière sportive : reconversion, blessure, projet post-carrière.</li>
+        <li>📊 Répartition visuelle des dépenses pour garder le contrôle avant les échéances sportives.</li>
+        <li>🏆 Taux d'épargne mensuel affiché comme une statistique de performance.</li>
+        <li>💪 Score de forme financière : une jauge unique qui résume épargne, objectifs et défis, comme une charge d'entraînement.</li>
+        <li>🩹 Simulateur "résistance blessure" : combien de mois tu tiendrais sans revenu si une blessure survenait demain.</li>
+        <li>⚔️ Match "Toi vs Toi" : comparaison automatique de ton taux d'épargne face à celui du mois précédent.</li>
+        <li>🔁 Arrondis d'entraînement : chaque dépense est arrondie et l'écart est proposé en un clic vers un objectif d'épargne.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Podium Budget — projet de démonstration conçu pour un persona athlète de haut niveau.</p>
+</footer>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/app.js" defer></script>
+</body>
+</html>

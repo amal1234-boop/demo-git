@@ -1,0 +1,181 @@
+/* Styles propres à la page d'accueil (index.html).
+   Les variables, le reset et les composants partagés (.btn, .card...)
+   viennent de style.css, chargé juste avant celui-ci. */
+
+/* =========================================================
+   1. NAVIGATION D'ACCUEIL
+   ========================================================= */
+.landing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #0d1526, #182746);
+  border-bottom: 3px solid var(--gold);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.landing-nav .nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.landing-nav .nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: .9rem;
+}
+.landing-nav .nav-links a:hover { color: var(--text); }
+.landing-brand-title { font-size: 1.1rem; font-weight: 700; }
+
+/* =========================================================
+   2. HERO
+   ========================================================= */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+}
+.hero-eyebrow {
+  display: inline-block;
+  padding: .3rem .9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--gold);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+}
+.hero h1 .accent { color: var(--gold); }
+.hero-sub {
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+.hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn.large { padding: .9rem 1.8rem; font-size: 1rem; }
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+.hero-stat { text-align: center; }
+.hero-stat strong { display: block; font-size: 1.6rem; color: var(--gold); }
+.hero-stat span { font-size: .8rem; color: var(--text-muted); }
+
+/* =========================================================
+   3. SECTIONS GÉNÉRIQUES
+   ========================================================= */
+.landing-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+.section-head { text-align: center; max-width: 640px; margin: 0 auto 2.5rem; }
+.section-head h2 { font-size: 1.8rem; margin: 0 0 .6rem; }
+.section-head p { color: var(--text-muted); margin: 0; }
+
+/* =========================================================
+   4. POINTS DE DOULEUR (pourquoi une appli dédiée)
+   ========================================================= */
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+.pain-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.pain-card .pain-icon { font-size: 1.8rem; display: block; margin-bottom: .75rem; }
+.pain-card h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+.pain-card p { margin: 0; color: var(--text-muted); font-size: .9rem; line-height: 1.5; }
+
+/* =========================================================
+   5. GRILLE DE FONCTIONNALITÉS
+   ========================================================= */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border-top: 3px solid var(--gold);
+}
+.feature-card .feature-icon { font-size: 1.6rem; display: block; margin-bottom: .6rem; }
+.feature-card h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.feature-card p { margin: 0; color: var(--text-muted); font-size: .87rem; line-height: 1.5; }
+
+/* =========================================================
+   6. TÉMOIGNAGE / PERSONA
+   ========================================================= */
+.persona-teaser {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.persona-teaser .persona-emoji { font-size: 3rem; }
+.persona-teaser blockquote {
+  margin: 0 0 .75rem;
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+.persona-teaser cite { color: var(--text-muted); font-size: .85rem; font-style: normal; }
+
+/* =========================================================
+   7. CTA FINAL
+   ========================================================= */
+.final-cta {
+  text-align: center;
+  padding: 3.5rem 2rem;
+  margin: 1rem 2rem 3rem;
+  max-width: 1100px;
+  margin-inline: auto;
+  background: linear-gradient(135deg, #16223d, #1c2b4d);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.final-cta h2 { margin: 0 0 .75rem; font-size: 1.7rem; }
+.final-cta p { color: var(--text-muted); margin: 0 0 1.5rem; }
+
+/* =========================================================
+   8. RESPONSIVE
+   ========================================================= */
+@media (max-width: 640px) {
+  .landing-nav .nav-links { display: none; }
+  .hero { padding: 2.5rem 1.25rem 2rem; }
+  .landing-section { padding: 2rem 1.25rem; }
+}

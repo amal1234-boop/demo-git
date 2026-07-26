@@ -48,7 +48,7 @@ input, select, button { font-family: inherit; font-size: .9rem; }
   z-index: 10;
 }
 
-.brand { display: flex; align-items: center; gap: .75rem; }
+.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: inherit; }
 .brand-icon { font-size: 2rem; }
 .brand h1 { margin: 0; font-size: 1.3rem; letter-spacing: .5px; }
 .tagline { margin: 0; font-size: .8rem; color: var(--text-muted); }
