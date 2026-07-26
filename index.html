@@ -31,35 +31,35 @@
   <section id="dashboard" class="tab-panel active">
     <div class="panel-header">
       <h2>Tableau de bord — <span id="dashboardMonthLabel"></span></h2>
-      <label class="month-picker">
-        Mois :
+      <div class="month-picker">
+        <label for="monthSelector">Mois :</label>
         <input type="month" id="monthSelector">
-      </label>
+      </div>
     </div>
 
-    <div class="stat-grid">
+    <dl class="stat-grid">
       <div class="stat-card revenu">
-        <span class="stat-label">Revenus du mois</span>
-        <span class="stat-value" id="statRevenus">0 €</span>
+        <dt class="stat-label">Revenus du mois</dt>
+        <dd class="stat-value" id="statRevenus">0 €</dd>
       </div>
       <div class="stat-card depense">
-        <span class="stat-label">Dépenses du mois</span>
-        <span class="stat-value" id="statDepenses">0 €</span>
+        <dt class="stat-label">Dépenses du mois</dt>
+        <dd class="stat-value" id="statDepenses">0 €</dd>
       </div>
       <div class="stat-card solde">
-        <span class="stat-label">Solde</span>
-        <span class="stat-value" id="statSolde">0 €</span>
+        <dt class="stat-label">Solde</dt>
+        <dd class="stat-value" id="statSolde">0 €</dd>
       </div>
       <div class="stat-card taux">
-        <span class="stat-label">Taux d'épargne</span>
-        <span class="stat-value" id="statTaux">0 %</span>
+        <dt class="stat-label">Taux d'épargne</dt>
+        <dd class="stat-value" id="statTaux">0 %</dd>
       </div>
-    </div>
+    </dl>
 
     <div class="dashboard-columns">
       <div class="card">
         <h3>Répartition des dépenses</h3>
-        <div id="categoryChart" class="bar-chart"></div>
+        <ul id="categoryChart" class="bar-chart"></ul>
         <p class="empty-hint" id="categoryEmpty" hidden>Aucune dépense enregistrée ce mois-ci.</p>
       </div>
 
@@ -78,7 +78,7 @@
         <h3>💪 Forme financière</h3>
         <p class="subtitle">Ton score de forme, calculé comme une charge d'entraînement : épargne, objectifs et défis combinés.</p>
         <div class="gauge-wrap">
-          <svg class="gauge-svg" viewBox="0 0 120 120">
+          <svg class="gauge-svg" viewBox="0 0 120 120" role="img" aria-label="Jauge de forme financière">
             <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
             <circle class="gauge-value" id="formGaugeCircle" cx="60" cy="60" r="50"></circle>
           </svg>
@@ -154,6 +154,7 @@
       <h3>🔁 Arrondi d'entraînement</h3>
       <p id="roundupText"></p>
       <div class="goal-actions">
+        <label for="roundupGoalSelect" class="sr-only">Objectif qui recevra l'arrondi</label>
         <select id="roundupGoalSelect"></select>
         <button type="button" class="btn primary small" id="roundupSendBtn">Envoyer l'arrondi</button>
         <button type="button" class="btn ghost small" id="roundupSkipBtn">Ignorer</button>
@@ -163,7 +164,7 @@
     <div class="card">
       <table class="tx-table">
         <thead>
-          <tr><th>Date</th><th>Type</th><th>Catégorie</th><th>Libellé</th><th>Montant</th><th></th></tr>
+          <tr><th>Date</th><th>Type</th><th>Catégorie</th><th>Libellé</th><th>Montant</th><th>Action</th></tr>
         </thead>
         <tbody id="txTableBody"></tbody>
       </table>
@@ -203,7 +204,7 @@
       <button type="submit" class="btn primary">Créer l'objectif</button>
     </form>
 
-    <div id="goalsList" class="goals-list"></div>
+    <ul id="goalsList" class="goals-list"></ul>
   </section>
 
   <!-- DEFIS -->
@@ -212,7 +213,7 @@
       <h2>Défis d'épargne</h2>
       <p class="subtitle">Comme à l'entraînement : un défi validé, c'est une répétition de plus vers l'objectif.</p>
     </div>
-    <div id="challengesList" class="challenges-list"></div>
+    <ul id="challengesList" class="challenges-list"></ul>
   </section>
 
   <!-- PERSONA -->
@@ -221,7 +222,7 @@
       <h2>Persona &amp; User Stories</h2>
     </div>
 
-    <div class="card persona-card">
+    <article class="card persona-card">
       <div class="persona-head">
         <span class="persona-emoji">🏃‍♀️</span>
         <div>
@@ -235,7 +236,7 @@
         <li>Doit préparer sa reconversion : carrière sportive courte, fin souvent brutale (blessure, sélection).</li>
         <li>Motivée par la performance, les objectifs chiffrés, la régularité et la compétition avec elle-même.</li>
       </ul>
-    </div>
+    </article>
 
     <div class="card">
       <h3>User stories</h3>
@@ -267,8 +268,12 @@
 
 </main>
 
+<footer class="site-footer">
+  <p>Podium Budget — projet de démonstration conçu pour un persona athlète de haut niveau.</p>
+</footer>
+
 <div id="toast" class="toast" hidden></div>
 
-<script src="js/app.js"></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>

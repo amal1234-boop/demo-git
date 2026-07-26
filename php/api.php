@@ -1,9 +1,13 @@
 <?php
 declare(strict_types=1);
 
-header('Content-Type: application/json; charset=utf-8');
+// Ne jamais exposer les erreurs PHP brutes au client : elles sont journalisées
+// côté serveur, jamais affichées (et une erreur affichée casserait le JSON).
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+error_reporting(E_ALL);
 
-require __DIR__ . '/config.php';
+header('Content-Type: application/json; charset=utf-8');
 
 function respond($data, int $code = 200): void
 {
@@ -22,10 +26,21 @@ function bodyJson(): array
     return is_array($decoded) ? $decoded : [];
 }
 
-$action = $_GET['action'] ?? $_POST['action'] ?? '';
-$method = $_SERVER['REQUEST_METHOD'];
+// Évite de dupliquer prepare/execute/fetch à chaque fois qu'on doit relire
+// une ligne par id (goals et challenges en ont chacun besoin).
+function fetchById(PDO $pdo, string $table, int $id): array|false
+{
+    $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
 try {
+    require __DIR__ . '/config.php';
+
+    $action = $_GET['action'] ?? $_POST['action'] ?? '';
+    $method = $_SERVER['REQUEST_METHOD'];
+
     switch ($action) {
 
         case 'summary': {
@@ -72,10 +87,10 @@ try {
             $type = $body['type'] ?? '';
             $category = trim((string)($body['category'] ?? ''));
             $label = trim((string)($body['label'] ?? ''));
-            $amount = (float)($body['amount'] ?? 0);
+            $amount = filter_var($body['amount'] ?? null, FILTER_VALIDATE_FLOAT);
             $date = $body['date'] ?? date('Y-m-d');
 
-            if (!in_array($type, ['revenu', 'depense'], true) || $category === '' || $label === '' || $amount <= 0) {
+            if (!in_array($type, ['revenu', 'depense'], true) || $category === '' || $label === '' || $amount === false || $amount <= 0) {
                 respond(['error' => 'Champs invalides'], 422);
             }
 
@@ -87,7 +102,9 @@ try {
         case 'delete_transaction': {
             if ($method !== 'POST') respond(['error' => 'Méthode non autorisée'], 405);
             $body = bodyJson();
-            $id = (int)($body['id'] ?? 0);
+            $id = filter_var($body['id'] ?? null, FILTER_VALIDATE_INT);
+            if ($id === false) respond(['error' => 'Identifiant invalide'], 422);
+
             $stmt = $pdo->prepare('DELETE FROM transactions WHERE id = ?');
             $stmt->execute([$id]);
             respond(['success' => true]);
@@ -102,11 +119,11 @@ try {
             $body = bodyJson();
             $name = trim((string)($body['name'] ?? ''));
             $category = trim((string)($body['category'] ?? 'autre'));
-            $target = (float)($body['target_amount'] ?? 0);
+            $target = filter_var($body['target_amount'] ?? null, FILTER_VALIDATE_FLOAT);
             $deadline = $body['deadline'] ?? null;
             $icon = $body['icon'] ?? '🎯';
 
-            if ($name === '' || $target <= 0) {
+            if ($name === '' || $target === false || $target <= 0) {
                 respond(['error' => 'Champs invalides'], 422);
             }
 
@@ -118,16 +135,14 @@ try {
         case 'contribute_goal': {
             if ($method !== 'POST') respond(['error' => 'Méthode non autorisée'], 405);
             $body = bodyJson();
-            $id = (int)($body['id'] ?? 0);
-            $amount = (float)($body['amount'] ?? 0);
-            if ($id <= 0 || $amount <= 0) respond(['error' => 'Champs invalides'], 422);
+            $id = filter_var($body['id'] ?? null, FILTER_VALIDATE_INT);
+            $amount = filter_var($body['amount'] ?? null, FILTER_VALIDATE_FLOAT);
+            if (!$id || $amount === false || $amount <= 0) respond(['error' => 'Champs invalides'], 422);
 
             $stmt = $pdo->prepare('UPDATE goals SET current_amount = current_amount + ? WHERE id = ?');
             $stmt->execute([$amount, $id]);
 
-            $stmt = $pdo->prepare('SELECT * FROM goals WHERE id = ?');
-            $stmt->execute([$id]);
-            respond(['success' => true, 'goal' => $stmt->fetch(PDO::FETCH_ASSOC)]);
+            respond(['success' => true, 'goal' => fetchById($pdo, 'goals', $id)]);
         }
 
         case 'challenges': {
@@ -137,11 +152,10 @@ try {
         case 'checkin_challenge': {
             if ($method !== 'POST') respond(['error' => 'Méthode non autorisée'], 405);
             $body = bodyJson();
-            $id = (int)($body['id'] ?? 0);
+            $id = filter_var($body['id'] ?? null, FILTER_VALIDATE_INT);
+            if (!$id) respond(['error' => 'Identifiant invalide'], 422);
 
-            $stmt = $pdo->prepare('SELECT * FROM challenges WHERE id = ?');
-            $stmt->execute([$id]);
-            $challenge = $stmt->fetch(PDO::FETCH_ASSOC);
+            $challenge = fetchById($pdo, 'challenges', $id);
             if (!$challenge) respond(['error' => 'Défi introuvable'], 404);
 
             $today = date('Y-m-d');
@@ -155,14 +169,13 @@ try {
             $stmt = $pdo->prepare('UPDATE challenges SET progress_days = ?, status = ?, last_checkin = ? WHERE id = ?');
             $stmt->execute([$progress, $status, $today, $id]);
 
-            $stmt = $pdo->prepare('SELECT * FROM challenges WHERE id = ?');
-            $stmt->execute([$id]);
-            respond(['success' => true, 'challenge' => $stmt->fetch(PDO::FETCH_ASSOC)]);
+            respond(['success' => true, 'challenge' => fetchById($pdo, 'challenges', $id)]);
         }
 
         default:
             respond(['error' => 'Action inconnue'], 400);
     }
 } catch (Throwable $e) {
-    respond(['error' => 'Erreur serveur', 'detail' => $e->getMessage()], 500);
+    error_log('[podium-budget] ' . $e->getMessage());
+    respond(['error' => 'Erreur serveur, réessaie dans un instant.'], 500);
 }

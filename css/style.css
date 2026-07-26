@@ -1,3 +1,6 @@
+/* =========================================================
+   1. VARIABLES GLOBALES
+   ========================================================= */
 :root {
   --bg: #0b1220;
   --bg-alt: #121b30;
@@ -10,8 +13,12 @@
   --red: #ff5d5d;
   --blue: #4d8dff;
   --radius: 14px;
+  --gap-md: 1rem;
 }
 
+/* =========================================================
+   2. RESET / BASE
+   ========================================================= */
 * { box-sizing: border-box; }
 
 body {
@@ -22,12 +29,17 @@ body {
   min-height: 100vh;
 }
 
+input, select, button { font-family: inherit; font-size: .9rem; }
+
+/* =========================================================
+   3. LAYOUT — EN-TÊTE & NAVIGATION
+   ========================================================= */
 .topbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--gap-md);
   padding: 1rem 2rem;
   background: linear-gradient(90deg, #0d1526, #182746);
   border-bottom: 3px solid var(--gold);
@@ -55,6 +67,9 @@ body {
 .tab-btn:hover { border-color: var(--gold); color: var(--text); }
 .tab-btn.active { background: var(--gold); color: #1a1305; border-color: var(--gold); font-weight: 600; }
 
+/* =========================================================
+   4. LAYOUT — CONTENU PRINCIPAL & ONGLETS
+   ========================================================= */
 main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 
 .tab-panel { display: none; animation: fadeIn .2s ease; }
@@ -81,19 +96,30 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
   border-radius: 8px;
 }
 
-.stat-grid {
+.dashboard-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--gap-md);
 }
-.stat-card {
+
+/* =========================================================
+   5. COMPOSANTS — CARTES (base commune, pas de duplication)
+   ========================================================= */
+.card,
+.stat-card,
+.goal-card,
+.challenge-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  border-top: 4px solid var(--border);
+  padding: 1.25rem;
 }
+.card { margin-bottom: var(--gap-md); }
+.card h3 { margin-top: 0; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--gap-md); margin: 0 0 1.5rem; }
+.stat-grid dt, .stat-grid dd { margin: 0; }
+.stat-card { border-top: 4px solid var(--border); }
 .stat-card.revenu { border-top-color: var(--lime); }
 .stat-card.depense { border-top-color: var(--red); }
 .stat-card.solde { border-top-color: var(--blue); }
@@ -101,28 +127,72 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .stat-label { display: block; font-size: .8rem; color: var(--text-muted); margin-bottom: .35rem; }
 .stat-value { display: block; font-size: 1.6rem; font-weight: 700; }
 
-.dashboard-columns {
+/* =========================================================
+   6. COMPOSANTS — BOUTONS
+   ========================================================= */
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: .6rem 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .1s ease, opacity .15s ease;
+}
+.btn:hover { opacity: .9; }
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--gold); color: #1a1305; }
+.btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn.danger { background: var(--red); color: #2b0505; }
+.btn.small { padding: .35rem .7rem; font-size: .8rem; }
+
+/* =========================================================
+   7. COMPOSANTS — FORMULAIRES
+   ========================================================= */
+.form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .9rem;
+  align-items: end;
 }
-
-.card {
-  background: var(--card);
+.field { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
+.field label { color: var(--text-muted); }
+input, select {
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  margin-bottom: 1rem;
+  color: var(--text);
+  padding: .55rem .7rem;
+  border-radius: 8px;
 }
-.card h3 { margin-top: 0; }
+input:focus, select:focus { outline: none; border-color: var(--gold); }
 
-.bar-chart { display: flex; flex-direction: column; gap: .6rem; }
+.roundup-card { border-top: 3px solid var(--gold); }
+.roundup-card select { min-width: 200px; }
+
+/* =========================================================
+   8. COMPOSANTS — TABLEAU DE TRANSACTIONS
+   ========================================================= */
+.tx-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.tx-table th { text-align: left; color: var(--text-muted); font-weight: 600; padding: .5rem; border-bottom: 1px solid var(--border); }
+.tx-table td { padding: .5rem; border-bottom: 1px solid var(--border); }
+.tx-table tr:last-child td { border-bottom: none; }
+.amount-revenu { color: var(--lime); font-weight: 600; }
+.amount-depense { color: var(--red); font-weight: 600; }
+
+.empty-hint { color: var(--text-muted); font-size: .85rem; font-style: italic; }
+
+/* =========================================================
+   9. WIDGETS — RÉPARTITION DES DÉPENSES (liste de barres)
+   ========================================================= */
+.bar-chart { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .6rem; }
 .bar-row { display: grid; grid-template-columns: 160px 1fr 70px; align-items: center; gap: .6rem; font-size: .85rem; }
 .bar-row .bar-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bar-track { background: var(--bg); border-radius: 999px; height: 10px; overflow: hidden; }
 .bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--red)); border-radius: 999px; }
 .bar-amount { text-align: right; font-variant-numeric: tabular-nums; }
 
+/* =========================================================
+   10. WIDGETS — PISTE DE PROGRESSION (objectifs)
+   ========================================================= */
 .track-lane {
   position: relative;
   background: repeating-linear-gradient(90deg, var(--bg) 0 24px, #0e1830 24px 26px);
@@ -146,69 +216,9 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 }
 .track-caption { margin: .6rem 0 0; font-size: .85rem; color: var(--text-muted); }
 
-.empty-hint { color: var(--text-muted); font-size: .85rem; font-style: italic; }
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: .9rem;
-  align-items: end;
-}
-.field { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
-.field label { color: var(--text-muted); }
-input, select, button {
-  font-family: inherit;
-  font-size: .9rem;
-}
-input, select {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: .55rem .7rem;
-  border-radius: 8px;
-}
-input:focus, select:focus { outline: none; border-color: var(--gold); }
-
-.btn {
-  border: none;
-  border-radius: 8px;
-  padding: .6rem 1.1rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: transform .1s ease, opacity .15s ease;
-}
-.btn:hover { opacity: .9; }
-.btn:active { transform: scale(.97); }
-.btn.primary { background: var(--gold); color: #1a1305; }
-.btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-.btn.danger { background: var(--red); color: #2b0505; }
-.btn.small { padding: .35rem .7rem; font-size: .8rem; }
-
-.tx-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-.tx-table th { text-align: left; color: var(--text-muted); font-weight: 600; padding: .5rem; border-bottom: 1px solid var(--border); }
-.tx-table td { padding: .5rem; border-bottom: 1px solid var(--border); }
-.tx-table tr:last-child td { border-bottom: none; }
-.amount-revenu { color: var(--lime); font-weight: 600; }
-.amount-depense { color: var(--red); font-weight: 600; }
-
-.goals-list, .challenges-list { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-
-.goal-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem; }
-.goal-card h4 { margin: 0 0 .2rem; display: flex; align-items: center; gap: .4rem; }
-.goal-meta { font-size: .8rem; color: var(--text-muted); margin: 0 0 .7rem; }
-.goal-progress-text { font-size: .85rem; margin: .5rem 0 .8rem; }
-.goal-actions { display: flex; gap: .5rem; align-items: center; }
-.goal-actions input { width: 90px; }
-
-.challenge-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem; }
-.challenge-card h4 { margin: 0 0 .3rem; display: flex; align-items: center; gap: .4rem; }
-.challenge-desc { font-size: .85rem; color: var(--text-muted); margin: 0 0 .8rem; }
-.streak-dots { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: .8rem; }
-.streak-dot { width: 14px; height: 14px; border-radius: 4px; background: var(--bg); border: 1px solid var(--border); }
-.streak-dot.filled { background: var(--gold); border-color: var(--gold); }
-.challenge-status { font-size: .8rem; padding: .2rem .6rem; border-radius: 999px; background: var(--bg); display: inline-block; margin-bottom: .6rem; }
-.challenge-status.termine { background: var(--lime); color: #0b2b0b; font-weight: 700; }
-
+/* =========================================================
+   11. WIDGETS — JAUGE DE FORME FINANCIÈRE
+   ========================================================= */
 .gauge-card { text-align: center; }
 .gauge-wrap { position: relative; width: 150px; height: 150px; margin: .5rem auto; }
 .gauge-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -218,7 +228,7 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   stroke: var(--lime);
   stroke-width: 10;
   stroke-linecap: round;
-  stroke-dasharray: 314.159;
+  stroke-dasharray: 314.159; /* 2 * PI * r, r=50 (voir markup du cercle) */
   stroke-dashoffset: 314.159;
   transition: stroke-dashoffset .5s ease, stroke .5s ease;
 }
@@ -229,6 +239,9 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
 .gauge-number { font-size: 1.8rem; font-weight: 800; line-height: 1; }
 .gauge-sub { font-size: .75rem; color: var(--text-muted); }
 
+/* =========================================================
+   12. WIDGETS — SIMULATEUR RÉSISTANCE BLESSURE
+   ========================================================= */
 .fuel-gauge {
   position: relative;
   height: 22px;
@@ -237,6 +250,8 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   border: 1px solid var(--border);
   overflow: hidden;
 }
+/* Le niveau "consommé" masque le dégradé depuis la droite : ce qui reste
+   visible à gauche représente le niveau de résistance atteint. */
 .fuel-fill {
   position: absolute; top: 0; bottom: 0; right: 0;
   width: 100%;
@@ -244,6 +259,9 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   transition: width .4s ease;
 }
 
+/* =========================================================
+   13. WIDGETS — MATCH MENSUEL (versus)
+   ========================================================= */
 .versus-card { text-align: center; }
 .versus-row { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin: .75rem 0; flex-wrap: wrap; }
 .versus-side {
@@ -258,13 +276,52 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
 .versus-value { font-size: 1.5rem; font-weight: 800; }
 .versus-vs { font-weight: 800; color: var(--gold); font-size: 1.1rem; }
 
-.roundup-card { border-top: 3px solid var(--gold); }
-.roundup-card select { min-width: 200px; }
+/* =========================================================
+   14. LISTES — OBJECTIFS & DÉFIS
+   ========================================================= */
+.goals-list, .challenges-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--gap-md);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
 
-.persona-card .persona-head { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+.goal-card h4 { margin: 0 0 .2rem; display: flex; align-items: center; gap: .4rem; }
+.goal-meta { font-size: .8rem; color: var(--text-muted); margin: 0 0 .7rem; }
+.goal-progress-text { font-size: .85rem; margin: .5rem 0 .8rem; }
+.goal-actions { display: flex; gap: .5rem; align-items: center; }
+.goal-actions input { width: 90px; }
+
+.challenge-card h4 { margin: 0 0 .3rem; display: flex; align-items: center; gap: .4rem; }
+.challenge-desc { font-size: .85rem; color: var(--text-muted); margin: 0 0 .8rem; }
+.streak-dots { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: .8rem; }
+.streak-dot { width: 14px; height: 14px; border-radius: 4px; background: var(--bg); border: 1px solid var(--border); }
+.streak-dot.filled { background: var(--gold); border-color: var(--gold); }
+.challenge-status { font-size: .8rem; padding: .2rem .6rem; border-radius: 999px; background: var(--bg); display: inline-block; margin-bottom: .6rem; }
+.challenge-status.termine { background: var(--lime); color: #0b2b0b; font-weight: 700; }
+
+/* =========================================================
+   15. PAGE — PERSONA & USER STORIES
+   ========================================================= */
+.persona-card .persona-head { display: flex; gap: var(--gap-md); align-items: flex-start; margin-bottom: var(--gap-md); }
 .persona-emoji { font-size: 2.4rem; }
 .persona-sub { color: var(--text-muted); font-size: .9rem; margin: .3rem 0 0; }
 .persona-traits, .story-list { padding-left: 1.2rem; line-height: 1.7; font-size: .92rem; }
+
+/* =========================================================
+   16. UTILITAIRES
+   ========================================================= */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .toast {
   position: fixed;
@@ -280,6 +337,22 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   z-index: 100;
 }
 
+/* =========================================================
+   17. PIED DE PAGE
+   ========================================================= */
+.site-footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 2.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .8rem;
+  border-top: 1px solid var(--border);
+}
+
+/* =========================================================
+   18. RESPONSIVE
+   ========================================================= */
 @media (max-width: 640px) {
   .topbar { flex-direction: column; align-items: flex-start; }
   main { padding: 1rem; }
