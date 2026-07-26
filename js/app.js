@@ -6,7 +6,7 @@ const CATEGORIES = {
 };
 
 // Petites icônes SVG (style trait fin) utilisées à la place d'émojis dans les
-// zones générées dynamiquement — cohérentes avec celles écrites en dur dans app.html.
+// zones générées dynamiquement — cohérentes avec celles écrites en dur dans app.php.
 const ICONS = {
   graduation: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-4 10 4-10 4-10-4z"/><path d="M6 11v4c0 1.7 2.7 3 6 3s6-1.3 6-3v-4"/></svg>',
   shield: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-3z"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="9.5" y1="10.5" x2="14.5" y2="10.5"/></svg>',
@@ -81,6 +81,7 @@ const el = {
   challengesList: document.getElementById('challengesList'),
 
   toast: document.getElementById('toast'),
+  logoutBtn: document.getElementById('logoutBtn'),
 };
 
 function fmtEuro(n) {
@@ -104,6 +105,11 @@ async function api(action, { method = 'GET', body } = {}) {
     opts.body = JSON.stringify(body || {});
   }
   const res = await fetch(url, opts);
+  if (res.status === 401) {
+    // Session expirée ou absente : plus la peine de continuer, direction connexion.
+    window.location.href = 'connexion.html';
+    return new Promise(() => {}); // stoppe la chaîne d'appels en attente sans lever d'erreur inutile
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'Erreur inconnue');
   return data;
@@ -443,6 +449,12 @@ async function loadChallenges() {
     });
   });
 }
+
+// ---------- Déconnexion ----------
+el.logoutBtn.addEventListener('click', async () => {
+  await fetch('php/logout.php', { method: 'POST' });
+  window.location.href = 'index.html';
+});
 
 // ---------- Init ----------
 async function refreshAll() {

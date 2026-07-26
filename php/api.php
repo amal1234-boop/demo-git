@@ -7,6 +7,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 error_reporting(E_ALL);
 
+session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 function respond($data, int $code = 200): void
@@ -27,17 +28,21 @@ function bodyJson(): array
 }
 
 // Évite de dupliquer prepare/execute/fetch à chaque fois qu'on doit relire
-// une ligne par id (goals et challenges en ont chacun besoin).
-function fetchById(PDO $pdo, string $table, int $id): array|false
+// une ligne par id (goals et challenges en ont chacun besoin). Toujours
+// filtrée par utilisateur : personne ne doit pouvoir relire la ligne d'un
+// autre compte en devinant son id.
+function fetchOwnedById(PDO $pdo, string $table, int $id, int $userId): array|false
 {
-    $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE id = ? AND user_id = ?");
+    $stmt->execute([$id, $userId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 try {
     require __DIR__ . '/config.php';
+    require __DIR__ . '/auth.php';
 
+    $userId = require_login();
     $action = $_GET['action'] ?? $_POST['action'] ?? '';
     $method = $_SERVER['REQUEST_METHOD'];
 
@@ -46,8 +51,8 @@ try {
         case 'summary': {
             $month = $_GET['month'] ?? date('Y-m');
 
-            $stmt = $pdo->prepare("SELECT type, COALESCE(SUM(amount),0) AS total FROM transactions WHERE date LIKE ? GROUP BY type");
-            $stmt->execute([$month . '%']);
+            $stmt = $pdo->prepare("SELECT type, COALESCE(SUM(amount),0) AS total FROM transactions WHERE user_id = ? AND date LIKE ? GROUP BY type");
+            $stmt->execute([$userId, $month . '%']);
             $totals = ['revenu' => 0.0, 'depense' => 0.0];
             foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 $totals[$row['type']] = (float) $row['total'];
@@ -55,12 +60,13 @@ try {
             $solde = $totals['revenu'] - $totals['depense'];
             $tauxEpargne = $totals['revenu'] > 0 ? round(($solde / $totals['revenu']) * 100, 1) : 0.0;
 
-            $stmt = $pdo->prepare("SELECT category, COALESCE(SUM(amount),0) AS total FROM transactions WHERE type='depense' AND date LIKE ? GROUP BY category ORDER BY total DESC");
-            $stmt->execute([$month . '%']);
+            $stmt = $pdo->prepare("SELECT category, COALESCE(SUM(amount),0) AS total FROM transactions WHERE type='depense' AND user_id = ? AND date LIKE ? GROUP BY category ORDER BY total DESC");
+            $stmt->execute([$userId, $month . '%']);
             $byCategory = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $goalsStmt = $pdo->query('SELECT COALESCE(SUM(current_amount),0) AS saved, COALESCE(SUM(target_amount),0) AS target FROM goals');
-            $goalsTotals = $goalsStmt->fetch(PDO::FETCH_ASSOC);
+            $stmt = $pdo->prepare('SELECT COALESCE(SUM(current_amount),0) AS saved, COALESCE(SUM(target_amount),0) AS target FROM goals WHERE user_id = ?');
+            $stmt->execute([$userId]);
+            $goalsTotals = $stmt->fetch(PDO::FETCH_ASSOC);
 
             respond([
                 'month' => $month,
@@ -76,8 +82,8 @@ try {
 
         case 'transactions': {
             $month = $_GET['month'] ?? date('Y-m');
-            $stmt = $pdo->prepare('SELECT * FROM transactions WHERE date LIKE ? ORDER BY date DESC, id DESC');
-            $stmt->execute([$month . '%']);
+            $stmt = $pdo->prepare('SELECT * FROM transactions WHERE user_id = ? AND date LIKE ? ORDER BY date DESC, id DESC');
+            $stmt->execute([$userId, $month . '%']);
             respond($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
@@ -94,8 +100,8 @@ try {
                 respond(['error' => 'Champs invalides'], 422);
             }
 
-            $stmt = $pdo->prepare('INSERT INTO transactions (type, category, label, amount, date) VALUES (?, ?, ?, ?, ?)');
-            $stmt->execute([$type, $category, $label, $amount, $date]);
+            $stmt = $pdo->prepare('INSERT INTO transactions (user_id, type, category, label, amount, date) VALUES (?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$userId, $type, $category, $label, $amount, $date]);
             respond(['id' => (int)$pdo->lastInsertId(), 'success' => true]);
         }
 
@@ -105,13 +111,15 @@ try {
             $id = filter_var($body['id'] ?? null, FILTER_VALIDATE_INT);
             if ($id === false) respond(['error' => 'Identifiant invalide'], 422);
 
-            $stmt = $pdo->prepare('DELETE FROM transactions WHERE id = ?');
-            $stmt->execute([$id]);
+            $stmt = $pdo->prepare('DELETE FROM transactions WHERE id = ? AND user_id = ?');
+            $stmt->execute([$id, $userId]);
             respond(['success' => true]);
         }
 
         case 'goals': {
-            respond($pdo->query('SELECT * FROM goals ORDER BY id ASC')->fetchAll(PDO::FETCH_ASSOC));
+            $stmt = $pdo->prepare('SELECT * FROM goals WHERE user_id = ? ORDER BY id ASC');
+            $stmt->execute([$userId]);
+            respond($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
         case 'add_goal': {
@@ -121,14 +129,14 @@ try {
             $category = trim((string)($body['category'] ?? 'autre'));
             $target = filter_var($body['target_amount'] ?? null, FILTER_VALIDATE_FLOAT);
             $deadline = $body['deadline'] ?? null;
-            $icon = $body['icon'] ?? '🎯';
+            $icon = $body['icon'] ?? 'target';
 
             if ($name === '' || $target === false || $target <= 0) {
                 respond(['error' => 'Champs invalides'], 422);
             }
 
-            $stmt = $pdo->prepare('INSERT INTO goals (name, category, target_amount, current_amount, deadline, icon) VALUES (?, ?, ?, 0, ?, ?)');
-            $stmt->execute([$name, $category, $target, $deadline ?: null, $icon]);
+            $stmt = $pdo->prepare('INSERT INTO goals (user_id, name, category, target_amount, current_amount, deadline, icon) VALUES (?, ?, ?, ?, 0, ?, ?)');
+            $stmt->execute([$userId, $name, $category, $target, $deadline ?: null, $icon]);
             respond(['id' => (int)$pdo->lastInsertId(), 'success' => true]);
         }
 
@@ -139,14 +147,17 @@ try {
             $amount = filter_var($body['amount'] ?? null, FILTER_VALIDATE_FLOAT);
             if (!$id || $amount === false || $amount <= 0) respond(['error' => 'Champs invalides'], 422);
 
-            $stmt = $pdo->prepare('UPDATE goals SET current_amount = current_amount + ? WHERE id = ?');
-            $stmt->execute([$amount, $id]);
+            $stmt = $pdo->prepare('UPDATE goals SET current_amount = current_amount + ? WHERE id = ? AND user_id = ?');
+            $stmt->execute([$amount, $id, $userId]);
+            if ($stmt->rowCount() === 0) respond(['error' => 'Objectif introuvable'], 404);
 
-            respond(['success' => true, 'goal' => fetchById($pdo, 'goals', $id)]);
+            respond(['success' => true, 'goal' => fetchOwnedById($pdo, 'goals', $id, $userId)]);
         }
 
         case 'challenges': {
-            respond($pdo->query('SELECT * FROM challenges ORDER BY id ASC')->fetchAll(PDO::FETCH_ASSOC));
+            $stmt = $pdo->prepare('SELECT * FROM challenges WHERE user_id = ? ORDER BY id ASC');
+            $stmt->execute([$userId]);
+            respond($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
         case 'checkin_challenge': {
@@ -155,7 +166,7 @@ try {
             $id = filter_var($body['id'] ?? null, FILTER_VALIDATE_INT);
             if (!$id) respond(['error' => 'Identifiant invalide'], 422);
 
-            $challenge = fetchById($pdo, 'challenges', $id);
+            $challenge = fetchOwnedById($pdo, 'challenges', $id, $userId);
             if (!$challenge) respond(['error' => 'Défi introuvable'], 404);
 
             $today = date('Y-m-d');
@@ -166,16 +177,16 @@ try {
             $progress = min((int)$challenge['progress_days'] + 1, (int)$challenge['target_days']);
             $status = $progress >= (int)$challenge['target_days'] ? 'termine' : 'actif';
 
-            $stmt = $pdo->prepare('UPDATE challenges SET progress_days = ?, status = ?, last_checkin = ? WHERE id = ?');
-            $stmt->execute([$progress, $status, $today, $id]);
+            $stmt = $pdo->prepare('UPDATE challenges SET progress_days = ?, status = ?, last_checkin = ? WHERE id = ? AND user_id = ?');
+            $stmt->execute([$progress, $status, $today, $id, $userId]);
 
-            respond(['success' => true, 'challenge' => fetchById($pdo, 'challenges', $id)]);
+            respond(['success' => true, 'challenge' => fetchOwnedById($pdo, 'challenges', $id, $userId)]);
         }
 
         default:
             respond(['error' => 'Action inconnue'], 400);
     }
 } catch (Throwable $e) {
-    error_log('[podium-budget] ' . $e->getMessage());
+    error_log('[cadence] ' . $e->getMessage());
     respond(['error' => 'Erreur serveur, réessaie dans un instant.'], 500);
 }

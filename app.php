@@ -1,3 +1,16 @@
+<?php
+declare(strict_types=1);
+session_start();
+
+// Page protégée : on redirige vers la connexion avant tout rendu HTML si
+// aucune session utilisateur n'est active.
+if (empty($_SESSION['user_id'])) {
+    header('Location: connexion.html');
+    exit;
+}
+
+$userEmail = $_SESSION['user_email'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,6 +38,10 @@
     <button class="tab-btn" data-tab="objectifs">Objectifs</button>
     <button class="tab-btn" data-tab="defis">Défis</button>
   </nav>
+  <div class="account-box">
+    <span class="account-email"><?= htmlspecialchars($userEmail, ENT_QUOTES, 'UTF-8') ?></span>
+    <button type="button" class="btn ghost small" id="logoutBtn">Déconnexion</button>
+  </div>
 </header>
 
 <main>

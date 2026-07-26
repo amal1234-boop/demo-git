@@ -76,6 +76,9 @@ input, select, button { font-family: inherit; font-size: .9rem; }
 .tab-btn:hover { border-color: var(--primary); color: var(--text); }
 .tab-btn.active { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); font-weight: 600; }
 
+.account-box { display: flex; align-items: center; gap: .7rem; }
+.account-email { font-size: .82rem; color: var(--text-muted); }
+
 /* =========================================================
    4. LAYOUT — CONTENU PRINCIPAL & ONGLETS
    ========================================================= */
