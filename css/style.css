@@ -1,19 +1,22 @@
 /* =========================================================
-   1. VARIABLES GLOBALES
+   1. VARIABLES GLOBALES — thème clair
    ========================================================= */
 :root {
-  --bg: #0b1220;
-  --bg-alt: #121b30;
-  --card: #16223d;
-  --border: #263252;
-  --text: #eef1f8;
-  --text-muted: #9aa5c0;
-  --gold: #ffb703;
-  --lime: #7bd93b;
-  --red: #ff5d5d;
-  --blue: #4d8dff;
+  --bg: #f5f6fb;
+  --bg-alt: #ffffff;
+  --card: #ffffff;
+  --border: #e4e7f0;
+  --text: #161821;
+  --text-muted: #6b7280;
+  --primary: #4f46e5;
+  --primary-ink: #ffffff;
+  --positive: #0d9488;
+  --red: #e11d48;
+  --blue: #2563eb;
+  --warning: #f59e0b;
   --radius: 14px;
   --gap-md: 1rem;
+  --shadow-sm: 0 1px 2px rgba(20, 24, 40, .04), 0 1px 3px rgba(20, 24, 40, .06);
 }
 
 /* =========================================================
@@ -24,12 +27,14 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(circle at top, var(--bg-alt), var(--bg) 60%);
+  background: radial-gradient(circle at top, #ffffff, var(--bg) 70%);
   color: var(--text);
   min-height: 100vh;
 }
 
 input, select, button { font-family: inherit; font-size: .9rem; }
+
+.icon { width: 1.3em; height: 1.3em; flex-shrink: 0; }
 
 /* =========================================================
    3. LAYOUT — EN-TÊTE & NAVIGATION
@@ -41,20 +46,24 @@ input, select, button { font-family: inherit; font-size: .9rem; }
   justify-content: space-between;
   gap: var(--gap-md);
   padding: 1rem 2rem;
-  background: linear-gradient(90deg, #0d1526, #182746);
-  border-bottom: 3px solid var(--gold);
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: inherit; }
-.brand-icon { font-size: 2rem; }
-.brand h1 { margin: 0; font-size: 1.3rem; letter-spacing: .5px; }
-.tagline { margin: 0; font-size: .8rem; color: var(--text-muted); }
+.brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: inherit; }
+.logo-mark { color: var(--primary); }
+.brand h1 { margin: 0; font-size: 1.2rem; letter-spacing: -.01em; }
+.tagline { margin: 0; font-size: .78rem; color: var(--text-muted); }
 
 .tabs { display: flex; gap: .4rem; flex-wrap: wrap; }
 .tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-muted);
@@ -64,8 +73,8 @@ input, select, button { font-family: inherit; font-size: .9rem; }
   font-size: .85rem;
   transition: all .15s ease;
 }
-.tab-btn:hover { border-color: var(--gold); color: var(--text); }
-.tab-btn.active { background: var(--gold); color: #1a1305; border-color: var(--gold); font-weight: 600; }
+.tab-btn:hover { border-color: var(--primary); color: var(--text); }
+.tab-btn.active { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); font-weight: 600; }
 
 /* =========================================================
    4. LAYOUT — CONTENU PRINCIPAL & ONGLETS
@@ -89,7 +98,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 
 .month-picker { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--text-muted); }
 .month-picker input {
-  background: var(--card);
+  background: var(--bg-alt);
   border: 1px solid var(--border);
   color: var(--text);
   padding: .4rem .6rem;
@@ -113,17 +122,18 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 .card { margin-bottom: var(--gap-md); }
-.card h3 { margin-top: 0; }
+.card h3 { margin-top: 0; display: flex; align-items: center; gap: .5rem; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--gap-md); margin: 0 0 1.5rem; }
 .stat-grid dt, .stat-grid dd { margin: 0; }
-.stat-card { border-top: 4px solid var(--border); }
-.stat-card.revenu { border-top-color: var(--lime); }
+.stat-card { border-top: 3px solid var(--border); }
+.stat-card.revenu { border-top-color: var(--positive); }
 .stat-card.depense { border-top-color: var(--red); }
 .stat-card.solde { border-top-color: var(--blue); }
-.stat-card.taux { border-top-color: var(--gold); }
+.stat-card.taux { border-top-color: var(--primary); }
 .stat-label { display: block; font-size: .8rem; color: var(--text-muted); margin-bottom: .35rem; }
 .stat-value { display: block; font-size: 1.6rem; font-weight: 700; }
 
@@ -131,18 +141,21 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
    6. COMPOSANTS — BOUTONS
    ========================================================= */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
   border: none;
   border-radius: 8px;
   padding: .6rem 1.1rem;
   cursor: pointer;
   font-weight: 600;
-  transition: transform .1s ease, opacity .15s ease;
+  transition: transform .1s ease, opacity .15s ease, box-shadow .15s ease;
 }
-.btn:hover { opacity: .9; }
+.btn:hover { opacity: .92; }
 .btn:active { transform: scale(.97); }
-.btn.primary { background: var(--gold); color: #1a1305; }
+.btn.primary { background: var(--primary); color: var(--primary-ink); box-shadow: 0 4px 12px rgba(79, 70, 229, .25); }
 .btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-.btn.danger { background: var(--red); color: #2b0505; }
+.btn.danger { background: var(--red); color: #fff; }
 .btn.small { padding: .35rem .7rem; font-size: .8rem; }
 
 /* =========================================================
@@ -157,15 +170,15 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .field { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
 .field label { color: var(--text-muted); }
 input, select {
-  background: var(--bg);
+  background: var(--bg-alt);
   border: 1px solid var(--border);
   color: var(--text);
   padding: .55rem .7rem;
   border-radius: 8px;
 }
-input:focus, select:focus { outline: none; border-color: var(--gold); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, .12); }
 
-.roundup-card { border-top: 3px solid var(--gold); }
+.roundup-card { border-top: 3px solid var(--primary); }
 .roundup-card select { min-width: 200px; }
 
 /* =========================================================
@@ -175,7 +188,8 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
 .tx-table th { text-align: left; color: var(--text-muted); font-weight: 600; padding: .5rem; border-bottom: 1px solid var(--border); }
 .tx-table td { padding: .5rem; border-bottom: 1px solid var(--border); }
 .tx-table tr:last-child td { border-bottom: none; }
-.amount-revenu { color: var(--lime); font-weight: 600; }
+.tx-type { display: inline-flex; align-items: center; gap: .35rem; }
+.amount-revenu { color: var(--positive); font-weight: 600; }
 .amount-depense { color: var(--red); font-weight: 600; }
 
 .empty-hint { color: var(--text-muted); font-size: .85rem; font-style: italic; }
@@ -187,7 +201,7 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
 .bar-row { display: grid; grid-template-columns: 160px 1fr 70px; align-items: center; gap: .6rem; font-size: .85rem; }
 .bar-row .bar-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bar-track { background: var(--bg); border-radius: 999px; height: 10px; overflow: hidden; }
-.bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--red)); border-radius: 999px; }
+.bar-fill { height: 100%; background: var(--primary); border-radius: 999px; }
 .bar-amount { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* =========================================================
@@ -195,24 +209,27 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
    ========================================================= */
 .track-lane {
   position: relative;
-  background: repeating-linear-gradient(90deg, var(--bg) 0 24px, #0e1830 24px 26px);
+  background: repeating-linear-gradient(90deg, var(--bg) 0 24px, #eceef6 24px 26px);
   border: 1px solid var(--border);
   border-radius: 999px;
-  height: 34px;
+  height: 30px;
   overflow: hidden;
 }
 .track-fill {
   position: absolute; inset: 0 auto 0 0;
   width: 0%;
-  background: linear-gradient(90deg, #2c7a2c, var(--lime));
+  background: var(--positive);
   transition: width .4s ease;
 }
-.track-runner {
+.track-marker {
   position: absolute;
   top: 50%; left: 0%;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 3px solid var(--positive);
   transform: translate(-50%, -50%);
   transition: left .4s ease;
-  font-size: 1.2rem;
 }
 .track-caption { margin: .6rem 0 0; font-size: .85rem; color: var(--text-muted); }
 
@@ -220,12 +237,13 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
    11. WIDGETS — JAUGE DE FORME FINANCIÈRE
    ========================================================= */
 .gauge-card { text-align: center; }
+.gauge-card h3 { justify-content: center; }
 .gauge-wrap { position: relative; width: 150px; height: 150px; margin: .5rem auto; }
 .gauge-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .gauge-bg { fill: none; stroke: var(--bg); stroke-width: 10; }
 .gauge-value {
   fill: none;
-  stroke: var(--lime);
+  stroke: var(--positive);
   stroke-width: 10;
   stroke-linecap: round;
   stroke-dasharray: 314.159; /* 2 * PI * r, r=50 (voir markup du cercle) */
@@ -244,9 +262,9 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
    ========================================================= */
 .fuel-gauge {
   position: relative;
-  height: 22px;
+  height: 20px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--red) 0%, var(--gold) 45%, var(--lime) 100%);
+  background: linear-gradient(90deg, var(--red) 0%, var(--warning) 45%, var(--positive) 100%);
   border: 1px solid var(--border);
   overflow: hidden;
 }
@@ -255,7 +273,7 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
 .fuel-fill {
   position: absolute; top: 0; bottom: 0; right: 0;
   width: 100%;
-  background: var(--bg);
+  background: var(--bg-alt);
   transition: width .4s ease;
 }
 
@@ -263,6 +281,7 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
    13. WIDGETS — MATCH MENSUEL (versus)
    ========================================================= */
 .versus-card { text-align: center; }
+.versus-card h3 { justify-content: center; }
 .versus-row { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin: .75rem 0; flex-wrap: wrap; }
 .versus-side {
   display: flex; flex-direction: column; align-items: center; gap: .3rem;
@@ -271,10 +290,10 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   border: 1px solid var(--border);
   min-width: 140px;
 }
-.versus-side.winner { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+.versus-side.winner { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary) inset; }
 .versus-label { font-size: .8rem; color: var(--text-muted); }
 .versus-value { font-size: 1.5rem; font-weight: 800; }
-.versus-vs { font-weight: 800; color: var(--gold); font-size: 1.1rem; }
+.versus-vs { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
 
 /* =========================================================
    14. LISTES — OBJECTIFS & DÉFIS
@@ -288,30 +307,24 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-.goal-card h4 { margin: 0 0 .2rem; display: flex; align-items: center; gap: .4rem; }
+.goal-card h4 { margin: 0 0 .2rem; display: flex; align-items: center; gap: .5rem; }
+.goal-card h4 .icon { color: var(--primary); }
 .goal-meta { font-size: .8rem; color: var(--text-muted); margin: 0 0 .7rem; }
 .goal-progress-text { font-size: .85rem; margin: .5rem 0 .8rem; }
 .goal-actions { display: flex; gap: .5rem; align-items: center; }
 .goal-actions input { width: 90px; }
 
-.challenge-card h4 { margin: 0 0 .3rem; display: flex; align-items: center; gap: .4rem; }
+.challenge-card h4 { margin: 0 0 .3rem; display: flex; align-items: center; gap: .5rem; }
+.challenge-card h4 .icon { color: var(--warning); }
 .challenge-desc { font-size: .85rem; color: var(--text-muted); margin: 0 0 .8rem; }
 .streak-dots { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: .8rem; }
 .streak-dot { width: 14px; height: 14px; border-radius: 4px; background: var(--bg); border: 1px solid var(--border); }
-.streak-dot.filled { background: var(--gold); border-color: var(--gold); }
+.streak-dot.filled { background: var(--primary); border-color: var(--primary); }
 .challenge-status { font-size: .8rem; padding: .2rem .6rem; border-radius: 999px; background: var(--bg); display: inline-block; margin-bottom: .6rem; }
-.challenge-status.termine { background: var(--lime); color: #0b2b0b; font-weight: 700; }
+.challenge-status.termine { background: var(--positive); color: #fff; font-weight: 700; }
 
 /* =========================================================
-   15. PAGE — PERSONA & USER STORIES
-   ========================================================= */
-.persona-card .persona-head { display: flex; gap: var(--gap-md); align-items: flex-start; margin-bottom: var(--gap-md); }
-.persona-emoji { font-size: 2.4rem; }
-.persona-sub { color: var(--text-muted); font-size: .9rem; margin: .3rem 0 0; }
-.persona-traits, .story-list { padding-left: 1.2rem; line-height: 1.7; font-size: .92rem; }
-
-/* =========================================================
-   16. UTILITAIRES
+   15. UTILITAIRES
    ========================================================= */
 .sr-only {
   position: absolute;
@@ -328,17 +341,17 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
   bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--gold);
-  color: #1a1305;
+  background: var(--text);
+  color: #fff;
   padding: .7rem 1.3rem;
   border-radius: 999px;
   font-weight: 600;
-  box-shadow: 0 6px 20px rgba(0,0,0,.4);
+  box-shadow: 0 10px 25px rgba(20, 24, 40, .2);
   z-index: 100;
 }
 
 /* =========================================================
-   17. PIED DE PAGE
+   16. PIED DE PAGE
    ========================================================= */
 .site-footer {
   max-width: 1100px;
@@ -351,7 +364,7 @@ input:focus, select:focus { outline: none; border-color: var(--gold); }
 }
 
 /* =========================================================
-   18. RESPONSIVE
+   17. RESPONSIVE
    ========================================================= */
 @media (max-width: 640px) {
   .topbar { flex-direction: column; align-items: flex-start; }

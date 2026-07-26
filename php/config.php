@@ -57,9 +57,9 @@ if ($freshInstall) {
     try {
         // Objectifs d'épargne pensés pour une carrière sportive courte et incertaine
         $goals = [
-            ['Fonds de reconversion', 'reconversion', 15000, 3200, '2027-12-31', '🎓'],
-            ['Fonds blessure / coup dur', 'blessure', 5000, 1850, null, '🩹'],
-            ['Projet post-carrière (coaching)', 'projet', 20000, 500, '2028-06-30', '🚀'],
+            ['Fonds de reconversion', 'reconversion', 15000, 3200, '2027-12-31', 'graduation'],
+            ['Fonds blessure / coup dur', 'blessure', 5000, 1850, null, 'shield'],
+            ['Projet post-carrière (coaching)', 'projet', 20000, 500, '2028-06-30', 'rocket'],
         ];
         $stmt = $pdo->prepare('INSERT INTO goals (name, category, target_amount, current_amount, deadline, icon) VALUES (?, ?, ?, ?, ?, ?)');
         foreach ($goals as $g) {
@@ -68,9 +68,9 @@ if ($freshInstall) {
 
         // Défis façon "entraînement" pour motiver l'épargne
         $challenges = [
-            ['Semaine sans dépense superflue', 'Ne rien dépenser en extra (hors matériel/coaching) pendant 7 jours d\'affilée.', 7, 3, 'actif', '🔥'],
-            ['30 jours, 30 versements', 'Verser un petit montant sur le fonds de reconversion chaque jour pendant 30 jours.', 30, 12, 'actif', '🏅'],
-            ['Sprint épargne primes', 'Mettre de côté 50% de chaque prime de compétition perçue ce trimestre.', 5, 2, 'actif', '🏆'],
+            ['Semaine sans dépense superflue', 'Ne rien dépenser en extra (hors matériel/coaching) pendant 7 jours d\'affilée.', 7, 3, 'actif', 'flame'],
+            ['30 jours, 30 versements', 'Verser un petit montant sur le fonds de reconversion chaque jour pendant 30 jours.', 30, 12, 'actif', 'flame'],
+            ['Sprint épargne primes', 'Mettre de côté 50% de chaque prime de compétition perçue ce trimestre.', 5, 2, 'actif', 'flame'],
         ];
         $stmt = $pdo->prepare('INSERT INTO challenges (title, description, target_days, progress_days, status, badge) VALUES (?, ?, ?, ?, ?, ?)');
         foreach ($challenges as $c) {

@@ -5,7 +5,22 @@ const CATEGORIES = {
   depense: ['Équipement sportif', 'Coaching / Préparation physique', 'Kiné / Médical', 'Déplacements compétitions', 'Nutrition / Compléments', 'Logement / Vie quotidienne', 'Autre'],
 };
 
-const GOAL_ICONS = { reconversion: '🎓', blessure: '🩹', projet: '🚀', autre: '🎯' };
+// Petites icônes SVG (style trait fin) utilisées à la place d'émojis dans les
+// zones générées dynamiquement — cohérentes avec celles écrites en dur dans app.html.
+const ICONS = {
+  graduation: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-4 10 4-10 4-10-4z"/><path d="M6 11v4c0 1.7 2.7 3 6 3s6-1.3 6-3v-4"/></svg>',
+  shield: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-3z"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="9.5" y1="10.5" x2="14.5" y2="10.5"/></svg>',
+  rocket: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2c2.5 2 4 5.5 4 9 0 2-1 4-1 4l-3 3-3-3s-1-2-1-4c0-3.5 1.5-7 4-9z"/><circle cx="12" cy="10" r="1.6"/><path d="M9 15l-3 1 1-3M15 15l3 1-1-3"/></svg>',
+  target: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.8"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  flame: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2c.3 3-2.4 4.6-3.6 6.7C7 11 7 13.4 8.4 15c-.6-2 .6-3 1.4-4.3.2 1.6 1 2.2 1.9 3 .8-.7.7-1.6.4-2.4 1.6 1 2.6 2.5 2.6 4.2 0 2.9-2.6 5-5.7 5S3.3 18.4 3.3 15.5c0-4 3.6-6.2 4.9-9.3.9 1 1 2.2.6 3.4C10.3 7.8 11.4 4.9 12 2z"/></svg>',
+  trophy: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M5 4H3v2a4 4 0 0 0 4 4"/><path d="M19 4h2v2a4 4 0 0 1-4 4"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="8" y1="19" x2="16" y2="19"/></svg>',
+  arrowUp: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="6 11 12 5 18 11"/></svg>',
+  arrowDown: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="18 13 12 19 6 13"/></svg>',
+};
+
+// La base ne stocke qu'une clé courte ('graduation', 'shield'...), jamais le
+// markup SVG complet — ICONS[clé] fait la conversion au moment de l'affichage.
+const GOAL_ICON_KEYS = { reconversion: 'graduation', blessure: 'shield', projet: 'rocket', autre: 'target' };
 
 let currentMonth = new Date().toISOString().slice(0, 7);
 let pendingRoundup = 0;
@@ -26,7 +41,7 @@ const el = {
   categoryChart: document.getElementById('categoryChart'),
   categoryEmpty: document.getElementById('categoryEmpty'),
   globalGoalFill: document.getElementById('globalGoalFill'),
-  globalGoalRunner: document.getElementById('globalGoalRunner'),
+  globalGoalMarker: document.getElementById('globalGoalMarker'),
   globalGoalText: document.getElementById('globalGoalText'),
 
   formGaugeCircle: document.getElementById('formGaugeCircle'),
@@ -135,7 +150,7 @@ async function loadDashboard() {
     ? Math.min(100, (summary.objectifs_total_epargne / summary.objectifs_total_cible) * 100)
     : 0;
   el.globalGoalFill.style.width = `${pct}%`;
-  el.globalGoalRunner.style.left = `${pct}%`;
+  el.globalGoalMarker.style.left = `${pct}%`;
   el.globalGoalText.textContent =
     `${fmtEuro(summary.objectifs_total_epargne)} épargnés sur ${fmtEuro(summary.objectifs_total_cible)} d'objectifs cumulés (${pct.toFixed(1)}%).`;
 }
@@ -152,11 +167,11 @@ function renderFormGauge(score) {
   const offset = circumference * (1 - Math.max(0, Math.min(100, score)) / 100);
   el.formGaugeCircle.style.strokeDashoffset = offset;
 
-  let color = 'var(--lime)';
-  let label = 'Grande forme 💪';
-  if (score < 40) { color = 'var(--red)'; label = 'Alerte fatigue financière 🚨'; }
-  else if (score < 60) { color = 'var(--gold)'; label = 'Rythme à travailler ⚠️'; }
-  else if (score < 80) { color = 'var(--blue)'; label = 'Bonne dynamique 🙂'; }
+  let color = 'var(--positive)';
+  let label = 'Grande forme';
+  if (score < 40) { color = 'var(--red)'; label = 'Alerte fatigue financière'; }
+  else if (score < 60) { color = 'var(--warning)'; label = 'Rythme à travailler'; }
+  else if (score < 80) { color = 'var(--blue)'; label = 'Bonne dynamique'; }
 
   el.formGaugeCircle.style.stroke = color;
   el.formScoreNumber.textContent = score;
@@ -195,7 +210,7 @@ function renderVersus(summary, prevSummary) {
 
   if (summary.taux_epargne > prevSummary.taux_epargne) {
     el.versusCurrentSide.classList.add('winner');
-    el.versusText.textContent = `Tu bats ton mois dernier ! Taux d'épargne en hausse de ${(summary.taux_epargne - prevSummary.taux_epargne).toFixed(1)} point(s). 🏆`;
+    el.versusText.textContent = `Tu bats ton mois dernier ! Taux d'épargne en hausse de ${(summary.taux_epargne - prevSummary.taux_epargne).toFixed(1)} point(s).`;
   } else if (summary.taux_epargne < prevSummary.taux_epargne) {
     el.versusPreviousSide.classList.add('winner');
     el.versusText.textContent = `Le mois dernier était plus fort de ${(prevSummary.taux_epargne - summary.taux_epargne).toFixed(1)} point(s). Reprends l'avantage d'ici la fin du mois !`;
@@ -242,9 +257,10 @@ async function loadTransactions() {
 
   for (const tx of list) {
     const tr = document.createElement('tr');
+    const icon = tx.type === 'revenu' ? ICONS.arrowUp : ICONS.arrowDown;
     tr.innerHTML = `
       <td>${new Date(tx.date).toLocaleDateString('fr-FR')}</td>
-      <td>${tx.type === 'revenu' ? '💰 Revenu' : '💸 Dépense'}</td>
+      <td><span class="tx-type amount-${tx.type}">${icon} ${tx.type === 'revenu' ? 'Revenu' : 'Dépense'}</span></td>
       <td>${tx.category}</td>
       <td>${tx.label}</td>
       <td class="amount-${tx.type}">${tx.type === 'revenu' ? '+' : '-'}${fmtEuro(tx.amount)}</td>
@@ -278,7 +294,7 @@ el.transactionForm.addEventListener('submit', async (e) => {
   };
   try {
     await api('add_transaction', { method: 'POST', body: payload });
-    toast('Opération ajoutée 🎯');
+    toast('Opération ajoutée');
     e.target.reset();
     el.txDate.value = new Date().toISOString().slice(0, 10);
     refreshCategoryOptions();
@@ -301,7 +317,7 @@ async function maybeOfferRoundup(amount) {
   if (!goals.length) return;
 
   pendingRoundup = roundUp;
-  el.roundupGoalSelect.innerHTML = goals.map((g) => `<option value="${g.id}">${g.icon || '🎯'} ${g.name}</option>`).join('');
+  el.roundupGoalSelect.innerHTML = goals.map((g) => `<option value="${g.id}">${g.name}</option>`).join('');
   el.roundupText.textContent =
     `Cette dépense arrondie à ${fmtEuro(roundedTo)} laisse ${fmtEuro(roundUp)} d'écart. Transforme-le en épargne en un clic :`;
   el.roundupCard.hidden = false;
@@ -310,7 +326,7 @@ async function maybeOfferRoundup(amount) {
 el.roundupSendBtn.addEventListener('click', async () => {
   try {
     await api('contribute_goal', { method: 'POST', body: { id: el.roundupGoalSelect.value, amount: pendingRoundup } });
-    toast(`+${fmtEuro(pendingRoundup)} envoyés vers ton objectif 🔁`);
+    toast(`+${fmtEuro(pendingRoundup)} envoyés vers ton objectif`);
     el.roundupCard.hidden = true;
     await refreshAll();
   } catch (err) {
@@ -329,14 +345,15 @@ async function loadGoals() {
 
   for (const g of goals) {
     const pct = g.target_amount > 0 ? Math.min(100, (g.current_amount / g.target_amount) * 100) : 0;
+    const iconKey = g.icon || GOAL_ICON_KEYS[g.category] || 'target';
     const li = document.createElement('li');
     li.innerHTML = `
       <article class="goal-card">
-        <h4>${g.icon || GOAL_ICONS[g.category] || '🎯'} ${g.name}</h4>
+        <h4>${ICONS[iconKey] || ICONS.target} ${g.name}</h4>
         <p class="goal-meta">${g.deadline ? 'Échéance : ' + new Date(g.deadline).toLocaleDateString('fr-FR') : 'Sans échéance fixe'}</p>
         <div class="track-lane">
           <div class="track-fill" style="width:${pct}%"></div>
-          <span class="track-runner" style="left:${pct}%">🏃</span>
+          <span class="track-marker" style="left:${pct}%"></span>
         </div>
         <p class="goal-progress-text">${fmtEuro(g.current_amount)} / ${fmtEuro(g.target_amount)} (${pct.toFixed(1)}%)</p>
         <div class="goal-actions">
@@ -355,7 +372,7 @@ async function loadGoals() {
       if (!amount || amount <= 0) { toast('Indique un montant valide'); return; }
       try {
         await api('contribute_goal', { method: 'POST', body: { id: btn.dataset.add, amount } });
-        toast('Versement enregistré 🏅');
+        toast('Versement enregistré');
         input.value = '';
         await refreshAll();
       } catch (err) {
@@ -376,11 +393,11 @@ el.goalForm.addEventListener('submit', async (e) => {
     category: el.goalCategory.value,
     target_amount: parseFloat(el.goalTarget.value),
     deadline: el.goalDeadline.value || null,
-    icon: GOAL_ICONS[el.goalCategory.value] || '🎯',
+    icon: GOAL_ICON_KEYS[el.goalCategory.value] || 'target',
   };
   try {
     await api('add_goal', { method: 'POST', body: payload });
-    toast('Objectif créé 🚀');
+    toast('Objectif créé');
     e.target.reset();
     e.target.hidden = true;
     await loadGoals();
@@ -403,8 +420,8 @@ async function loadChallenges() {
     const li = document.createElement('li');
     li.innerHTML = `
       <article class="challenge-card">
-        <span class="challenge-status ${done ? 'termine' : ''}">${done ? 'Défi terminé 🏆' : `${c.progress_days}/${c.target_days}`}</span>
-        <h4>${c.badge || '🔥'} ${c.title}</h4>
+        <span class="challenge-status ${done ? 'termine' : ''}">${done ? 'Défi terminé' : `${c.progress_days}/${c.target_days}`}</span>
+        <h4>${done ? ICONS.trophy : ICONS.flame} ${c.title}</h4>
         <p class="challenge-desc">${c.description || ''}</p>
         <div class="streak-dots">${dots}</div>
         <button class="btn primary small" data-checkin="${c.id}" ${done ? 'disabled' : ''}>
@@ -418,7 +435,7 @@ async function loadChallenges() {
     btn.addEventListener('click', async () => {
       try {
         const res = await api('checkin_challenge', { method: 'POST', body: { id: btn.dataset.checkin } });
-        toast(res.challenge.status === 'termine' ? 'Défi terminé, bravo champion(ne) ! 🏆' : 'Jour validé 🔥');
+        toast(res.challenge.status === 'termine' ? 'Défi terminé, bravo !' : 'Jour validé');
         await refreshAll();
       } catch (err) {
         toast(err.message);
