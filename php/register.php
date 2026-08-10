@@ -41,8 +41,6 @@ try {
     $stmt->execute([$email, password_hash($password, PASSWORD_DEFAULT), $name ?: null]);
     $userId = (int) $pdo->lastInsertId();
 
-    seed_demo_data($pdo, $userId);
-
     $_SESSION['user_id'] = $userId;
     $_SESSION['user_email'] = $email;
 

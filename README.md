@@ -20,8 +20,7 @@ Chaque athlète a son propre compte et ses propres données :
 
 - **Inscription** (`inscription.html`) : email + mot de passe (8 caractères
   minimum, hashé avec `password_hash()`), prénom optionnel. Un compte
-  nouvellement créé reçoit un jeu de données de démo (objectifs, défis,
-  transactions) pour ne pas démarrer sur un tableau de bord vide.
+  nouvellement créé démarre à 0 (aucune transaction, objectif ou défi).
 - **Connexion** (`connexion.html`) : email + mot de passe, vérifié avec
   `password_verify()`.
 - **Session** : gérée côté serveur avec les sessions PHP natives. `app.php`
@@ -63,8 +62,8 @@ ou **MAMP**).
    php -S localhost:8000
    ```
 4. Ouvrir [http://localhost:8000](http://localhost:8000) : la page d'accueil
-   propose de créer un compte, ce qui donne accès au tableau de bord avec un
-   jeu de données de démo prêt à l'emploi.
+   propose de créer un compte, ce qui donne accès à un tableau de bord vide,
+   prêt à recevoir tes propres données.
 
 ## Structure du projet
 
@@ -78,7 +77,7 @@ css/landing.css         Styles propres à la page d'accueil
 css/auth.css            Styles propres aux pages inscription/connexion
 js/app.js               Logique front de l'application (appels API, onglets)
 database.sql            Schéma SQL à importer dans phpMyAdmin
-php/config.php          Connexion PDO à MySQL + seed de démo par compte
+php/config.php          Connexion PDO à MySQL
 php/auth.php            Garde de session réutilisée par l'API
 php/register.php        Endpoint d'inscription
 php/login.php           Endpoint de connexion
