@@ -241,7 +241,7 @@ async function loadPerformance() {
     ? Math.min(100, (summary.objectifs_total_epargne / summary.objectifs_total_cible) * 100)
     : 0;
   const ratios = challenges.map((c) => Math.min(1, c.progress_days / c.target_days));
-  const challengesScore = ratios.length ? (ratios.reduce((a, b) => a + b, 0) / ratios.length) * 100 : 50;
+  const challengesScore = ratios.length ? (ratios.reduce((a, b) => a + b, 0) / ratios.length) * 100 : 0;
   const formScore = Math.round(savingsScore * 0.4 + goalsPct * 0.35 + challengesScore * 0.25);
   renderFormGauge(formScore);
 
