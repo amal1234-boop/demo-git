@@ -51,9 +51,7 @@
   width: 1400px;
   max-width: none;
   transform: translate(-50%, -50%);
-  opacity: .16;
-  filter: grayscale(1) contrast(1.1);
-  mix-blend-mode: multiply;
+  opacity: .3;
   -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, #000 40%, transparent 85%);
   mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, #000 40%, transparent 85%);
   pointer-events: none;

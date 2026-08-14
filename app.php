@@ -48,11 +48,14 @@ $userEmail = $_SESSION['user_email'] ?? '';
 
   <!-- DASHBOARD -->
   <section id="dashboard" class="tab-panel active">
-    <div class="panel-header">
-      <h2>Tableau de bord — <span id="dashboardMonthLabel"></span></h2>
-      <div class="month-picker">
-        <label for="monthSelector">Mois :</label>
-        <input type="month" id="monthSelector">
+    <div class="dashboard-banner">
+      <img class="dashboard-illustration" src="ressources/hero-illustration.png" alt="" aria-hidden="true">
+      <div class="panel-header">
+        <h2>Tableau de bord — <span id="dashboardMonthLabel"></span></h2>
+        <div class="month-picker">
+          <label for="monthSelector">Mois :</label>
+          <input type="month" id="monthSelector">
+        </div>
       </div>
     </div>
 
