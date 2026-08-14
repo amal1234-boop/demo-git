@@ -160,6 +160,22 @@ try {
             respond($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
+        case 'add_challenge': {
+            if ($method !== 'POST') respond(['error' => 'Méthode non autorisée'], 405);
+            $body = bodyJson();
+            $title = trim((string)($body['title'] ?? ''));
+            $description = trim((string)($body['description'] ?? ''));
+            $targetDays = filter_var($body['target_days'] ?? null, FILTER_VALIDATE_INT);
+
+            if ($title === '' || $targetDays === false || $targetDays <= 0) {
+                respond(['error' => 'Champs invalides'], 422);
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO challenges (user_id, title, description, target_days, progress_days, status, badge) VALUES (?, ?, ?, ?, 0, 'actif', 'flame')");
+            $stmt->execute([$userId, $title, $description ?: null, $targetDays]);
+            respond(['id' => (int)$pdo->lastInsertId(), 'success' => true]);
+        }
+
         case 'checkin_challenge': {
             if ($method !== 'POST') respond(['error' => 'Méthode non autorisée'], 405);
             $body = bodyJson();

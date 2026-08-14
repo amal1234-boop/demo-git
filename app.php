@@ -252,7 +252,28 @@ $userEmail = $_SESSION['user_email'] ?? '';
     <div class="panel-header">
       <h2>Défis d'épargne</h2>
       <p class="subtitle">Comme à l'entraînement : un défi validé, c'est une répétition de plus vers l'objectif.</p>
+      <button class="btn primary" id="newChallengeBtn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouveau défi
+      </button>
     </div>
+
+    <form id="challengeForm" class="card form-grid" hidden>
+      <div class="field">
+        <label for="challengeTitle">Titre du défi</label>
+        <input type="text" id="challengeTitle" placeholder="Ex : Semaine sans dépense superflue" required>
+      </div>
+      <div class="field">
+        <label for="challengeDescription">Description (optionnel)</label>
+        <input type="text" id="challengeDescription" placeholder="Ex : Ne rien dépenser en extra pendant 7 jours">
+      </div>
+      <div class="field">
+        <label for="challengeTargetDays">Durée (jours)</label>
+        <input type="number" id="challengeTargetDays" min="1" step="1" required>
+      </div>
+      <button type="submit" class="btn primary">Créer le défi</button>
+    </form>
+
     <ul id="challengesList" class="challenges-list"></ul>
   </section>
 
