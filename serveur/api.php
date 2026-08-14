@@ -8,14 +8,8 @@ ini_set('log_errors', '1');
 error_reporting(E_ALL);
 
 session_start();
-header('Content-Type: application/json; charset=utf-8');
 
-function respond($data, int $code = 200): void
-{
-    http_response_code($code);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
+require __DIR__ . '/reponse.php';
 
 function bodyJson(): array
 {
