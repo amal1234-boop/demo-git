@@ -5,14 +5,8 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 session_start();
-header('Content-Type: application/json; charset=utf-8');
 
-function respond($data, int $code = 200): void
-{
-    http_response_code($code);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
+require __DIR__ . '/reponse.php';
 
 $body = json_decode(file_get_contents('php://input'), true);
 $body = is_array($body) ? $body : [];
