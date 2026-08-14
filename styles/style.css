@@ -23,6 +23,7 @@
    2. RESET / BASE
    ========================================================= */
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
