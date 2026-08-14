@@ -21,7 +21,7 @@ $email = strtolower(trim((string) ($body['email'] ?? '')));
 $password = (string) ($body['password'] ?? '');
 
 try {
-    require __DIR__ . '/config.php';
+    require __DIR__ . '/configuration.php';
 
     $stmt = $pdo->prepare('SELECT id, password_hash FROM users WHERE email = ?');
     $stmt->execute([$email]);

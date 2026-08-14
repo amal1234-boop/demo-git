@@ -56,7 +56,7 @@ form.addEventListener('submit', async (e) => {
   };
 
   try {
-    const res = await fetch('serveur/login.php', {
+    const res = await fetch('serveur/connexion.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

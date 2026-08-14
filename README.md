@@ -53,7 +53,7 @@ ou **MAMP**).
    fichier [`database.sql`](database.sql) et valide. Ça crée la base
    `cadence` avec ses 4 tables (`users`, `transactions`, `goals`,
    `challenges`). Tu peux ensuite les parcourir directement dans phpMyAdmin.
-2. **Vérifier les identifiants** dans `serveur/config.php` (en haut du fichier) :
+2. **Vérifier les identifiants** dans `serveur/configuration.php` (en haut du fichier) :
    par défaut `localhost` / port `3306` / utilisateur `root` / pas de mot de
    passe, ce qui correspond à une install XAMPP/WAMP standard. Adapte ces
    constantes si ta configuration diffère.
@@ -77,11 +77,11 @@ styles/landing.css          Styles propres à la page d'accueil
 styles/auth.css             Styles propres aux pages inscription/connexion
 scripts/app.js              Logique front de l'application (appels API, onglets)
 database.sql                Schéma SQL à importer dans phpMyAdmin
-serveur/config.php          Connexion PDO à MySQL
-serveur/auth.php            Garde de session réutilisée par l'API
-serveur/register.php        Endpoint d'inscription
-serveur/login.php           Endpoint de connexion
-serveur/logout.php          Endpoint de déconnexion
+serveur/configuration.php   Connexion PDO à MySQL
+serveur/authentification.php Garde de session réutilisée par l'API
+serveur/inscription.php     Endpoint d'inscription
+serveur/connexion.php       Endpoint de connexion
+serveur/deconnexion.php     Endpoint de déconnexion
 serveur/api.php             API JSON (transactions, objectifs, défis), par compte
 ressources/                 Captures d'écran utilisées sur la page d'accueil
 ```
