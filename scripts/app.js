@@ -479,7 +479,7 @@ el.challengeForm.addEventListener('submit', async (e) => {
 
 // ---------- Déconnexion ----------
 el.logoutBtn.addEventListener('click', async () => {
-  await fetch('serveur/logout.php', { method: 'POST' });
+  await fetch('serveur/deconnexion.php', { method: 'POST' });
   window.location.href = 'index.html';
 });
 

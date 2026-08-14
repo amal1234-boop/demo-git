@@ -29,7 +29,7 @@ if (strlen($password) < 8) {
 }
 
 try {
-    require __DIR__ . '/config.php';
+    require __DIR__ . '/configuration.php';
 
     $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
     $stmt->execute([$email]);

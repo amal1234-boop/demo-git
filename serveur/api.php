@@ -39,8 +39,8 @@ function fetchOwnedById(PDO $pdo, string $table, int $id, int $userId): array|fa
 }
 
 try {
-    require __DIR__ . '/config.php';
-    require __DIR__ . '/auth.php';
+    require __DIR__ . '/configuration.php';
+    require __DIR__ . '/authentification.php';
 
     $userId = require_login();
     $action = $_GET['action'] ?? $_POST['action'] ?? '';
