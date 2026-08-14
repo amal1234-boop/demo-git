@@ -1,6 +1,4 @@
-/* =========================================================
-   1. VARIABLES GLOBALES — thème clair
-   ========================================================= */
+/* Variables globales */
 :root {
   --bg: #f5f6fb;
   --bg-alt: #ffffff;
@@ -19,12 +17,8 @@
   --shadow-sm: 3px 3px 0 rgba(22, 24, 33, .08);
 }
 
-/* =========================================================
-   2. RESET / BASE
-   ========================================================= */
+/* Reset / base */
 * { box-sizing: border-box; }
-/* form[hidden] est plus spécifique que .form-grid (display: grid) sans
-   recourir à !important : un formulaire cache reste bien caché. */
 form[hidden] { display: none; }
 
 body {
@@ -36,12 +30,9 @@ body {
 }
 
 input, select, button { font-family: inherit; font-size: .9rem; }
-
 .icon { width: 1.3em; height: 1.3em; flex-shrink: 0; }
 
-/* =========================================================
-   3. LAYOUT — EN-TÊTE & NAVIGATION
-   ========================================================= */
+/* En-tête et navigation */
 .topbar {
   display: flex;
   flex-wrap: wrap;
@@ -80,9 +71,7 @@ input, select, button { font-family: inherit; font-size: .9rem; }
 .account-box { display: flex; align-items: center; gap: .7rem; }
 .account-email { font-size: .82rem; color: var(--text-muted); }
 
-/* =========================================================
-   4. LAYOUT — CONTENU PRINCIPAL & ONGLETS
-   ========================================================= */
+/* Contenu principal et onglets */
 main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 
 .tab-panel { display: none; animation: fadeIn .2s ease; }
@@ -100,18 +89,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .panel-header h2 { margin: 0; }
 .subtitle { margin: .25rem 0 0; color: var(--text-muted); font-size: .9rem; }
 
-.dashboard-banner {
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.dashboard-illustration {
-  display: block;
-  width: 100%;
-  height: auto;
-  opacity: .85;
-}
+.dashboard-banner { position: relative; overflow: hidden; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.dashboard-illustration { display: block; width: 100%; height: auto; opacity: .85; }
 .dashboard-banner .panel-header {
   position: absolute;
   inset: 0;
@@ -120,34 +99,15 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
   padding: 0 1.75rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, .96) 0%, rgba(255, 255, 255, .8) 42%, rgba(255, 255, 255, .1) 78%, rgba(255, 255, 255, 0) 100%);
 }
-.dashboard-banner .month-picker {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  padding: .5rem .75rem;
-  box-shadow: var(--shadow-sm);
-}
+.dashboard-banner .month-picker { background: var(--bg-alt); border: 1px solid var(--border); padding: .5rem .75rem; box-shadow: var(--shadow-sm); }
 
 .month-picker { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--text-muted); }
-.month-picker input {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: .4rem .6rem;
-}
+.month-picker input { background: var(--bg-alt); border: 1px solid var(--border); color: var(--text); padding: .4rem .6rem; }
 
-.dashboard-columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--gap-md);
-}
+.dashboard-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--gap-md); }
 
-/* =========================================================
-   5. COMPOSANTS — CARTES (base commune, pas de duplication)
-   ========================================================= */
-.card,
-.stat-card,
-.goal-card,
-.challenge-card {
+/* Cartes (base commune) */
+.card, .stat-card, .goal-card, .challenge-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -167,9 +127,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .stat-label { display: block; font-size: .8rem; color: var(--text-muted); margin-bottom: .35rem; }
 .stat-value { display: block; font-size: 1.6rem; font-weight: 700; }
 
-/* =========================================================
-   6. COMPOSANTS — BOUTONS
-   ========================================================= */
+/* Boutons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -187,31 +145,17 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .btn.danger { background: var(--red); color: #fff; }
 .btn.small { padding: .35rem .7rem; font-size: .8rem; }
 
-/* =========================================================
-   7. COMPOSANTS — FORMULAIRES
-   ========================================================= */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: .9rem;
-  align-items: end;
-}
+/* Formulaires */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .9rem; align-items: end; }
 .field { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
 .field label { color: var(--text-muted); }
-input, select {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: .55rem .7rem;
-}
+input, select { background: var(--bg-alt); border: 1px solid var(--border); color: var(--text); padding: .55rem .7rem; }
 input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: inset 0 0 0 2px rgba(79, 70, 229, .25); }
 
 .roundup-card { border-top: 3px solid var(--primary); }
 .roundup-card select { min-width: 200px; }
 
-/* =========================================================
-   8. COMPOSANTS — TABLEAU DE TRANSACTIONS
-   ========================================================= */
+/* Tableau de transactions */
 .tx-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
 .tx-table th { text-align: left; color: var(--text-muted); font-weight: 600; padding: .5rem; border-bottom: 1px solid var(--border); }
 .tx-table td { padding: .5rem; border-bottom: 1px solid var(--border); }
@@ -219,12 +163,9 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .tx-type { display: inline-flex; align-items: center; gap: .35rem; }
 .amount-revenu { color: var(--positive); font-weight: 600; }
 .amount-depense { color: var(--red); font-weight: 600; }
-
 .empty-hint { color: var(--text-muted); font-size: .85rem; font-style: italic; }
 
-/* =========================================================
-   9. WIDGETS — RÉPARTITION DES DÉPENSES (liste de barres)
-   ========================================================= */
+/* Répartition des dépenses (barres) */
 .bar-chart { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .6rem; }
 .bar-row { display: grid; grid-template-columns: 160px 1fr 70px; align-items: center; gap: .6rem; font-size: .85rem; }
 .bar-row .bar-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -232,9 +173,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .bar-fill { height: 100%; background: var(--primary); }
 .bar-amount { text-align: right; font-variant-numeric: tabular-nums; }
 
-/* =========================================================
-   10. WIDGETS — PISTE DE PROGRESSION (objectifs)
-   ========================================================= */
+/* Piste de progression (objectifs) */
 .track-lane {
   position: relative;
   background: repeating-linear-gradient(90deg, var(--bg) 0 24px, #eceef6 24px 26px);
@@ -242,12 +181,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
   height: 30px;
   overflow: hidden;
 }
-.track-fill {
-  position: absolute; inset: 0 auto 0 0;
-  width: 0%;
-  background: var(--positive);
-  transition: width .4s ease;
-}
+.track-fill { position: absolute; inset: 0 auto 0 0; width: 0%; background: var(--positive); transition: width .4s ease; }
 .track-marker {
   position: absolute;
   top: 50%; left: 0%;
@@ -259,9 +193,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 }
 .track-caption { margin: .6rem 0 0; font-size: .85rem; color: var(--text-muted); }
 
-/* =========================================================
-   11. WIDGETS — JAUGE DE FORME FINANCIÈRE
-   ========================================================= */
+/* Jauge de forme financière */
 .gauge-card { text-align: center; }
 .gauge-card h3 { justify-content: center; }
 .gauge-wrap { position: relative; width: 150px; height: 150px; margin: .5rem auto; }
@@ -272,20 +204,15 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
   stroke: var(--positive);
   stroke-width: 10;
   stroke-linecap: round;
-  stroke-dasharray: 314.159; /* 2 * PI * r, r=50 (voir markup du cercle) */
+  stroke-dasharray: 314.159;
   stroke-dashoffset: 314.159;
   transition: stroke-dashoffset .5s ease, stroke .5s ease;
 }
-.gauge-center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
+.gauge-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .gauge-number { font-size: 1.8rem; font-weight: 800; line-height: 1; }
 .gauge-sub { font-size: .75rem; color: var(--text-muted); }
 
-/* =========================================================
-   12. WIDGETS — SIMULATEUR RÉSISTANCE BLESSURE
-   ========================================================= */
+/* Simulateur résistance blessure */
 .fuel-gauge {
   position: relative;
   height: 20px;
@@ -293,18 +220,9 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
   border: 1px solid var(--border);
   overflow: hidden;
 }
-/* Le niveau "consommé" masque le dégradé depuis la droite : ce qui reste
-   visible à gauche représente le niveau de résistance atteint. */
-.fuel-fill {
-  position: absolute; top: 0; bottom: 0; right: 0;
-  width: 100%;
-  background: var(--bg-alt);
-  transition: width .4s ease;
-}
+.fuel-fill { position: absolute; top: 0; bottom: 0; right: 0; width: 100%; background: var(--bg-alt); transition: width .4s ease; }
 
-/* =========================================================
-   13. WIDGETS — MATCH MENSUEL (versus)
-   ========================================================= */
+/* Match mensuel (versus) */
 .versus-card { text-align: center; }
 .versus-card h3 { justify-content: center; }
 .versus-row { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin: .75rem 0; flex-wrap: wrap; }
@@ -320,9 +238,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .versus-value { font-size: 1.5rem; font-weight: 800; }
 .versus-vs { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
 
-/* =========================================================
-   14. LISTES — OBJECTIFS & DÉFIS
-   ========================================================= */
+/* Listes objectifs et défis */
 .goals-list, .challenges-list {
   list-style: none;
   margin: 0;
@@ -348,18 +264,8 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .challenge-status { font-size: .8rem; padding: .2rem .6rem; border: 1px solid var(--border); background: var(--bg); display: inline-block; margin-bottom: .6rem; }
 .challenge-status.termine { background: var(--positive); color: #fff; font-weight: 700; }
 
-/* =========================================================
-   15. UTILITAIRES
-   ========================================================= */
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* Utilitaires */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 .toast {
   position: fixed;
@@ -374,22 +280,10 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
   z-index: 100;
 }
 
-/* =========================================================
-   16. PIED DE PAGE
-   ========================================================= */
-.site-footer {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1.5rem 2rem 2.5rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: .8rem;
-  border-top: 1px solid var(--border);
-}
+/* Pied de page */
+.site-footer { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 2.5rem; text-align: center; color: var(--text-muted); font-size: .8rem; border-top: 1px solid var(--border); }
 
-/* =========================================================
-   17. RESPONSIVE
-   ========================================================= */
+/* Responsive */
 @media (max-width: 640px) {
   .topbar { flex-direction: column; align-items: flex-start; }
   main { padding: 1rem; }

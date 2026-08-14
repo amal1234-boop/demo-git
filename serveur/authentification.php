@@ -1,10 +1,6 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Vérifie qu'une session utilisateur est active ; sinon coupe la requête
- * avec une réponse JSON 401. Toujours appelée après session_start().
- */
 function require_login(): int
 {
     if (empty($_SESSION['user_id'])) {

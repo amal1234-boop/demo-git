@@ -2,8 +2,6 @@
 declare(strict_types=1);
 session_start();
 
-// Page protégée : on redirige vers la connexion avant tout rendu HTML si
-// aucune session utilisateur n'est active.
 if (empty($_SESSION['user_id'])) {
     header('Location: connexion.html');
     exit;
