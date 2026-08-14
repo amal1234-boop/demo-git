@@ -79,6 +79,11 @@ const el = {
   goalsList: document.getElementById('goalsList'),
 
   challengesList: document.getElementById('challengesList'),
+  newChallengeBtn: document.getElementById('newChallengeBtn'),
+  challengeForm: document.getElementById('challengeForm'),
+  challengeTitle: document.getElementById('challengeTitle'),
+  challengeDescription: document.getElementById('challengeDescription'),
+  challengeTargetDays: document.getElementById('challengeTargetDays'),
 
   toast: document.getElementById('toast'),
   logoutBtn: document.getElementById('logoutBtn'),
@@ -449,6 +454,28 @@ async function loadChallenges() {
     });
   });
 }
+
+el.newChallengeBtn.addEventListener('click', () => {
+  el.challengeForm.hidden = !el.challengeForm.hidden;
+});
+
+el.challengeForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const payload = {
+    title: el.challengeTitle.value.trim(),
+    description: el.challengeDescription.value.trim(),
+    target_days: parseInt(el.challengeTargetDays.value, 10),
+  };
+  try {
+    await api('add_challenge', { method: 'POST', body: payload });
+    toast('Défi créé');
+    e.target.reset();
+    e.target.hidden = true;
+    await loadChallenges();
+  } catch (err) {
+    toast(err.message);
+  }
+});
 
 // ---------- Déconnexion ----------
 el.logoutBtn.addEventListener('click', async () => {
