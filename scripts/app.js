@@ -1,4 +1,4 @@
-const API = 'php/api.php';
+const API = 'serveur/api.php';
 
 const CATEGORIES = {
   revenu: ['Sponsoring', 'Primes de compétition', 'Aide fédération', 'Droits image', 'Stage / coaching rémunéré', 'Autre'],
@@ -479,7 +479,7 @@ el.challengeForm.addEventListener('submit', async (e) => {
 
 // ---------- Déconnexion ----------
 el.logoutBtn.addEventListener('click', async () => {
-  await fetch('php/logout.php', { method: 'POST' });
+  await fetch('serveur/logout.php', { method: 'POST' });
   window.location.href = 'index.html';
 });
 

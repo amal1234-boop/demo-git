@@ -17,7 +17,7 @@ $userEmail = $_SESSION['user_email'] ?? '';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cadence — Gestion budgétaire pour athlète de haut niveau</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 
@@ -285,6 +285,6 @@ $userEmail = $_SESSION['user_email'] ?? '';
 
 <div id="toast" class="toast" hidden></div>
 
-<script src="js/app.js" defer></script>
+<script src="scripts/app.js" defer></script>
 </body>
 </html>
