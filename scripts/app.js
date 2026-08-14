@@ -32,18 +32,15 @@ const el = {
   tabsNav: document.getElementById('tabs'),
   monthSelector: document.getElementById('monthSelector'),
   dashboardMonthLabel: document.getElementById('dashboardMonthLabel'),
-
   statRevenus: document.getElementById('statRevenus'),
   statDepenses: document.getElementById('statDepenses'),
   statSolde: document.getElementById('statSolde'),
   statTaux: document.getElementById('statTaux'),
-
   categoryChart: document.getElementById('categoryChart'),
   categoryEmpty: document.getElementById('categoryEmpty'),
   globalGoalFill: document.getElementById('globalGoalFill'),
   globalGoalMarker: document.getElementById('globalGoalMarker'),
   globalGoalText: document.getElementById('globalGoalText'),
-
   formGaugeCircle: document.getElementById('formGaugeCircle'),
   formScoreNumber: document.getElementById('formScoreNumber'),
   formScoreLabel: document.getElementById('formScoreLabel'),
@@ -54,7 +51,6 @@ const el = {
   versusCurrentSide: document.getElementById('versusCurrentSide'),
   versusPreviousSide: document.getElementById('versusPreviousSide'),
   versusText: document.getElementById('versusText'),
-
   transactionForm: document.getElementById('transactionForm'),
   txType: document.getElementById('txType'),
   txCategory: document.getElementById('txCategory'),
@@ -63,13 +59,11 @@ const el = {
   txDate: document.getElementById('txDate'),
   txTableBody: document.getElementById('txTableBody'),
   txEmpty: document.getElementById('txEmpty'),
-
   roundupCard: document.getElementById('roundupCard'),
   roundupText: document.getElementById('roundupText'),
   roundupGoalSelect: document.getElementById('roundupGoalSelect'),
   roundupSendBtn: document.getElementById('roundupSendBtn'),
   roundupSkipBtn: document.getElementById('roundupSkipBtn'),
-
   newGoalBtn: document.getElementById('newGoalBtn'),
   goalForm: document.getElementById('goalForm'),
   goalName: document.getElementById('goalName'),
@@ -77,14 +71,12 @@ const el = {
   goalTarget: document.getElementById('goalTarget'),
   goalDeadline: document.getElementById('goalDeadline'),
   goalsList: document.getElementById('goalsList'),
-
   challengesList: document.getElementById('challengesList'),
   newChallengeBtn: document.getElementById('newChallengeBtn'),
   challengeForm: document.getElementById('challengeForm'),
   challengeTitle: document.getElementById('challengeTitle'),
   challengeDescription: document.getElementById('challengeDescription'),
   challengeTargetDays: document.getElementById('challengeTargetDays'),
-
   toast: document.getElementById('toast'),
   logoutBtn: document.getElementById('logoutBtn'),
 };

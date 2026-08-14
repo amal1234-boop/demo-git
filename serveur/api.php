@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-// Ne jamais exposer les erreurs PHP brutes au client : elles sont journalisées
-// côté serveur, jamais affichées (et une erreur affichée casserait le JSON).
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 error_reporting(E_ALL);
@@ -21,10 +19,6 @@ function bodyJson(): array
     return is_array($decoded) ? $decoded : [];
 }
 
-// Évite de dupliquer prepare/execute/fetch à chaque fois qu'on doit relire
-// une ligne par id (goals et challenges en ont chacun besoin). Toujours
-// filtrée par utilisateur : personne ne doit pouvoir relire la ligne d'un
-// autre compte en devinant son id.
 function fetchOwnedById(PDO $pdo, string $table, int $id, int $userId): array|false
 {
     $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE id = ? AND user_id = ?");
@@ -41,7 +35,6 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     switch ($action) {
-
         case 'summary': {
             $month = $_GET['month'] ?? date('Y-m');
 

@@ -1,14 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// Identifiants MySQL — valeurs par défaut d'un XAMPP/WAMP/MAMP fraîchement
-// installé (utilisateur root, sans mot de passe). Modifie ces 5 constantes
-// si ta configuration locale est différente, ou définis les variables
-// d'environnement correspondantes (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS).
-//
-// Le schéma (base + tables) n'est PAS créé ici : importe database.sql dans
-// phpMyAdmin une bonne fois pour toutes, ce fichier se contente ensuite de
-// s'y connecter.
+// Valeurs par défaut XAMPP/WAMP ; voir README pour les personnaliser.
 const DB_HOST = 'localhost';
 const DB_PORT = '3306';
 const DB_NAME = 'cadence';
