@@ -13,8 +13,7 @@
   gap: 1rem;
   padding: 1rem 2rem;
   background: var(--bg-alt);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 2px solid var(--text);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -46,8 +45,8 @@
 .hero-eyebrow {
   display: inline-block;
   padding: .3rem .9rem;
-  border-radius: 999px;
   background: rgba(79, 70, 229, .08);
+  border: 1px solid var(--primary);
   color: var(--primary);
   font-size: .8rem;
   font-weight: 700;
@@ -77,11 +76,10 @@
 .browser-frame {
   max-width: 960px;
   margin: 0 auto;
-  border-radius: 16px;
   overflow: hidden;
   background: var(--bg-alt);
   border: 1px solid var(--border);
-  box-shadow: 0 20px 50px -20px rgba(30, 41, 59, .35);
+  box-shadow: 6px 6px 0 rgba(22, 24, 33, .12);
 }
 .browser-frame .browser-bar {
   display: flex;
