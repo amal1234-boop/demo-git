@@ -8,7 +8,7 @@ l'après-carrière.
 ## Stack
 
 - **Frontend** : HTML / CSS / JavaScript (vanilla, sans dépendance externe)
-- **Backend** : PHP (API JSON dans `php/api.php`)
+- **Backend** : PHP (API JSON dans `serveur/api.php`)
 - **Stockage** : base **MySQL/MariaDB** (via PDO), schéma relationnel défini
   dans [`database.sql`](database.sql) : une table `users`, et les données
   (`transactions`, `goals`, `challenges`) rattachées à chaque compte par une
@@ -25,7 +25,7 @@ Chaque athlète a son propre compte et ses propres données :
   `password_verify()`.
 - **Session** : gérée côté serveur avec les sessions PHP natives. `app.php`
   vérifie la session à chaque chargement et redirige vers `connexion.html`
-  si l'utilisateur n'est pas connecté ; `php/api.php` fait de même pour
+  si l'utilisateur n'est pas connecté ; `serveur/api.php` fait de même pour
   chaque appel et ne renvoie jamais les données d'un autre compte.
 - **Déconnexion** : bouton "Déconnexion" dans l'app, détruit la session.
 
@@ -53,7 +53,7 @@ ou **MAMP**).
    fichier [`database.sql`](database.sql) et valide. Ça crée la base
    `cadence` avec ses 4 tables (`users`, `transactions`, `goals`,
    `challenges`). Tu peux ensuite les parcourir directement dans phpMyAdmin.
-2. **Vérifier les identifiants** dans `php/config.php` (en haut du fichier) :
+2. **Vérifier les identifiants** dans `serveur/config.php` (en haut du fichier) :
    par défaut `localhost` / port `3306` / utilisateur `root` / pas de mot de
    passe, ce qui correspond à une install XAMPP/WAMP standard. Adapte ces
    constantes si ta configuration diffère.
@@ -68,20 +68,20 @@ ou **MAMP**).
 ## Structure du projet
 
 ```
-index.html            Page d'accueil (marketing, non protégée)
-inscription.html       Formulaire de création de compte
-connexion.html          Formulaire de connexion
-app.php                 Application (protégée par session PHP)
-css/style.css           Thème visuel partagé par toutes les pages
-css/landing.css         Styles propres à la page d'accueil
-css/auth.css            Styles propres aux pages inscription/connexion
-js/app.js               Logique front de l'application (appels API, onglets)
-database.sql            Schéma SQL à importer dans phpMyAdmin
-php/config.php          Connexion PDO à MySQL
-php/auth.php            Garde de session réutilisée par l'API
-php/register.php        Endpoint d'inscription
-php/login.php           Endpoint de connexion
-php/logout.php          Endpoint de déconnexion
-php/api.php             API JSON (transactions, objectifs, défis), par compte
-assets/                 Captures d'écran utilisées sur la page d'accueil
+index.html                  Page d'accueil (marketing, non protégée)
+inscription.html            Formulaire de création de compte
+connexion.html              Formulaire de connexion
+app.php                     Application (protégée par session PHP)
+styles/style.css            Thème visuel partagé par toutes les pages
+styles/landing.css          Styles propres à la page d'accueil
+styles/auth.css             Styles propres aux pages inscription/connexion
+scripts/app.js              Logique front de l'application (appels API, onglets)
+database.sql                Schéma SQL à importer dans phpMyAdmin
+serveur/config.php          Connexion PDO à MySQL
+serveur/auth.php            Garde de session réutilisée par l'API
+serveur/register.php        Endpoint d'inscription
+serveur/login.php           Endpoint de connexion
+serveur/logout.php          Endpoint de déconnexion
+serveur/api.php             API JSON (transactions, objectifs, défis), par compte
+ressources/                 Captures d'écran utilisées sur la page d'accueil
 ```
