@@ -2,12 +2,12 @@
 declare(strict_types=1);
 session_start();
 
-if (empty($_SESSION['user_id'])) {
+if (empty($_SESSION['id_utilisateur'])) {
     header('Location: connexion.html');
     exit;
 }
 
-$userEmail = $_SESSION['user_email'] ?? '';
+$email_utilisateur = $_SESSION['email_utilisateur'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -30,15 +30,15 @@ $userEmail = $_SESSION['user_email'] ?? '';
       <p class="tagline">La rigueur de l'entraînement, appliquée à ton argent</p>
     </div>
   </a>
-  <nav class="tabs" id="tabs">
+  <nav class="tabs" id="onglets">
     <button class="tab-btn active" data-tab="dashboard">Tableau de bord</button>
     <button class="tab-btn" data-tab="transactions">Revenus &amp; Dépenses</button>
     <button class="tab-btn" data-tab="objectifs">Objectifs</button>
     <button class="tab-btn" data-tab="defis">Défis</button>
   </nav>
   <div class="account-box">
-    <span class="account-email"><?= htmlspecialchars($userEmail, ENT_QUOTES, 'UTF-8') ?></span>
-    <button type="button" class="btn ghost small" id="logoutBtn">Déconnexion</button>
+    <span class="account-email"><?= htmlspecialchars($email_utilisateur, ENT_QUOTES, 'UTF-8') ?></span>
+    <button type="button" class="btn ghost small" id="bouton_deconnexion">Déconnexion</button>
   </div>
 </header>
 
@@ -49,10 +49,10 @@ $userEmail = $_SESSION['user_email'] ?? '';
     <div class="dashboard-banner">
       <img class="dashboard-illustration" src="ressources/hero-illustration.png?v=2" alt="" aria-hidden="true">
       <div class="panel-header">
-        <h2>Tableau de bord — <span id="dashboardMonthLabel"></span></h2>
+        <h2>Tableau de bord — <span id="libelle_mois"></span></h2>
         <div class="month-picker">
-          <label for="monthSelector">Mois :</label>
-          <input type="month" id="monthSelector">
+          <label for="selecteur_mois">Mois :</label>
+          <input type="month" id="selecteur_mois">
         </div>
       </div>
     </div>
@@ -60,19 +60,19 @@ $userEmail = $_SESSION['user_email'] ?? '';
     <dl class="stat-grid">
       <div class="stat-card revenu">
         <dt class="stat-label">Revenus du mois</dt>
-        <dd class="stat-value" id="statRevenus">0 €</dd>
+        <dd class="stat-value" id="stat_revenus">0 €</dd>
       </div>
       <div class="stat-card depense">
         <dt class="stat-label">Dépenses du mois</dt>
-        <dd class="stat-value" id="statDepenses">0 €</dd>
+        <dd class="stat-value" id="stat_depenses">0 €</dd>
       </div>
       <div class="stat-card solde">
         <dt class="stat-label">Solde</dt>
-        <dd class="stat-value" id="statSolde">0 €</dd>
+        <dd class="stat-value" id="stat_solde">0 €</dd>
       </div>
       <div class="stat-card taux">
         <dt class="stat-label">Taux d'épargne</dt>
-        <dd class="stat-value" id="statTaux">0 %</dd>
+        <dd class="stat-value" id="stat_taux">0 %</dd>
       </div>
     </dl>
 
@@ -82,17 +82,17 @@ $userEmail = $_SESSION['user_email'] ?? '';
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="14"/></svg>
           Répartition des dépenses
         </h3>
-        <ul id="categoryChart" class="bar-chart"></ul>
-        <p class="empty-hint" id="categoryEmpty" hidden>Aucune dépense enregistrée ce mois-ci.</p>
+        <ul id="graphique_categories" class="bar-chart"></ul>
+        <p class="empty-hint" id="categories_vide" hidden>Aucune dépense enregistrée ce mois-ci.</p>
       </div>
 
       <div class="card">
         <h3>Progression globale des objectifs</h3>
         <div class="track-lane">
-          <div class="track-fill" id="globalGoalFill"></div>
-          <span class="track-marker" id="globalGoalMarker"></span>
+          <div class="track-fill" id="remplissage_objectif_global"></div>
+          <span class="track-marker" id="marqueur_objectif_global"></span>
         </div>
-        <p id="globalGoalText" class="track-caption"></p>
+        <p id="texte_objectif_global" class="track-caption"></p>
       </div>
     </div>
 
@@ -106,14 +106,14 @@ $userEmail = $_SESSION['user_email'] ?? '';
         <div class="gauge-wrap">
           <svg class="gauge-svg" viewBox="0 0 120 120" role="img" aria-label="Jauge de forme financière">
             <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
-            <circle class="gauge-value" id="formGaugeCircle" cx="60" cy="60" r="50"></circle>
+            <circle class="gauge-value" id="cercle_jauge_forme" cx="60" cy="60" r="50"></circle>
           </svg>
           <div class="gauge-center">
-            <span class="gauge-number" id="formScoreNumber">–</span>
+            <span class="gauge-number" id="nombre_score_forme">–</span>
             <span class="gauge-sub">/100</span>
           </div>
         </div>
-        <p class="track-caption" id="formScoreLabel"></p>
+        <p class="track-caption" id="libelle_score_forme"></p>
       </div>
 
       <div class="card">
@@ -123,9 +123,9 @@ $userEmail = $_SESSION['user_email'] ?? '';
         </h3>
         <p class="subtitle">Si une blessure ou une contre-performance coupait tes revenus dès demain...</p>
         <div class="fuel-gauge">
-          <div class="fuel-fill" id="runwayFill"></div>
+          <div class="fuel-fill" id="remplissage_autonomie"></div>
         </div>
-        <p class="track-caption" id="runwayText"></p>
+        <p class="track-caption" id="texte_autonomie"></p>
       </div>
     </div>
 
@@ -135,17 +135,17 @@ $userEmail = $_SESSION['user_email'] ?? '';
         Toi vs Toi — match du mois
       </h3>
       <div class="versus-row">
-        <div class="versus-side" id="versusCurrentSide">
+        <div class="versus-side" id="cote_versus_actuel">
           <span class="versus-label">Ce mois</span>
-          <span class="versus-value" id="versusCurrentValue">–</span>
+          <span class="versus-value" id="valeur_versus_actuel">–</span>
         </div>
         <span class="versus-vs">VS</span>
-        <div class="versus-side" id="versusPreviousSide">
+        <div class="versus-side" id="cote_versus_precedent">
           <span class="versus-label">Mois dernier</span>
-          <span class="versus-value" id="versusPreviousValue">–</span>
+          <span class="versus-value" id="valeur_versus_precedent">–</span>
         </div>
       </div>
-      <p class="track-caption" id="versusText"></p>
+      <p class="track-caption" id="texte_versus"></p>
     </div>
   </section>
 
@@ -155,29 +155,29 @@ $userEmail = $_SESSION['user_email'] ?? '';
       <h2>Revenus &amp; Dépenses</h2>
     </div>
 
-    <form id="transactionForm" class="card form-grid">
+    <form id="formulaire_operation" class="card form-grid">
       <div class="field">
-        <label for="txType">Type</label>
-        <select id="txType" required>
+        <label for="type_operation">Type</label>
+        <select id="type_operation" required>
           <option value="revenu">Revenu</option>
           <option value="depense">Dépense</option>
         </select>
       </div>
       <div class="field">
-        <label for="txCategory">Catégorie</label>
-        <select id="txCategory" required></select>
+        <label for="categorie_operation">Catégorie</label>
+        <select id="categorie_operation" required></select>
       </div>
       <div class="field">
-        <label for="txLabel">Libellé</label>
-        <input type="text" id="txLabel" placeholder="Ex : Prime podium championnat" required>
+        <label for="libelle_operation">Libellé</label>
+        <input type="text" id="libelle_operation" placeholder="Ex : Prime podium championnat" required>
       </div>
       <div class="field">
-        <label for="txAmount">Montant (€)</label>
-        <input type="number" id="txAmount" min="0.01" step="0.01" required>
+        <label for="montant_operation">Montant (€)</label>
+        <input type="number" id="montant_operation" min="0.01" step="0.01" required>
       </div>
       <div class="field">
-        <label for="txDate">Date</label>
-        <input type="date" id="txDate" required>
+        <label for="date_operation">Date</label>
+        <input type="date" id="date_operation" required>
       </div>
       <button type="submit" class="btn primary">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -185,17 +185,17 @@ $userEmail = $_SESSION['user_email'] ?? '';
       </button>
     </form>
 
-    <div class="card roundup-card" id="roundupCard" hidden>
+    <div class="card roundup-card" id="carte_arrondi" hidden>
       <h3>
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><polyline points="20 4 20 11 13 11"/></svg>
         Arrondi d'entraînement
       </h3>
-      <p id="roundupText"></p>
+      <p id="texte_arrondi"></p>
       <div class="goal-actions">
-        <label for="roundupGoalSelect" class="sr-only">Objectif qui recevra l'arrondi</label>
-        <select id="roundupGoalSelect"></select>
-        <button type="button" class="btn primary small" id="roundupSendBtn">Envoyer l'arrondi</button>
-        <button type="button" class="btn ghost small" id="roundupSkipBtn">Ignorer</button>
+        <label for="select_objectif_arrondi" class="sr-only">Objectif qui recevra l'arrondi</label>
+        <select id="select_objectif_arrondi"></select>
+        <button type="button" class="btn primary small" id="bouton_envoyer_arrondi">Envoyer l'arrondi</button>
+        <button type="button" class="btn ghost small" id="bouton_ignorer_arrondi">Ignorer</button>
       </div>
     </div>
 
@@ -204,9 +204,9 @@ $userEmail = $_SESSION['user_email'] ?? '';
         <thead>
           <tr><th>Date</th><th>Type</th><th>Catégorie</th><th>Libellé</th><th>Montant</th><th>Action</th></tr>
         </thead>
-        <tbody id="txTableBody"></tbody>
+        <tbody id="corps_tableau_operations"></tbody>
       </table>
-      <p class="empty-hint" id="txEmpty" hidden>Aucune opération ce mois-ci.</p>
+      <p class="empty-hint" id="operations_vide" hidden>Aucune opération ce mois-ci.</p>
     </div>
   </section>
 
@@ -214,20 +214,20 @@ $userEmail = $_SESSION['user_email'] ?? '';
   <section id="objectifs" class="tab-panel">
     <div class="panel-header">
       <h2>Objectifs d'épargne</h2>
-      <button class="btn primary" id="newGoalBtn">
+      <button class="btn primary" id="bouton_nouvel_objectif">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nouvel objectif
       </button>
     </div>
 
-    <form id="goalForm" class="card form-grid" hidden>
+    <form id="formulaire_objectif" class="card form-grid" hidden>
       <div class="field">
-        <label for="goalName">Nom de l'objectif</label>
-        <input type="text" id="goalName" placeholder="Ex : Fonds reconversion" required>
+        <label for="nom_objectif">Nom de l'objectif</label>
+        <input type="text" id="nom_objectif" placeholder="Ex : Fonds reconversion" required>
       </div>
       <div class="field">
-        <label for="goalCategory">Catégorie</label>
-        <select id="goalCategory">
+        <label for="categorie_objectif">Catégorie</label>
+        <select id="categorie_objectif">
           <option value="reconversion">Reconversion</option>
           <option value="blessure">Fonds blessure / coup dur</option>
           <option value="projet">Projet post-carrière</option>
@@ -235,17 +235,17 @@ $userEmail = $_SESSION['user_email'] ?? '';
         </select>
       </div>
       <div class="field">
-        <label for="goalTarget">Montant cible (€)</label>
-        <input type="number" id="goalTarget" min="1" step="1" required>
+        <label for="cible_objectif">Montant cible (€)</label>
+        <input type="number" id="cible_objectif" min="1" step="1" required>
       </div>
       <div class="field">
-        <label for="goalDeadline">Échéance (optionnel)</label>
-        <input type="date" id="goalDeadline">
+        <label for="echeance_objectif">Échéance (optionnel)</label>
+        <input type="date" id="echeance_objectif">
       </div>
       <button type="submit" class="btn primary">Créer l'objectif</button>
     </form>
 
-    <ul id="goalsList" class="goals-list"></ul>
+    <ul id="liste_objectifs" class="goals-list"></ul>
   </section>
 
   <!-- DEFIS -->
@@ -253,29 +253,29 @@ $userEmail = $_SESSION['user_email'] ?? '';
     <div class="panel-header">
       <h2>Défis d'épargne</h2>
       <p class="subtitle">Comme à l'entraînement : un défi validé, c'est une répétition de plus vers l'objectif.</p>
-      <button class="btn primary" id="newChallengeBtn">
+      <button class="btn primary" id="bouton_nouveau_defi">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nouveau défi
       </button>
     </div>
 
-    <form id="challengeForm" class="card form-grid" hidden>
+    <form id="formulaire_defi" class="card form-grid" hidden>
       <div class="field">
-        <label for="challengeTitle">Titre du défi</label>
-        <input type="text" id="challengeTitle" placeholder="Ex : Semaine sans dépense superflue" required>
+        <label for="titre_defi">Titre du défi</label>
+        <input type="text" id="titre_defi" placeholder="Ex : Semaine sans dépense superflue" required>
       </div>
       <div class="field">
-        <label for="challengeDescription">Description (optionnel)</label>
-        <input type="text" id="challengeDescription" placeholder="Ex : Ne rien dépenser en extra pendant 7 jours">
+        <label for="description_defi">Description (optionnel)</label>
+        <input type="text" id="description_defi" placeholder="Ex : Ne rien dépenser en extra pendant 7 jours">
       </div>
       <div class="field">
-        <label for="challengeTargetDays">Durée (jours)</label>
-        <input type="number" id="challengeTargetDays" min="1" step="1" required>
+        <label for="jours_cible_defi">Durée (jours)</label>
+        <input type="number" id="jours_cible_defi" min="1" step="1" required>
       </div>
       <button type="submit" class="btn primary">Créer le défi</button>
     </form>
 
-    <ul id="challengesList" class="challenges-list"></ul>
+    <ul id="liste_defis" class="challenges-list"></ul>
   </section>
 
 </main>
@@ -284,7 +284,7 @@ $userEmail = $_SESSION['user_email'] ?? '';
   <p>Cadence — l'application budget pensée pour les athlètes de haut niveau.</p>
 </footer>
 
-<div id="toast" class="toast" hidden></div>
+<div id="notification" class="toast" hidden></div>
 
 <script src="scripts/app.js" defer></script>
 </body>

@@ -8,28 +8,28 @@ session_start();
 
 require __DIR__ . '/reponse.php';
 
-$body = json_decode(file_get_contents('php://input'), true);
-$body = is_array($body) ? $body : [];
+$corps = json_decode(file_get_contents('php://input'), true);
+$corps = is_array($corps) ? $corps : [];
 
-$email = strtolower(trim((string) ($body['email'] ?? '')));
-$password = (string) ($body['password'] ?? '');
+$email = strtolower(trim((string) ($corps['email'] ?? '')));
+$mot_de_passe = (string) ($corps['mot_de_passe'] ?? '');
 
 try {
     require __DIR__ . '/configuration.php';
 
-    $stmt = $pdo->prepare('SELECT id, password_hash FROM users WHERE email = ?');
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $requete = $pdo->prepare('SELECT id, mot_de_passe FROM utilisateurs WHERE email = ?');
+    $requete->execute([$email]);
+    $utilisateur = $requete->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user || !password_verify($password, $user['password_hash'])) {
-        respond(['error' => 'Email ou mot de passe incorrect'], 401);
+    if (!$utilisateur || !password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
+        repondre(['erreur' => 'Email ou mot de passe incorrect'], 401);
     }
 
-    $_SESSION['user_id'] = (int) $user['id'];
-    $_SESSION['user_email'] = $email;
+    $_SESSION['id_utilisateur'] = (int) $utilisateur['id'];
+    $_SESSION['email_utilisateur'] = $email;
 
-    respond(['success' => true]);
+    repondre(['succes' => true]);
 } catch (Throwable $e) {
-    error_log('[cadence] login: ' . $e->getMessage());
-    respond(['error' => "Erreur serveur : impossible de joindre la base de données. Vérifie que MySQL est démarré."], 500);
+    error_log('[cadence] connexion : ' . $e->getMessage());
+    repondre(['erreur' => "Erreur serveur : impossible de joindre la base de données. Vérifie que MySQL est démarré."], 500);
 }

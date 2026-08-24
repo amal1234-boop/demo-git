@@ -1,35 +1,35 @@
-const form = document.getElementById('registerForm');
-const errorBox = document.getElementById('formError');
+const formulaire = document.getElementById('formulaire_inscription');
+const boiteErreur = document.getElementById('erreur_formulaire');
 
-form.addEventListener('submit', async (e) => {
+formulaire.addEventListener('submit', async (e) => {
   e.preventDefault();
-  errorBox.hidden = true;
+  boiteErreur.hidden = true;
 
-  const password = document.getElementById('password').value;
-  const passwordConfirm = document.getElementById('passwordConfirm').value;
-  if (password !== passwordConfirm) {
-    errorBox.textContent = 'Les mots de passe ne correspondent pas.';
-    errorBox.hidden = false;
+  const mot_de_passe = document.getElementById('mot_de_passe').value;
+  const confirmation_mot_de_passe = document.getElementById('confirmation_mot_de_passe').value;
+  if (mot_de_passe !== confirmation_mot_de_passe) {
+    boiteErreur.textContent = 'Les mots de passe ne correspondent pas.';
+    boiteErreur.hidden = false;
     return;
   }
 
-  const payload = {
-    name: document.getElementById('name').value.trim(),
+  const donnees = {
+    nom: document.getElementById('nom').value.trim(),
     email: document.getElementById('email').value.trim(),
-    password,
+    mot_de_passe,
   };
 
   try {
     const res = await fetch('serveur/inscription.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(donnees),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || 'Inscription impossible pour le moment.');
+    if (!res.ok) throw new Error(data.erreur || 'Inscription impossible pour le moment.');
     window.location.href = 'app.php';
   } catch (err) {
-    errorBox.textContent = err.message;
-    errorBox.hidden = false;
+    boiteErreur.textContent = err.message;
+    boiteErreur.hidden = false;
   }
 });
