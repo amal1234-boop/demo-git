@@ -6,4 +6,4 @@ $_SESSION = [];
 session_destroy();
 
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode(['success' => true]);
+echo json_encode(['succes' => true]);

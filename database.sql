@@ -6,50 +6,50 @@ CREATE DATABASE IF NOT EXISTS `cadence` CHARACTER SET utf8mb4 COLLATE utf8mb4_un
 USE `cadence`;
 
 -- Un compte par athlète : email + mot de passe haché (jamais en clair).
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS utilisateurs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    name VARCHAR(255),
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    mot_de_passe VARCHAR(255) NOT NULL,
+    nom VARCHAR(255),
+    date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Revenus et dépenses, rattachés à un compte via user_id.
+-- Revenus et dépenses, rattachés à un compte via id_utilisateur.
 CREATE TABLE IF NOT EXISTS transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    id_utilisateur INT NOT NULL,
     type ENUM('revenu','depense') NOT NULL,
-    category VARCHAR(100) NOT NULL,
-    label VARCHAR(255) NOT NULL,
-    amount DOUBLE NOT NULL,
+    categorie VARCHAR(100) NOT NULL,
+    libelle VARCHAR(255) NOT NULL,
+    montant DOUBLE NOT NULL,
     date DATE NOT NULL,
     note TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- Objectifs d'épargne (fonds de reconversion, fonds blessure, projet...).
-CREATE TABLE IF NOT EXISTS goals (
+CREATE TABLE IF NOT EXISTS objectifs (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    category VARCHAR(50) NOT NULL,
-    target_amount DOUBLE NOT NULL,
-    current_amount DOUBLE NOT NULL DEFAULT 0,
-    deadline DATE NULL,
-    icon VARCHAR(50),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    id_utilisateur INT NOT NULL,
+    nom VARCHAR(255) NOT NULL,
+    categorie VARCHAR(50) NOT NULL,
+    montant_cible DOUBLE NOT NULL,
+    montant_actuel DOUBLE NOT NULL DEFAULT 0,
+    echeance DATE NULL,
+    icone VARCHAR(50),
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- Défis d'épargne façon entraînement (séries de jours à valider).
-CREATE TABLE IF NOT EXISTS challenges (
+CREATE TABLE IF NOT EXISTS defis (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
+    id_utilisateur INT NOT NULL,
+    titre VARCHAR(255) NOT NULL,
     description TEXT,
-    target_days INT NOT NULL,
-    progress_days INT NOT NULL DEFAULT 0,
-    status ENUM('actif','termine') NOT NULL DEFAULT 'actif',
-    last_checkin DATE NULL,
+    jours_cible INT NOT NULL,
+    jours_valides INT NOT NULL DEFAULT 0,
+    statut ENUM('actif','termine') NOT NULL DEFAULT 'actif',
+    dernier_pointage DATE NULL,
     badge VARCHAR(50),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;

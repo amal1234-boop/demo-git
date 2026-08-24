@@ -1,26 +1,26 @@
-const form = document.getElementById('loginForm');
-const errorBox = document.getElementById('formError');
+const formulaire = document.getElementById('formulaire_connexion');
+const boiteErreur = document.getElementById('erreur_formulaire');
 
-form.addEventListener('submit', async (e) => {
+formulaire.addEventListener('submit', async (e) => {
   e.preventDefault();
-  errorBox.hidden = true;
+  boiteErreur.hidden = true;
 
-  const payload = {
+  const donnees = {
     email: document.getElementById('email').value.trim(),
-    password: document.getElementById('password').value,
+    mot_de_passe: document.getElementById('mot_de_passe').value,
   };
 
   try {
     const res = await fetch('serveur/connexion.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(donnees),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || 'Connexion impossible pour le moment.');
+    if (!res.ok) throw new Error(data.erreur || 'Connexion impossible pour le moment.');
     window.location.href = 'app.php';
   } catch (err) {
-    errorBox.textContent = err.message;
-    errorBox.hidden = false;
+    boiteErreur.textContent = err.message;
+    boiteErreur.hidden = false;
   }
 });
