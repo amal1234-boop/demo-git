@@ -103,9 +103,9 @@ async function api(action, { method = 'GET', body } = {}) {
   }
   const res = await fetch(url, opts);
   if (res.status === 401) {
-    // Session expirée ou absente : plus la peine de continuer, direction connexion.
+    // Session expirée ou absente : on redirige vers la connexion.
     window.location.href = 'connexion.html';
-    return new Promise(() => {}); // stoppe la chaîne d'appels en attente sans lever d'erreur inutile
+    return {};
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'Erreur inconnue');
@@ -223,12 +223,10 @@ function renderVersus(summary, prevSummary) {
 }
 
 async function loadPerformance() {
-  const [summary, prevSummary, goals, challenges] = await Promise.all([
-    api('summary', { body: { month: currentMonth } }),
-    api('summary', { body: { month: getPrevMonth(currentMonth) } }),
-    api('goals'),
-    api('challenges'),
-  ]);
+  const summary = await api('summary', { body: { month: currentMonth } });
+  const prevSummary = await api('summary', { body: { month: getPrevMonth(currentMonth) } });
+  const goals = await api('goals');
+  const challenges = await api('challenges');
 
   // Score composite : épargne du mois (40%), avancement des objectifs (35%),
   // assiduité sur les défis (25%) — pondération choisie pour que l'épargne
@@ -477,7 +475,11 @@ el.logoutBtn.addEventListener('click', async () => {
 
 // ---------- Init ----------
 async function refreshAll() {
-  await Promise.all([loadDashboard(), loadTransactions(), loadGoals(), loadChallenges(), loadPerformance()]);
+  await loadDashboard();
+  await loadTransactions();
+  await loadGoals();
+  await loadChallenges();
+  await loadPerformance();
 }
 
 el.monthSelector.addEventListener('change', async (e) => {

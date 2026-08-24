@@ -19,11 +19,12 @@ function bodyJson(): array
     return is_array($decoded) ? $decoded : [];
 }
 
-function fetchOwnedById(PDO $pdo, string $table, int $id, int $userId): array|false
+function fetchOwnedById(PDO $pdo, string $table, int $id, int $userId): ?array
 {
     $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE id = ? AND user_id = ?");
     $stmt->execute([$id, $userId]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row === false ? null : $row;
 }
 
 try {
