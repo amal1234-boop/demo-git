@@ -8,9 +8,9 @@
   width: 100%;
   max-width: 380px;
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
   padding: 2rem;
 }
 .auth-card h1 { font-size: 1.4rem; margin: 0 0 .3rem; text-align: center; }
