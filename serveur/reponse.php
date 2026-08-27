@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-function repondre($donnees, int $code = 200): void
+function repondre($donnees, $code = 200)
 {
     http_response_code($code);
     header('Content-Type: application/json; charset=utf-8');

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
@@ -39,7 +38,7 @@ try {
     $_SESSION['email_utilisateur'] = $email;
 
     repondre(['succes' => true]);
-} catch (Throwable $e) {
+} catch (Exception $e) {
     error_log('[cadence] inscription : ' . $e->getMessage());
     repondre(['erreur' => "Erreur serveur : impossible de joindre la base de données. Vérifie que MySQL est démarré."], 500);
 }

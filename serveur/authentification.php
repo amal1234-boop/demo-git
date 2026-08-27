@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-function exiger_connexion(): int
+function exiger_connexion()
 {
     if (empty($_SESSION['id_utilisateur'])) {
         http_response_code(401);

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
@@ -9,7 +8,7 @@ session_start();
 
 require __DIR__ . '/reponse.php';
 
-function corps_json(): array
+function corps_json()
 {
     $brut = file_get_contents('php://input');
     if ($brut === false || $brut === '') {
@@ -19,7 +18,7 @@ function corps_json(): array
     return is_array($decode) ? $decode : [];
 }
 
-function recuperer_par_id(PDO $pdo, string $table, int $id, int $id_utilisateur): ?array
+function recuperer_par_id($pdo, $table, $id, $id_utilisateur)
 {
     $requete = $pdo->prepare("SELECT * FROM {$table} WHERE id = ? AND id_utilisateur = ?");
     $requete->execute([$id, $id_utilisateur]);
@@ -190,7 +189,7 @@ try {
         default:
             repondre(['erreur' => 'Action inconnue'], 400);
     }
-} catch (Throwable $e) {
+} catch (Exception $e) {
     error_log('[cadence] ' . $e->getMessage());
     repondre(['erreur' => 'Erreur serveur, réessaie dans un instant.'], 500);
 }
