@@ -61,16 +61,19 @@
 .section-head h2 { font-size: 1.7rem; margin: 0 0 .5rem; }
 .section-head p { color: var(--text-muted); margin: 0; font-size: .95rem; }
 
-/* Points de douleur */
-.pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
-.pain-card { background: var(--card); border: var(--card-border); border-radius: var(--card-radius); padding: 1.5rem; box-shadow: var(--card-shadow); }
+/* Points de douleur : liste verticale séparée par des filets, pas des
+   cards côte à côte. */
+.pain-grid { display: flex; flex-direction: column; }
+.pain-card { background: transparent; border: none; padding: 1.5rem 0; }
+.pain-grid > .pain-card + .pain-card { border-top: 1px solid var(--border); }
 .pain-card .icon { width: 1.6rem; height: 1.6rem; color: var(--red); display: block; margin-bottom: .75rem; }
 .pain-card h3 { margin: 0 0 .4rem; font-size: 1.02rem; }
 .pain-card p { margin: 0; color: var(--text-muted); font-size: .88rem; line-height: 1.5; }
 
-/* Grille de fonctionnalités */
-.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; list-style: none; margin: 0; padding: 0; }
-.feature-card { background: var(--card); border: var(--card-border); border-radius: var(--card-radius); padding: 1.5rem; box-shadow: var(--card-shadow); }
+/* Grille de fonctionnalités : même principe, une liste plutôt qu'une grille. */
+.feature-grid { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; }
+.feature-card { background: transparent; border: none; padding: 1.25rem 0; }
+.feature-grid > .feature-card + .feature-card { border-top: 1px solid var(--border); }
 .feature-card .icon { width: 1.5rem; height: 1.5rem; color: var(--primary); display: block; margin-bottom: .6rem; }
 .feature-card h3 { margin: 0 0 .3rem; font-size: .95rem; }
 .feature-card p { margin: 0; color: var(--text-muted); font-size: .84rem; line-height: 1.45; }

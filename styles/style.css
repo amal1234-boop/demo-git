@@ -15,10 +15,6 @@
   --radius: 0;
   --gap-md: 1rem;
   --shadow-sm: 3px 3px 0 rgba(22, 24, 33, .08);
-  /* Style dédié aux cards de contenu : coins légèrement arrondis, ombre à peine visible. */
-  --card-radius: 6px;
-  --card-border: 1px solid var(--border);
-  --card-shadow: 0 1px 2px rgba(16, 24, 40, .05);
 }
 
 /* Reset / base */
@@ -93,7 +89,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .panel-header h2 { margin: 0; }
 .subtitle { margin: .25rem 0 0; color: var(--text-muted); font-size: .9rem; }
 
-.dashboard-banner { position: relative; overflow: hidden; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.dashboard-banner { position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
 .dashboard-illustration { display: block; width: 100%; height: auto; opacity: .85; }
 .dashboard-banner .panel-header {
   position: absolute;
@@ -108,28 +104,47 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 .month-picker { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--text-muted); }
 .month-picker input { background: var(--bg-alt); border: 1px solid var(--border); color: var(--text); padding: .4rem .6rem; }
 
-.dashboard-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--gap-md); }
+.dashboard-columns { display: flex; flex-direction: column; }
 
-/* Cartes (base commune) */
+/* Cartes (base commune) : pas de boîte fermée ni d'ombre — juste un
+   séparateur fin entre blocs, dans l'esprit d'une liste structurée plutôt
+   que d'une grille de cards. */
 .card, .stat-card, .goal-card, .challenge-card {
-  background: var(--card);
-  border: var(--card-border);
-  border-radius: var(--card-radius);
-  padding: 1.5rem;
-  box-shadow: var(--card-shadow);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
 }
-.card { margin-bottom: var(--gap-md); }
 .card h3 { margin-top: 0; display: flex; align-items: center; gap: .5rem; }
 
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--gap-md); margin: 0 0 1.5rem; }
+/* Tout bloc de premier niveau dans un onglet est séparé du suivant par un
+   simple filet, jamais par un encadré. */
+.tab-panel > * + *,
+.dashboard-columns > .card + .card {
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+  padding-top: 2rem;
+}
+
+.stat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.stat-grid > .stat-card {
+  flex: 1 1 150px;
+  padding: 0 1.5rem;
+}
+.stat-grid > .stat-card:first-child { padding-left: 0; }
+.stat-grid > .stat-card + .stat-card { border-left: 1px solid var(--border); border-top: none; }
 .stat-grid dt, .stat-grid dd { margin: 0; }
-.stat-card { border-top: 3px solid var(--border); }
-.stat-card.revenu { border-top-color: var(--positive); }
-.stat-card.depense { border-top-color: var(--red); }
-.stat-card.solde { border-top-color: var(--blue); }
-.stat-card.taux { border-top-color: var(--primary); }
 .stat-label { display: block; font-size: .8rem; color: var(--text-muted); margin-bottom: .35rem; }
 .stat-value { display: block; font-size: 1.6rem; font-weight: 700; }
+.stat-card.revenu .stat-value { color: var(--positive); }
+.stat-card.depense .stat-value { color: var(--red); }
+.stat-card.solde .stat-value { color: var(--blue); }
+.stat-card.taux .stat-value { color: var(--primary); }
 
 /* Boutons */
 .btn {
@@ -232,25 +247,28 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .versus-row { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin: .75rem 0; flex-wrap: wrap; }
 .versus-side {
   display: flex; flex-direction: column; align-items: center; gap: .3rem;
-  padding: .9rem 1.5rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  padding: 0 1.5rem;
   min-width: 140px;
 }
-.versus-side.winner { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary) inset; }
+.versus-side.winner .versus-value { color: var(--primary); }
 .versus-label { font-size: .8rem; color: var(--text-muted); }
 .versus-value { font-size: 1.5rem; font-weight: 800; }
 .versus-vs { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
 
-/* Listes objectifs et défis */
+/* Listes objectifs et défis : une liste verticale séparée par des filets,
+   pas une grille de cards côte à côte. */
 .goals-list, .challenges-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: var(--gap-md);
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
 }
+.goals-list > li + li,
+.challenges-list > li + li {
+  border-top: 1px solid var(--border);
+}
+.goal-card, .challenge-card { padding: 1.5rem 0; }
 
 .goal-card h4 { margin: 0 0 .2rem; display: flex; align-items: center; gap: .5rem; }
 .goal-card h4 .icon { color: var(--primary); }
