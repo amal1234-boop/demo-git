@@ -92,14 +92,19 @@ function notifier(msg) {
   notifier._t = setTimeout(() => { el.notification.hidden = true; }, 2500);
 }
 
-async function api(action, { method = 'GET', body } = {}) {
-  const url = method === 'GET'
-    ? `${API}?action=${action}${body ? '&' + new URLSearchParams(body) : ''}`
-    : `${API}?action=${action}`;
-  const options = { method };
-  if (method !== 'GET') {
+async function api(action, methode = 'GET', corps) {
+  let url = `${API}?action=${action}`;
+  if (methode === 'GET') {
+    if (corps) {
+      for (const cle in corps) {
+        url += '&' + encodeURIComponent(cle) + '=' + encodeURIComponent(corps[cle]);
+      }
+    }
+  }
+  const options = { method: methode };
+  if (methode !== 'GET') {
     options.headers = { 'Content-Type': 'application/json' };
-    options.body = JSON.stringify(body || {});
+    options.body = JSON.stringify(corps || {});
   }
   const res = await fetch(url, options);
   if (res.status === 401) {
@@ -114,10 +119,10 @@ async function api(action, { method = 'GET', body } = {}) {
 
 // ---------- Onglets ----------
 el.nav_onglets.addEventListener('click', (e) => {
-  const bouton = e.target.closest('.tab-btn');
-  if (!bouton) return;
+  const bouton = e.target;
+  if (!bouton.classList.contains('tab-btn')) return;
   document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === bouton));
-  document.querySelectorAll('.tab-panel').forEach((p) => p.classList.toggle('active', p.id === bouton.dataset.tab));
+  document.querySelectorAll('.tab-panel').forEach((p) => p.classList.toggle('active', p.id === bouton.getAttribute('data-tab')));
 });
 
 // ---------- Tableau de bord ----------
@@ -125,7 +130,7 @@ async function chargerTableauBord() {
   const [a, m] = mois_courant.split('-');
   el.libelle_mois.textContent = new Date(Number(a), Number(m) - 1, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 
-  const resume = await api('resume', { body: { mois: mois_courant } });
+  const resume = await api('resume', 'GET', { mois: mois_courant });
 
   el.stat_revenus.textContent = fmtEuro(resume.revenus);
   el.stat_depenses.textContent = fmtEuro(resume.depenses);
@@ -137,7 +142,10 @@ async function chargerTableauBord() {
     el.categories_vide.hidden = false;
   } else {
     el.categories_vide.hidden = true;
-    const max = Math.max(...resume.depenses_par_categorie.map((c) => c.total));
+    let max = 0;
+    for (const c of resume.depenses_par_categorie) {
+      if (c.total > max) max = c.total;
+    }
     for (const c of resume.depenses_par_categorie) {
       const ligne = document.createElement('li');
       ligne.className = 'bar-row';
@@ -160,8 +168,8 @@ async function chargerTableauBord() {
 
 // ---------- Performance features (forme, blessure, versus) ----------
 function moisPrecedent(mois) {
-  const [a, m] = mois.split('-').map(Number);
-  const d = new Date(a, m - 2, 1);
+  const [a, m] = mois.split('-');
+  const d = new Date(Number(a), Number(m) - 2, 1);
   return d.toISOString().slice(0, 7);
 }
 
@@ -223,8 +231,8 @@ function afficherVersus(resume, resumePrecedent) {
 }
 
 async function chargerPerformance() {
-  const resume = await api('resume', { body: { mois: mois_courant } });
-  const resumePrecedent = await api('resume', { body: { mois: moisPrecedent(mois_courant) } });
+  const resume = await api('resume', 'GET', { mois: mois_courant });
+  const resumePrecedent = await api('resume', 'GET', { mois: moisPrecedent(mois_courant) });
   const objectifs = await api('objectifs');
   const defis = await api('defis');
 
@@ -235,12 +243,18 @@ async function chargerPerformance() {
   const pctObjectifs = resume.objectifs_total_cible > 0
     ? Math.min(100, (resume.objectifs_total_epargne / resume.objectifs_total_cible) * 100)
     : 0;
-  const ratios = defis.map((d) => Math.min(1, d.jours_valides / d.jours_cible));
-  const scoreDefis = ratios.length ? (ratios.reduce((a, b) => a + b, 0) / ratios.length) * 100 : 0;
+  let sommeRatios = 0;
+  for (const d of defis) {
+    sommeRatios += Math.min(1, d.jours_valides / d.jours_cible);
+  }
+  const scoreDefis = defis.length ? (sommeRatios / defis.length) * 100 : 0;
   const scoreForme = Math.round(scoreEpargne * 0.4 + pctObjectifs * 0.35 + scoreDefis * 0.25);
   afficherJaugeForme(scoreForme);
 
-  const matelas = objectifs.reduce((somme, o) => somme + o.montant_actuel, 0);
+  let matelas = 0;
+  for (const o of objectifs) {
+    matelas += o.montant_actuel;
+  }
   afficherAutonomie(matelas, resume.depenses);
 
   afficherVersus(resume, resumePrecedent);
@@ -248,11 +262,17 @@ async function chargerPerformance() {
 
 // ---------- Transactions ----------
 function rafraichirOptionsCategorie() {
-  el.categorie_operation.innerHTML = CATEGORIES[el.type_operation.value].map((c) => `<option value="${c}">${c}</option>`).join('');
+  el.categorie_operation.innerHTML = '';
+  for (const c of CATEGORIES[el.type_operation.value]) {
+    const option = document.createElement('option');
+    option.value = c;
+    option.textContent = c;
+    el.categorie_operation.appendChild(option);
+  }
 }
 
 async function chargerTransactions() {
-  const liste = await api('transactions', { body: { mois: mois_courant } });
+  const liste = await api('transactions', 'GET', { mois: mois_courant });
   el.corps_tableau_operations.innerHTML = '';
   el.operations_vide.hidden = liste.length !== 0;
 
@@ -272,7 +292,7 @@ async function chargerTransactions() {
   el.corps_tableau_operations.querySelectorAll('[data-suppr]').forEach((bouton) => {
     bouton.addEventListener('click', async () => {
       try {
-        await api('supprimer_transaction', { method: 'POST', body: { id: bouton.dataset.suppr } });
+        await api('supprimer_transaction', 'POST', { id: bouton.getAttribute('data-suppr') });
         notifier('Opération supprimée');
         await toutRafraichir();
       } catch (err) {
@@ -294,7 +314,7 @@ el.formulaire_operation.addEventListener('submit', async (e) => {
     date: el.date_operation.value,
   };
   try {
-    await api('ajouter_transaction', { method: 'POST', body: donnees });
+    await api('ajouter_transaction', 'POST', donnees);
     notifier('Opération ajoutée');
     e.target.reset();
     el.date_operation.value = new Date().toISOString().slice(0, 10);
@@ -318,7 +338,13 @@ async function proposerArrondi(montant) {
   if (!objectifs.length) return;
 
   arrondi_en_attente = ecart;
-  el.select_objectif_arrondi.innerHTML = objectifs.map((o) => `<option value="${o.id}">${o.nom}</option>`).join('');
+  el.select_objectif_arrondi.innerHTML = '';
+  for (const o of objectifs) {
+    const option = document.createElement('option');
+    option.value = o.id;
+    option.textContent = o.nom;
+    el.select_objectif_arrondi.appendChild(option);
+  }
   el.texte_arrondi.textContent =
     `Cette dépense arrondie à ${fmtEuro(arrondiA)} laisse ${fmtEuro(ecart)} d'écart. Transforme-le en épargne en un clic :`;
   el.carte_arrondi.hidden = false;
@@ -326,7 +352,7 @@ async function proposerArrondi(montant) {
 
 el.bouton_envoyer_arrondi.addEventListener('click', async () => {
   try {
-    await api('contribuer_objectif', { method: 'POST', body: { id: el.select_objectif_arrondi.value, montant: arrondi_en_attente } });
+    await api('contribuer_objectif', 'POST', { id: el.select_objectif_arrondi.value, montant: arrondi_en_attente });
     notifier(`+${fmtEuro(arrondi_en_attente)} envoyés vers ton objectif`);
     el.carte_arrondi.hidden = true;
     await toutRafraichir();
@@ -368,11 +394,12 @@ async function chargerObjectifs() {
 
   el.liste_objectifs.querySelectorAll('[data-ajout]').forEach((bouton) => {
     bouton.addEventListener('click', async () => {
-      const champ = el.liste_objectifs.querySelector(`[data-contrib="${bouton.dataset.ajout}"]`);
+      const idObjectif = bouton.getAttribute('data-ajout');
+      const champ = el.liste_objectifs.querySelector(`[data-contrib="${idObjectif}"]`);
       const montant = parseFloat(champ.value);
       if (!montant || montant <= 0) { notifier('Indique un montant valide'); return; }
       try {
-        await api('contribuer_objectif', { method: 'POST', body: { id: bouton.dataset.ajout, montant } });
+        await api('contribuer_objectif', 'POST', { id: idObjectif, montant: montant });
         notifier('Versement enregistré');
         champ.value = '';
         await toutRafraichir();
@@ -397,7 +424,7 @@ el.formulaire_objectif.addEventListener('submit', async (e) => {
     icone: CLES_ICONE_OBJECTIF[el.categorie_objectif.value] || 'cible',
   };
   try {
-    await api('ajouter_objectif', { method: 'POST', body: donnees });
+    await api('ajouter_objectif', 'POST', donnees);
     notifier('Objectif créé');
     e.target.reset();
     e.target.hidden = true;
@@ -414,9 +441,10 @@ async function chargerDefis() {
 
   for (const defi of defis) {
     const termine = defi.statut === 'termine';
-    const points = Array.from({ length: defi.jours_cible }, (_, i) =>
-      `<span class="streak-dot ${i < defi.jours_valides ? 'filled' : ''}"></span>`
-    ).join('');
+    let points = '';
+    for (let i = 0; i < defi.jours_cible; i++) {
+      points += `<span class="streak-dot ${i < defi.jours_valides ? 'filled' : ''}"></span>`;
+    }
 
     const li = document.createElement('li');
     li.innerHTML = `
@@ -435,7 +463,7 @@ async function chargerDefis() {
   el.liste_defis.querySelectorAll('[data-validation]').forEach((bouton) => {
     bouton.addEventListener('click', async () => {
       try {
-        const res = await api('valider_defi', { method: 'POST', body: { id: bouton.dataset.validation } });
+        const res = await api('valider_defi', 'POST', { id: bouton.getAttribute('data-validation') });
         notifier(res.defi.statut === 'termine' ? 'Défi terminé, bravo !' : 'Jour validé');
         await toutRafraichir();
       } catch (err) {
@@ -457,7 +485,7 @@ el.formulaire_defi.addEventListener('submit', async (e) => {
     jours_cible: parseInt(el.jours_cible_defi.value, 10),
   };
   try {
-    await api('ajouter_defi', { method: 'POST', body: donnees });
+    await api('ajouter_defi', 'POST', donnees);
     notifier('Défi créé');
     e.target.reset();
     e.target.hidden = true;
