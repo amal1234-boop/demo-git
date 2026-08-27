@@ -15,6 +15,10 @@
   --radius: 0;
   --gap-md: 1rem;
   --shadow-sm: 3px 3px 0 rgba(22, 24, 33, .08);
+  /* Style dédié aux cards de contenu : coins légèrement arrondis, ombre à peine visible. */
+  --card-radius: 6px;
+  --card-border: 1px solid var(--border);
+  --card-shadow: 0 1px 2px rgba(16, 24, 40, .05);
 }
 
 /* Reset / base */
@@ -109,10 +113,10 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 /* Cartes (base commune) */
 .card, .stat-card, .goal-card, .challenge-card {
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-sm);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
 }
 .card { margin-bottom: var(--gap-md); }
 .card h3 { margin-top: 0; display: flex; align-items: center; gap: .5rem; }
