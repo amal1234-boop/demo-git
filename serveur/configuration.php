@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 // Valeurs par défaut XAMPP/WAMP ; voir README pour les personnaliser.
 const HOTE_BDD = 'localhost';
