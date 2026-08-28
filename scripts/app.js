@@ -178,11 +178,11 @@ function afficherJaugeForme(score) {
   const decalage = circonference * (1 - Math.max(0, Math.min(100, score)) / 100);
   el.cercle_jauge_forme.style.strokeDashoffset = decalage;
 
-  let couleur = 'var(--positive)';
+  let couleur = '#0d9488';
   let libelle = 'Grande forme';
-  if (score < 40) { couleur = 'var(--red)'; libelle = 'Alerte fatigue financière'; }
-  else if (score < 60) { couleur = 'var(--warning)'; libelle = 'Rythme à travailler'; }
-  else if (score < 80) { couleur = 'var(--blue)'; libelle = 'Bonne dynamique'; }
+  if (score < 40) { couleur = '#e11d48'; libelle = 'Alerte fatigue financière'; }
+  else if (score < 60) { couleur = '#f59e0b'; libelle = 'Rythme à travailler'; }
+  else if (score < 80) { couleur = '#2563eb'; libelle = 'Bonne dynamique'; }
 
   el.cercle_jauge_forme.style.stroke = couleur;
   el.nombre_score_forme.textContent = score;
