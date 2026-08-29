@@ -4,7 +4,7 @@ form[hidden] { display: none; }
 
 body {
   margin: 0;
-  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background: radial-gradient(circle at top, #ffffff, #f5f6fb 70%);
   color: #161821;
   min-height: 100vh;
