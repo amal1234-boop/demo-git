@@ -1,18 +1,3 @@
-/*
- * NeoSecure - cyber_scan.c
- *
- * Mini-outil d'analyse textuelle : detecte des indices de compromission
- * dans un message (caracteres speciaux, chiffres, majuscules, mots cles)
- * et produit un rapport avec un score de suspicion.
- *
- * Contraintes respectees :
- * - tableau de char, pas de string.h
- * - parcours caractere par caractere
- * - detection de mots cles par comparaison caractere par caractere
- * - manipulation via pointeur *(ptr + i)
- * - fgets() a la place de gets()
- */
-
 #include <stdio.h>
 
 #define TAILLE_MAX 205
@@ -39,21 +24,18 @@ int main(void)
 
     fgets(message, TAILLE_MAX, stdin);
 
-    /* Calcul de la longueur reelle en cherchant le caractere nul */
     longueur = 0;
     while (message[longueur] != '\0')
     {
         longueur++;
     }
 
-    /* Suppression du retour a la ligne final laisse par fgets() */
     if (longueur > 0 && message[longueur - 1] == '\n')
     {
         message[longueur - 1] = '\0';
         longueur--;
     }
 
-    /* ===== Parcours caractere par caractere via un pointeur ===== */
     ptr = message;
 
     for (i = 0; i < longueur; i++)
@@ -77,7 +59,6 @@ int main(void)
             nb_majuscules++;
         }
 
-        /* Detection du mot cle "hack" (insensible a la casse) */
         if ((i + 3 < longueur) &&
             (c == 'h' || c == 'H') &&
             (*(ptr + i + 1) == 'a' || *(ptr + i + 1) == 'A') &&
@@ -87,7 +68,6 @@ int main(void)
             nb_hack++;
         }
 
-        /* Detection du mot cle "root" (insensible a la casse) */
         if ((i + 3 < longueur) &&
             (c == 'r' || c == 'R') &&
             (*(ptr + i + 1) == 'o' || *(ptr + i + 1) == 'O') &&
@@ -97,7 +77,6 @@ int main(void)
             nb_root++;
         }
 
-        /* Detection du mot cle "admin" (insensible a la casse) */
         if ((i + 4 < longueur) &&
             (c == 'a' || c == 'A') &&
             (*(ptr + i + 1) == 'd' || *(ptr + i + 1) == 'D') &&
@@ -111,10 +90,8 @@ int main(void)
 
     nb_motscles = nb_hack + nb_root + nb_admin;
 
-    /* ===== Calcul du score de suspicion ===== */
     score = (nb_speciaux * 2) + (nb_chiffres * 1) + (nb_majuscules * 1) + (nb_motscles * 15);
 
-    /* ===== Rapport final ===== */
     printf("\n========== RAPPORT D'ANALYSE NEOSECURE ==========\n");
     printf("Longueur du message analyse   : %d caracteres\n", longueur);
     printf("Caracteres speciaux (@#%%&*!?) : %d\n", nb_speciaux);
