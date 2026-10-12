@@ -1,0 +1,6 @@
+Video_courte 2 80
+Meme 1 35
+Story 1 25
+Interview 3 100
+Sondage 1 30
+Tutoriel 2 70
