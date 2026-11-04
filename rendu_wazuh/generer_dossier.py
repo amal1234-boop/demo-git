@@ -89,11 +89,10 @@ def runs_riches(p, texte, taille=None):
         if morceau.startswith("**"):
             r = p.add_run(morceau[2:-2]); r.bold = True
         elif morceau.startswith("`"):
-            r = p.add_run(morceau[1:-1]); r.font.name = "Consolas"
-            r.font.size = Pt((taille or 10.5) - 1)
+            r = p.add_run(morceau[1:-1])
         else:
             r = p.add_run(morceau)
-        if taille and not morceau.startswith("`"):
+        if taille:
             r.font.size = Pt(taille)
     return p
 
@@ -130,20 +129,14 @@ def code(texte, titre=None):
         p.paragraph_format.space_after = Pt(1)
         p.paragraph_format.keep_with_next = True
         r = p.add_run(titre); r.italic = True; r.font.size = Pt(9); r.font.color.rgb = GRIS
-    t = doc.add_table(rows=1, cols=1)
-    t.alignment = WD_TABLE_ALIGNMENT.CENTER
-    c = t.cell(0, 0)
-    ombrer(c, "F2F2F2"); bordures(c, "D0D0D0"); marges_cellule(c); insecable(t)
-    c.paragraphs[0].text = ""
     lignes = texte.strip("\n").split("\n")
     for i, l in enumerate(lignes):
-        p = c.paragraphs[0] if i == 0 else c.add_paragraph()
-        p.paragraph_format.space_after = Pt(0)
-        p.paragraph_format.line_spacing = 1.0
-        r = p.add_run(l if l else " ")
-        r.font.name = "Consolas"; r._element.rPr.rFonts.set(qn("w:hAnsi"), "Consolas")
-        r.font.size = Pt(8.5)
-    espace(6)
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(6 if i == len(lignes) - 1 else 0)
+        p.paragraph_format.keep_with_next = i < len(lignes) - 1
+        retrait = len(l) - len(l.lstrip(" "))
+        p.paragraph_format.left_indent = Cm(0.35 * retrait)
+        p.add_run(l.strip())
 
 
 def commandes(texte, titre=None):
@@ -213,6 +206,8 @@ def image(fichier, legende, largeur_cm=15.5):
     p.add_run().add_picture(os.path.join(CAP, fichier), width=Cm(largeur_cm))
     lp = doc.add_paragraph()
     lp.paragraph_format.space_after = Pt(8)
+    if not legende:
+        p.paragraph_format.space_after = Pt(8); lp._p.getparent().remove(lp._p); return
     r = lp.add_run(legende); r.italic = True; r.font.size = Pt(9); r.font.color.rgb = GRIS
 
 
@@ -296,8 +291,6 @@ for i in range(2):
     for j in range(4):
         c = ft.cell(i, j)
         tcPr = c._tc.get_or_add_tcPr(); bd = OxmlElement("w:tcBorders")
-        if i == 0 and j < 3:
-            e = OxmlElement("w:top"); e.set(qn("w:val"), "single"); e.set(qn("w:sz"), "18"); e.set(qn("w:color"), "4F81BD"); bd.append(e)
         tcPr.append(bd)
         p = c.paragraphs[0]; p.paragraph_format.space_after = Pt(0)
         if textes[i][j]:
@@ -341,7 +334,7 @@ tableau(["Détection", "MITRE", "Règle d’alerte", "Réponse active"], [
 ], [5.5, 2.5, 4, 4])
 encadre(["Tests réalisés **uniquement sur mes machines de laboratoire**, dans un **réseau isolé**.",
          "Accéder frauduleusement à un système d’information est un délit (**art. 323-1 et suivants du Code pénal**)."],
-        "orange", "ATTENTION — Cadre légal :")
+        "orange", "ATTENTION : cadre légal.")
 
 # ---------- 2 ----------
 titre("2. Schéma d’architecture")
@@ -350,7 +343,7 @@ tableau(["Machine", "Rôle", "Adresse IP"], [
     ["Agent client1", "Victime : Apache + agent Wazuh", "192.168.213.134"],
     ["Attaquante", "Lance ab, curl, nmap", "192.168.213.159"],
 ], [4, 8, 4])
-image("schema_reseau.png", "Schéma d’architecture du lab", 15.5)
+image("schema_reseau.png", None, 15.5)
 
 # ---------- 3 ----------
 titre("3. Préparation du lab")
@@ -362,7 +355,7 @@ code("/var/ossec/bin/agent_control -l")
 image("agent_actif_100201.png", "Configuration validée sans avertissement, 10 alertes 100201 enregistrées, agent client1 (ID 003) actif", 13)
 
 # ---------- 4 ----------
-titre("4. Détection 1 — Déni de service HTTP (MITRE T1499)")
+titre("4. Détection 1 : Déni de service HTTP (MITRE T1499)")
 titre("Explication", 2)
 para("L’attaquant envoie un très grand nombre de requêtes pour saturer le serveur web. "
      "On alerte quand une même IP dépasse **100 requêtes en 10 secondes**, puis on la bloque.")
@@ -397,27 +390,27 @@ code("systemctl restart wazuh-manager")
 image("dos_regle_chargee.png", "Règle 100200 chargée dans local_rules.xml", 11)
 titre("Avant", 2)
 para("Une requête normale ne déclenche aucune alerte (règle 31108, niveau 0).")
-image("dos_avant_logtest.png", "Avant : requête simple → règle 31108, niveau 0", 12)
+image("dos_avant_logtest.png", "Avant : une requête simple tombe sur la règle 31108 (niveau 0)", 12)
 titre("Pendant", 2)
 etapes(["Depuis l’attaquante, lancer l’attaque :"])
 code("ab -n 5000 -c 100 http://192.168.213.134/")
 etapes(["Sur le serveur, suivre les alertes :"])
 code('tail -f /var/ossec/logs/alerts/alerts.log | grep -E "100200|100201"')
 image("dos_pendant_ab.png", "Pendant : ab en cours, les alertes défilent sur le serveur", 13)
-capture_a_inserer("Capture C — Alerte 100201 (niveau 10, T1499) dans le dashboard (à réaliser)")
+capture_a_inserer("Capture C : Alerte 100201 (niveau 10, T1499) dans le dashboard (à réaliser)")
 titre("Après", 2)
 image("dos_apres_dashboard.png", "Après : pic d’environ 4 400 événements sur client1", 15.5)
-capture_a_inserer("Capture D — Threat Hunting client1 : 4 418 alertes, groupes attack / web / dos (envoyée, à renvoyer en fichier)")
-image("dos_apres_651.png", "Après : 22 alertes 651 « Host Blocked by firewall-drop » : l’IP a bien été bloquée", 15.5)
+capture_a_inserer("Capture D : Threat Hunting client1 : 4 418 alertes, groupes attack / web / dos (envoyée, à renvoyer en fichier)")
+image("dos_apres_651.png", "Après : 22 alertes 651 « Host Blocked by firewall-drop », l’IP a bien été bloquée", 15.5)
 para("Vérifier le blocage sur l’agent :")
 code("iptables -L INPUT -n | grep 192.168.213.159")
-capture_a_inserer("Capture F — Règle DROP pour 192.168.213.159 dans iptables sur l’agent (à réaliser)")
+capture_a_inserer("Capture F : Règle DROP pour 192.168.213.159 dans iptables sur l’agent (à réaliser)")
 titre("Analyse", 2)
 para("Règle **100201**, niveau **10**, MITRE **T1499**, IP source **192.168.213.159**. "
      "Après correction du doublon, **10 alertes 100201** ont été enregistrées. Elle déclenche `firewall-drop` : l’IP est bloquée 180 s (alerte **651**).")
 
 # ---------- 5 ----------
-titre("5. Détection 2 — Injection SQL (MITRE T1190)")
+titre("5. Détection 2 : Injection SQL (MITRE T1190)")
 titre("Explication", 2)
 para("L’attaquant place du code SQL dans un paramètre d’URL pour interroger la base de données. "
      "Wazuh le détecte **nativement** : aucune configuration à ajouter.")
@@ -426,14 +419,14 @@ etapes(["Depuis l’attaquante, envoyer la requête :"])
 code('curl -XGET "http://192.168.213.134/users/?id=SELECT+*+FROM+users"')
 image("sqli_pendant_curl.png", "Pendant : requête curl avec injection SQL, Apache répond 404", 14)
 etapes(["Dans le dashboard (Threat Hunting), filtrer : `rule.id:31103`"])
-image("sqli_apres_31103.png", "Après : rule.id:31103 → 1 alerte, aucune de niveau ≥ 12", 15.5)
+image("sqli_apres_31103.png", "Après : rule.id:31103, 1 alerte, aucune de niveau 12 ou plus", 15.5)
 titre("Analyse", 2)
 para("Règle **31103** « SQL injection attempt », niveau **7**, MITRE **T1190**. "
      "La règle **31106** (niveau 12) ne s’est pas déclenchée car le serveur a répondu **404** : "
      "l’attaque est détectée mais n’a pas réussi.")
 
 # ---------- 6 ----------
-titre("6. Détection 3 — Balayage de ports Nmap (MITRE T1046)")
+titre("6. Détection 3 : Balayage de ports Nmap (MITRE T1046)")
 titre("Explication", 2)
 para("L’attaquant teste de nombreux ports pour trouver les services ouverts. "
      "Le pare-feu de l’agent journalise chaque connexion ; on alerte au-delà de **15 en 5 secondes** depuis une même IP.")
@@ -461,13 +454,13 @@ code("""<group name="local,scan,">
   </rule>
 </group>""")
 titre("Avant", 2)
-capture_a_inserer("Capture I — rule.id:100301 : « No results match your search criteria » (envoyée, à renvoyer en fichier)")
+capture_a_inserer("Capture I : rule.id:100301 : « No results match your search criteria » (envoyée, à renvoyer en fichier)")
 titre("Pendant", 2)
 etapes(["Depuis l’attaquante, lancer le scan :"])
 code("nmap -sT -p 1-1000 192.168.213.134")
-capture_a_inserer("Capture J — Résultat nmap : ports 22 et 80 ouverts (envoyée, à renvoyer en fichier)")
+capture_a_inserer("Capture J : Résultat nmap : ports 22 et 80 ouverts (envoyée, à renvoyer en fichier)")
 titre("Après", 2)
-image("scan_apres_100301.png", "Après : rule.id:100301 → 541 alertes, tactique MITRE « Network Service Discovery »", 15.5)
+image("scan_apres_100301.png", "Après : rule.id:100301, 541 alertes, tactique MITRE « Network Service Discovery »", 15.5)
 titre("Analyse", 2)
 para("Règle **100301**, niveau **10**, MITRE **T1046**, IP source **192.168.213.159**. "
      "1000 ports testés en 0,24 s : le seuil est dépassé immédiatement.")
@@ -480,7 +473,7 @@ tableau(["Règle", "Niveau", "Signification", "MITRE"], [
     ["100301", "10", "Scan de ports : > 15 connexions / 5 s", "T1046"],
     ["651", "3", "IP bloquée par la réponse active", "—"],
 ], [3, 2, 8.5, 2.5])
-capture_a_inserer("Capture L — Vue globale Threat Hunting : 4 469 alertes, 0 niveau ≥ 12 (envoyée, à renvoyer en fichier)")
+capture_a_inserer("Capture L : Vue globale Threat Hunting : 4 469 alertes, 0 niveau ≥ 12 (envoyée, à renvoyer en fichier)")
 
 # ---------- 8 ----------
 titre("8. Difficultés rencontrées et solutions")
@@ -495,13 +488,13 @@ tableau(["Difficulté", "Solution"], [
     ["Règle scan sans résultat (la règle 4100 gagnait)", "`if_sid 4100` + niveau 3"],
 ], [9, 7])
 image("diff_regle_dupliquee.png", "Avertissement « Rule ID '100201' is duplicated » : seule la 1re règle était prise en compte", 12)
-capture_a_inserer("Capture M — Erreur « impossible d’ouvrir /var/log/kern.log » (envoyée, à renvoyer en fichier)")
+capture_a_inserer("Capture M : Erreur « impossible d’ouvrir /var/log/kern.log » (envoyée, à renvoyer en fichier)")
 
 # ---------- 9 ----------
 titre("9. Limites et améliorations")
-puces(["**Seuils fixes** : un scan lent ou un DDoS (plusieurs IP) passe sous le seuil → ajuster les seuils, ajouter une liste blanche.",
-       "**Injection SQL** : un encodage différent ou une requête POST échappe à la règle → ajouter un WAF (ModSecurity).",
-       "**Faux positifs** : un pic de trafic légitime peut bloquer un utilisateur → exclure les IP de confiance.",
+puces(["**Seuils fixes** : un scan lent ou un DDoS (plusieurs IP) passe sous le seuil : ajuster les seuils, ajouter une liste blanche.",
+       "**Injection SQL** : un encodage différent ou une requête POST échappe à la règle : ajouter un WAF (ModSecurity).",
+       "**Faux positifs** : un pic de trafic légitime peut bloquer un utilisateur : exclure les IP de confiance.",
        "**Amélioration** : étendre la réponse active au scan et envoyer les alertes par e-mail."])
 
 # ---------- 10 ----------
