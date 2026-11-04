@@ -359,7 +359,7 @@ puces(["Snapshot des 3 VM avant les tests.",
        "**Règle d’or : l’agent collecte les logs, le serveur porte les règles.**"])
 para("Vérifier que l’agent est connecté (sur le serveur) :")
 code("/var/ossec/bin/agent_control -l")
-capture_a_inserer("Capture B — Agent client1 (ID 003) « active » dans le dashboard (envoyée, à renvoyer en fichier)")
+image("agent_actif_100201.png", "Configuration validée sans avertissement, 10 alertes 100201 enregistrées, agent client1 (ID 003) actif", 13)
 
 # ---------- 4 ----------
 titre("4. Détection 1 — Déni de service HTTP (MITRE T1499)")
@@ -414,7 +414,7 @@ code("iptables -L INPUT -n | grep 192.168.213.159")
 capture_a_inserer("Capture F — Règle DROP pour 192.168.213.159 dans iptables sur l’agent (à réaliser)")
 titre("Analyse", 2)
 para("Règle **100201**, niveau **10**, MITRE **T1499**, IP source **192.168.213.159**. "
-     "Elle déclenche `firewall-drop` : l’IP est bloquée 180 s (alerte **651**).")
+     "Après correction du doublon, **10 alertes 100201** ont été enregistrées. Elle déclenche `firewall-drop` : l’IP est bloquée 180 s (alerte **651**).")
 
 # ---------- 5 ----------
 titre("5. Détection 2 — Injection SQL (MITRE T1190)")
@@ -424,7 +424,7 @@ para("L’attaquant place du code SQL dans un paramètre d’URL pour interroger
 titre("Procédure", 2)
 etapes(["Depuis l’attaquante, envoyer la requête :"])
 code('curl -XGET "http://192.168.213.134/users/?id=SELECT+*+FROM+users"')
-capture_a_inserer("Capture G — Commande curl et réponse 404 Not Found (envoyée, à renvoyer en fichier)")
+image("sqli_pendant_curl.png", "Pendant : requête curl avec injection SQL, Apache répond 404", 14)
 etapes(["Dans le dashboard (Threat Hunting), filtrer : `rule.id:31103`"])
 image("sqli_apres_31103.png", "Après : rule.id:31103 → 1 alerte, aucune de niveau ≥ 12", 15.5)
 titre("Analyse", 2)
@@ -467,7 +467,7 @@ etapes(["Depuis l’attaquante, lancer le scan :"])
 code("nmap -sT -p 1-1000 192.168.213.134")
 capture_a_inserer("Capture J — Résultat nmap : ports 22 et 80 ouverts (envoyée, à renvoyer en fichier)")
 titre("Après", 2)
-image("scan_apres_100301.png", "Après : rule.id:100301 → 8 alertes de scan", 15.5)
+image("scan_apres_100301.png", "Après : rule.id:100301 → 541 alertes, tactique MITRE « Network Service Discovery »", 15.5)
 titre("Analyse", 2)
 para("Règle **100301**, niveau **10**, MITRE **T1046**, IP source **192.168.213.159**. "
      "1000 ports testés en 0,24 s : le seuil est dépassé immédiatement.")
