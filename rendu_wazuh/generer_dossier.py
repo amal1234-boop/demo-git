@@ -283,28 +283,8 @@ def filet_haut(p, couleur="4F81BD"):
     bd.append(e); pPr.append(bd)
 
 
-ft = sec.footer.add_table(rows=2, cols=4, width=Cm(16.2))
-fixer_largeurs(ft, [4.2, 4.6, 5.6, 1.8])
-textes = [["LABIDI Amal", "LABIDI_ProjetWazuh", "Année : 2026-2027", ""],
-          ["amal59labidi@gmail.com", "", "Version : 1.0", ""]]
-for i in range(2):
-    for j in range(4):
-        c = ft.cell(i, j)
-        tcPr = c._tc.get_or_add_tcPr(); bd = OxmlElement("w:tcBorders")
-        tcPr.append(bd)
-        p = c.paragraphs[0]; p.paragraph_format.space_after = Pt(0)
-        if textes[i][j]:
-            r = p.add_run(textes[i][j]); r.font.size = Pt(8 if (i, j) == (1, 0) else 10)
-pn = ft.cell(1, 3).paragraphs[0]; pn.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+pn = sec.footer.paragraphs[0]; pn.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 champ_page(pn)
-for r in pn.runs:
-    r.font.name = "Cambria"; r.font.size = Pt(14)
-sec.footer.paragraphs[0].paragraph_format.space_after = Pt(0)
-tbl = ft._tbl; tblPr = tbl.tblPr
-bds = OxmlElement("w:tblBorders")
-for cote in ("top", "left", "bottom", "right", "insideH", "insideV"):
-    e = OxmlElement(f"w:{cote}"); e.set(qn("w:val"), "nil"); bds.append(e)
-tblPr.append(bds)
 
 # ---------- titre (modèle TP) ----------
 t = doc.add_table(rows=1, cols=1)
@@ -352,7 +332,7 @@ puces(["Snapshot des 3 VM avant les tests.",
        "**Règle d’or : l’agent collecte les logs, le serveur porte les règles.**"])
 para("Vérifier que l’agent est connecté (sur le serveur) :")
 code("/var/ossec/bin/agent_control -l")
-image("agent_actif_100201.png", "Configuration validée sans avertissement, 10 alertes 100201 enregistrées, agent client1 (ID 003) actif", 13)
+image("agent_actif_100201.png", None, 13)
 
 # ---------- 4 ----------
 titre("4. Détection 1 : Déni de service HTTP (MITRE T1499)")
@@ -387,24 +367,21 @@ code("""<active-response>
 </active-response>""")
 etapes(["Redémarrer le manager :"])
 code("systemctl restart wazuh-manager")
-image("dos_regle_chargee.png", "Règle 100200 chargée dans local_rules.xml", 11)
+image("dos_regle_chargee.png", None, 11)
 titre("Avant", 2)
 para("Une requête normale ne déclenche aucune alerte (règle 31108, niveau 0).")
-image("dos_avant_logtest.png", "Avant : une requête simple tombe sur la règle 31108 (niveau 0)", 12)
+image("dos_avant_logtest.png", None, 12)
 titre("Pendant", 2)
 etapes(["Depuis l’attaquante, lancer l’attaque :"])
 code("ab -n 5000 -c 100 http://192.168.213.134/")
 etapes(["Sur le serveur, suivre les alertes :"])
 code('tail -f /var/ossec/logs/alerts/alerts.log | grep -E "100200|100201"')
-image("dos_pendant_ab.png", "Pendant : ab en cours, les alertes défilent sur le serveur", 13)
-capture_a_inserer("Capture C : Alerte 100201 (niveau 10, T1499) dans le dashboard (à réaliser)")
+image("dos_pendant_ab.png", None, 13)
 titre("Après", 2)
-image("dos_apres_dashboard.png", "Après : pic d’environ 4 400 événements sur client1", 15.5)
-capture_a_inserer("Capture D : Threat Hunting client1 : 4 418 alertes, groupes attack / web / dos (envoyée, à renvoyer en fichier)")
-image("dos_apres_651.png", "Après : 22 alertes 651 « Host Blocked by firewall-drop », l’IP a bien été bloquée", 15.5)
+image("dos_apres_dashboard.png", None, 15.5)
+image("dos_apres_651.png", None, 15.5)
 para("Vérifier le blocage sur l’agent :")
 code("iptables -L INPUT -n | grep 192.168.213.159")
-capture_a_inserer("Capture F : Règle DROP pour 192.168.213.159 dans iptables sur l’agent (à réaliser)")
 titre("Analyse", 2)
 para("Règle **100201**, niveau **10**, MITRE **T1499**, IP source **192.168.213.159**. "
      "Après correction du doublon, **10 alertes 100201** ont été enregistrées. Elle déclenche `firewall-drop` : l’IP est bloquée 180 s (alerte **651**).")
@@ -417,9 +394,9 @@ para("L’attaquant place du code SQL dans un paramètre d’URL pour interroger
 titre("Procédure", 2)
 etapes(["Depuis l’attaquante, envoyer la requête :"])
 code('curl -XGET "http://192.168.213.134/users/?id=SELECT+*+FROM+users"')
-image("sqli_pendant_curl.png", "Pendant : requête curl avec injection SQL, Apache répond 404", 14)
+image("sqli_pendant_curl.png", None, 14)
 etapes(["Dans le dashboard (Threat Hunting), filtrer : `rule.id:31103`"])
-image("sqli_apres_31103.png", "Après : rule.id:31103, 1 alerte, aucune de niveau 12 ou plus", 15.5)
+image("sqli_apres_31103.png", None, 15.5)
 titre("Analyse", 2)
 para("Règle **31103** « SQL injection attempt », niveau **7**, MITRE **T1190**. "
      "La règle **31106** (niveau 12) ne s’est pas déclenchée car le serveur a répondu **404** : "
@@ -453,14 +430,11 @@ code("""<group name="local,scan,">
     <mitre><id>T1046</id></mitre>
   </rule>
 </group>""")
-titre("Avant", 2)
-capture_a_inserer("Capture I : rule.id:100301 : « No results match your search criteria » (envoyée, à renvoyer en fichier)")
 titre("Pendant", 2)
 etapes(["Depuis l’attaquante, lancer le scan :"])
 code("nmap -sT -p 1-1000 192.168.213.134")
-capture_a_inserer("Capture J : Résultat nmap : ports 22 et 80 ouverts (envoyée, à renvoyer en fichier)")
 titre("Après", 2)
-image("scan_apres_100301.png", "Après : rule.id:100301, 541 alertes, tactique MITRE « Network Service Discovery »", 15.5)
+image("scan_apres_100301.png", None, 15.5)
 titre("Analyse", 2)
 para("Règle **100301**, niveau **10**, MITRE **T1046**, IP source **192.168.213.159**. "
      "1000 ports testés en 0,24 s : le seuil est dépassé immédiatement.")
@@ -473,7 +447,6 @@ tableau(["Règle", "Niveau", "Signification", "MITRE"], [
     ["100301", "10", "Scan de ports : > 15 connexions / 5 s", "T1046"],
     ["651", "3", "IP bloquée par la réponse active", "—"],
 ], [3, 2, 8.5, 2.5])
-capture_a_inserer("Capture L : Vue globale Threat Hunting : 4 469 alertes, 0 niveau ≥ 12 (envoyée, à renvoyer en fichier)")
 
 # ---------- 8 ----------
 titre("8. Difficultés rencontrées et solutions")
@@ -487,29 +460,14 @@ tableau(["Difficulté", "Solution"], [
     ["kern.log absent (journald, pas rsyslog)", "Installer `rsyslog`"],
     ["Règle scan sans résultat (la règle 4100 gagnait)", "`if_sid 4100` + niveau 3"],
 ], [9, 7])
-image("diff_regle_dupliquee.png", "Avertissement « Rule ID '100201' is duplicated » : seule la 1re règle était prise en compte", 12)
-capture_a_inserer("Capture M : Erreur « impossible d’ouvrir /var/log/kern.log » (envoyée, à renvoyer en fichier)")
-
-# ---------- 9 ----------
-titre("9. Limites et améliorations")
-puces(["**Seuils fixes** : un scan lent ou un DDoS (plusieurs IP) passe sous le seuil : ajuster les seuils, ajouter une liste blanche.",
-       "**Injection SQL** : un encodage différent ou une requête POST échappe à la règle : ajouter un WAF (ModSecurity).",
-       "**Faux positifs** : un pic de trafic légitime peut bloquer un utilisateur : exclure les IP de confiance.",
-       "**Amélioration** : étendre la réponse active au scan et envoyer les alertes par e-mail."])
+image("diff_regle_dupliquee.png", None, 12)
 
 # ---------- 10 ----------
-titre("10. Conclusion")
+titre("9. Conclusion")
 para("Les trois détections fonctionnent : le DoS est détecté et bloqué automatiquement, l’injection SQL est "
      "reconnue par les règles natives, et le scan Nmap devient visible grâce aux logs iptables. "
      "J’ai surtout retenu la séparation agent (collecte) / serveur (règles) et l’importance de tester "
      "la configuration avant de redémarrer.")
-
-# ---------- 11 ----------
-titre("11. Sources")
-puces(["Documentation Wazuh : https://documentation.wazuh.com",
-       "MITRE ATT&CK (T1499, T1190, T1046) : https://attack.mitre.org",
-       "Code pénal, art. 323-1 : https://www.legifrance.gouv.fr",
-       "Cours et sujet B2 Sécurité Pratique, A. Lopez"])
 
 out = os.path.join(ICI, "LABIDI_ProjetWazuh.docx")
 doc.save(out)
