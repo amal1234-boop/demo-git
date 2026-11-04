@@ -350,7 +350,7 @@ tableau(["Machine", "Rôle", "Adresse IP"], [
     ["Agent client1", "Victime : Apache + agent Wazuh", "192.168.213.134"],
     ["Attaquante", "Lance ab, curl, nmap", "192.168.213.159"],
 ], [4, 8, 4])
-capture_a_inserer("Capture A — Schéma réseau des 3 machines avec leurs IP (à réaliser)")
+image("schema_reseau.png", "Schéma d’architecture du lab", 15.5)
 
 # ---------- 3 ----------
 titre("3. Préparation du lab")
@@ -408,7 +408,7 @@ capture_a_inserer("Capture C — Alerte 100201 (niveau 10, T1499) dans le dashbo
 titre("Après", 2)
 image("dos_apres_dashboard.png", "Après : pic d’environ 4 400 événements sur client1", 15.5)
 capture_a_inserer("Capture D — Threat Hunting client1 : 4 418 alertes, groupes attack / web / dos (envoyée, à renvoyer en fichier)")
-capture_a_inserer("Capture E — Alerte 651 « Host Blocked by firewall-drop » dans le dashboard (à réaliser)")
+image("dos_apres_651.png", "Après : 22 alertes 651 « Host Blocked by firewall-drop » : l’IP a bien été bloquée", 15.5)
 para("Vérifier le blocage sur l’agent :")
 code("iptables -L INPUT -n | grep 192.168.213.159")
 capture_a_inserer("Capture F — Règle DROP pour 192.168.213.159 dans iptables sur l’agent (à réaliser)")
@@ -426,7 +426,7 @@ etapes(["Depuis l’attaquante, envoyer la requête :"])
 code('curl -XGET "http://192.168.213.134/users/?id=SELECT+*+FROM+users"')
 capture_a_inserer("Capture G — Commande curl et réponse 404 Not Found (envoyée, à renvoyer en fichier)")
 etapes(["Dans le dashboard (Threat Hunting), filtrer : `rule.id:31103`"])
-capture_a_inserer("Capture H — rule.id:31103 : 1 alerte, niveau 7, groupe sql_injection (envoyée, à renvoyer en fichier)")
+image("sqli_apres_31103.png", "Après : rule.id:31103 → 1 alerte, aucune de niveau ≥ 12", 15.5)
 titre("Analyse", 2)
 para("Règle **31103** « SQL injection attempt », niveau **7**, MITRE **T1190**. "
      "La règle **31106** (niveau 12) ne s’est pas déclenchée car le serveur a répondu **404** : "
@@ -467,7 +467,7 @@ etapes(["Depuis l’attaquante, lancer le scan :"])
 code("nmap -sT -p 1-1000 192.168.213.134")
 capture_a_inserer("Capture J — Résultat nmap : ports 22 et 80 ouverts (envoyée, à renvoyer en fichier)")
 titre("Après", 2)
-capture_a_inserer("Capture K — Alerte 100301 (niveau 10, T1046) dans le dashboard (à réaliser)")
+image("scan_apres_100301.png", "Après : rule.id:100301 → 8 alertes de scan", 15.5)
 titre("Analyse", 2)
 para("Règle **100301**, niveau **10**, MITRE **T1046**, IP source **192.168.213.159**. "
      "1000 ports testés en 0,24 s : le seuil est dépassé immédiatement.")
@@ -490,9 +490,11 @@ tableau(["Difficulté", "Solution"], [
     ["Règle DoS ignorée (web-accesslog est un décodeur, pas un groupe)", "Utiliser `if_sid 31108`"],
     ["L’agent ne remontait pas les logs", "Redémarrer `wazuh-agent`"],
     ["Manager planté (décodeur iptables inexistant + doublons)", "Tester avec `wazuh-analysisd -t` avant de redémarrer"],
+    ["Pas d’alerte 100201 : règle écrite deux fois (« Rule ID is duplicated »)", "Supprimer le doublon dans `local_rules.xml`, revérifier avec `wazuh-analysisd -t`"],
     ["kern.log absent (journald, pas rsyslog)", "Installer `rsyslog`"],
     ["Règle scan sans résultat (la règle 4100 gagnait)", "`if_sid 4100` + niveau 3"],
 ], [9, 7])
+image("diff_regle_dupliquee.png", "Avertissement « Rule ID '100201' is duplicated » : seule la 1re règle était prise en compte", 12)
 capture_a_inserer("Capture M — Erreur « impossible d’ouvrir /var/log/kern.log » (envoyée, à renvoyer en fichier)")
 
 # ---------- 9 ----------
