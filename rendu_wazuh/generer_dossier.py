@@ -207,7 +207,7 @@ def image(fichier, legende, largeur_cm=15.5):
     lp = doc.add_paragraph()
     lp.paragraph_format.space_after = Pt(8)
     if not legende:
-        p.paragraph_format.space_after = Pt(8); lp._p.getparent().remove(lp._p); return
+        p.paragraph_format.space_after = Pt(8); p.paragraph_format.keep_with_next = False; lp._p.getparent().remove(lp._p); return
     r = lp.add_run(legende); r.italic = True; r.font.size = Pt(9); r.font.color.rgb = GRIS
 
 
@@ -373,7 +373,9 @@ etapes(["Depuis l’attaquante, lancer l’attaque :"])
 code("ab -n 5000 -c 100 http://192.168.213.134/")
 etapes(["Sur le serveur, suivre les alertes :"])
 code('tail -f /var/ossec/logs/alerts/alerts.log | grep -E "100200|100201"')
-image("dos_pendant_ab.png", None, 13)
+image("dos_pendant_ab.png", None, 11)
+para("Résultat de ab : **5000 requêtes en 0,96 s**, soit environ **5200 requêtes par seconde**, bien au-dessus du seuil de 100 requêtes en 10 s.")
+image("dos_resultat_ab.png", None, 9)
 titre("Après", 2)
 image("dos_apres_dashboard.png", None, 15.5)
 image("dos_apres_651.png", None, 15.5)
