@@ -312,9 +312,6 @@ tableau(["Détection", "MITRE", "Règle d’alerte", "Réponse active"], [
     ["Injection SQL", "T1190", "31103 / 31106", "Non"],
     ["Balayage de ports Nmap", "T1046", "100301", "Non"],
 ], [5.5, 2.5, 4, 4])
-encadre(["Tests réalisés **uniquement sur mes machines de laboratoire**, dans un **réseau isolé**.",
-         "Accéder frauduleusement à un système d’information est un délit (**art. 323-1 et suivants du Code pénal**)."],
-        "orange", "ATTENTION : cadre légal.")
 
 # ---------- 2 ----------
 titre("2. Schéma d’architecture")
