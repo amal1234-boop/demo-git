@@ -381,6 +381,8 @@ image("dos_apres_dashboard.png", None, 15.5)
 image("dos_apres_651.png", None, 15.5)
 para("Vérifier le blocage sur l’agent :")
 code("iptables -L INPUT -n | grep 192.168.213.159")
+para("Juste après l’attaque, la machine attaquante ne peut plus joindre le serveur : un nmap lancé dans la foulée reste bloqué sans réponse, alors qu’il se termine normalement en moins d’une seconde. L’IP 192.168.213.159 est bien bloquée par la réponse active.")
+image("dos_blocage_nmap.png", None, 12)
 titre("Analyse", 2)
 para("Règle **100201**, niveau **10**, MITRE **T1499**, IP source **192.168.213.159**. "
      "Après correction du doublon, **10 alertes 100201** ont été enregistrées. Elle déclenche `firewall-drop` : l’IP est bloquée 180 s (alerte **651**).")
