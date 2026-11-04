@@ -434,11 +434,12 @@ code("""<group name="local,scan,">
 titre("Pendant", 2)
 etapes(["Depuis l’attaquante, lancer le scan :"])
 code("nmap -sT -p 1-1000 192.168.213.134")
+image("scan_pendant_nmap.png", None, 13)
 titre("Après", 2)
 image("scan_apres_100301.png", None, 15.5)
 titre("Analyse", 2)
 para("Règle **100301**, niveau **10**, MITRE **T1046**, IP source **192.168.213.159**. "
-     "1000 ports testés en 0,24 s : le seuil est dépassé immédiatement.")
+     "1000 ports testés en 0,25 s : le seuil est dépassé immédiatement.")
 
 # ---------- 7 ----------
 titre("7. Analyse des alertes")
