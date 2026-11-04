@@ -464,12 +464,30 @@ tableau(["Difficulté", "Solution"], [
 ], [9, 7])
 image("diff_regle_dupliquee.png", None, 12)
 
+# ---------- 9 ----------
+titre("9. Limites et améliorations")
+tableau(["Détection", "Limites", "Améliorations"], [
+    ["DoS HTTP", "Un DDoS venant de plusieurs IP passe sous le seuil. Un pic de trafic normal peut bloquer un vrai utilisateur.",
+     "Ajuster le seuil selon le trafic habituel, ajouter une liste d’IP de confiance."],
+    ["Injection SQL", "Une requête encodée autrement ou envoyée en POST n’est pas détectée.",
+     "Ajouter un pare-feu applicatif (ModSecurity) devant Apache."],
+    ["Scan Nmap", "Un scan lent (nmap -T1) ou UDP passe sous le seuil.",
+     "Baisser le seuil sur une période plus longue, ajouter une réponse active."],
+], [3, 7, 6])
+
 # ---------- 10 ----------
-titre("9. Conclusion")
+titre("10. Conclusion")
 para("Les trois détections fonctionnent : le DoS est détecté et bloqué automatiquement, l’injection SQL est "
      "reconnue par les règles natives, et le scan Nmap devient visible grâce aux logs iptables. "
      "J’ai surtout retenu la séparation agent (collecte) / serveur (règles) et l’importance de tester "
      "la configuration avant de redémarrer.")
+
+# ---------- 11 ----------
+titre("11. Sources")
+puces(["Documentation officielle Wazuh : https://documentation.wazuh.com",
+       "MITRE ATT&CK (T1499, T1190, T1046) : https://attack.mitre.org",
+       "Documentation Nmap : https://nmap.org/book/man.html",
+       "Cours et TP B2 Sécurité Pratique"])
 
 out = os.path.join(ICI, "LABIDI_ProjetWazuh.docx")
 doc.save(out)
