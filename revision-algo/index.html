@@ -1,0 +1,1875 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Révision Algo B2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout : barre d'onglets collante + zone de lecture centrée ; le cours a un sommaire latéral sur grand écran.
+   Esprit "cahier Jupyter" : les blocs de code portent un prompt In [ ] et s'exécutent sur place. */
+:root{
+  --bg:#F3F5F9; --surface:#FFFFFF; --surface-2:#E9EDF5; --ink:#141B2B; --muted:#5A6378; --line:#D5DBE7;
+  --accent:#2747C9; --accent-ink:#FFFFFF; --accent-soft:#E2E8FF;
+  --prompt:#B4532A; --code-bg:#F7F8FC; --code-ink:#1D2433;
+  --ok:#1E7A4C; --ok-soft:#DDF3E7; --ko:#B42335; --ko-soft:#FBE3E6; --warn:#946200; --warn-soft:#FFF1CC;
+  --kw:#7A2BB5; --str:#1E7A4C; --num:#B4532A; --com:#7C8497; --fn:#2747C9;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1420; --surface:#171E2D; --surface-2:#202940; --ink:#E6EAF3; --muted:#9AA3B8; --line:#2C364D;
+  --accent:#8EA4FF; --accent-ink:#0F1420; --accent-soft:#232F55;
+  --prompt:#F0956B; --code-bg:#121827; --code-ink:#DCE2EE;
+  --ok:#5BD49A; --ok-soft:#163528; --ko:#FF8592; --ko-soft:#3D1C23; --warn:#F2C14E; --warn-soft:#3A2F12;
+  --kw:#D19BFF; --str:#7FDBA6; --num:#F0A27A; --com:#7D879E; --fn:#9DB2FF; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F1420; --surface:#171E2D; --surface-2:#202940; --ink:#E6EAF3; --muted:#9AA3B8; --line:#2C364D;
+  --accent:#8EA4FF; --accent-ink:#0F1420; --accent-soft:#232F55;
+  --prompt:#F0956B; --code-bg:#121827; --code-ink:#DCE2EE;
+  --ok:#5BD49A; --ok-soft:#163528; --ko:#FF8592; --ko-soft:#3D1C23; --warn:#F2C14E; --warn-soft:#3A2F12;
+  --kw:#D19BFF; --str:#7FDBA6; --num:#F0A27A; --com:#7D879E; --fn:#9DB2FF; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+a{color:var(--accent)}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:1.75rem;font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.25rem;font-weight:700;margin-top:1.8rem}
+h4{font-size:1.05rem;font-weight:700;margin-top:1.2rem}
+p{margin:.6rem 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--surface-2);padding:.08em .35em;border-radius:5px}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* ---------- Header / onglets ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:18px;min-height:58px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:1.15rem;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--prompt);border:1px solid currentColor;border-radius:4px;padding:1px 5px}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{text-decoration:none;color:var(--muted);font-weight:600;font-size:.95rem;padding:8px 12px;border-radius:8px;white-space:nowrap}
+.tabs a:hover{background:var(--surface-2);color:var(--ink)}
+.tabs a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.theme-btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:6px 10px;font-size:.85rem}
+
+main{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 80px}
+.view{display:block}
+.lede{color:var(--muted);max-width:68ch;font-size:1.05rem}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--prompt);font-weight:600}
+
+/* ---------- Accueil ---------- */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:start}
+.hero h1{font-size:clamp(2rem,4.5vw,3.1rem);font-weight:800;letter-spacing:-.02em;margin:.4rem 0 .6rem}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.stat b{display:block;font-family:var(--f-display);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+.term{white-space:pre;background:var(--code-bg);border:1px solid var(--line);border-radius:var(--r);font-family:var(--f-mono);font-size:.85rem;padding:14px 16px;overflow-x:auto}
+.term .in{color:var(--prompt)}
+.term .out{color:var(--ok)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:0}
+.panel h3{margin-top:0}
+.steps{counter-reset:s;list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:10px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.steps li::before{content:counter(s);font-family:var(--f-display);font-weight:800;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.steps small{color:var(--muted);display:block}
+.timeline{display:grid;gap:0;margin-top:.8rem}
+.timeline div{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:8px 0;border-top:1px dashed var(--line)}
+.timeline div:first-child{border-top:0}
+.timeline b{font-family:var(--f-mono);font-size:.85rem;color:var(--prompt);font-variant-numeric:tabular-nums}
+.checklist{list-style:none;padding:0;margin:.6rem 0 0;display:grid;gap:4px}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:6px 8px;border-radius:8px;cursor:pointer}
+.checklist label:hover{background:var(--surface-2)}
+.checklist input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.checklist input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+
+/* ---------- Cours ---------- */
+.course{display:grid;grid-template-columns:250px minmax(0,1fr);gap:36px;align-items:start}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100vh - 100px);overflow:auto;padding-right:6px}
+.toc a{display:grid;grid-template-columns:28px 1fr;gap:4px;text-decoration:none;color:var(--muted);padding:6px 8px;border-radius:8px;font-size:.92rem;line-height:1.35}
+.toc a span{font-family:var(--f-mono);font-size:.78rem;color:var(--prompt);padding-top:2px}
+.toc a:hover{background:var(--surface-2);color:var(--ink)}
+.toc a.on{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.chap{max-width:78ch;min-width:0}
+.chap section{padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--line);scroll-margin-top:90px}
+.chap section:last-child{border-bottom:0}
+.chap ul,.chap ol{padding-left:1.3rem}
+.chap li{margin:.25rem 0}
+.def{background:var(--accent-soft);border-radius:var(--r);padding:12px 16px;margin:12px 0}
+.def b:first-child{font-family:var(--f-display)}
+.trap{background:var(--warn-soft);border-radius:var(--r);padding:12px 16px;margin:12px 0}
+.trap::before{content:"Piège d'examen";display:block;font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--warn);font-weight:600;margin-bottom:2px}
+.tip{background:var(--ok-soft);border-radius:var(--r);padding:12px 16px;margin:12px 0}
+.tip::before{content:"Méthode";display:block;font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ok);font-weight:600;margin-bottom:2px}
+.tbl{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+
+/* ---------- Code (cellules) ---------- */
+.cell{margin:14px 0;border:1px solid var(--line);border-radius:var(--r);background:var(--code-bg);overflow:hidden;min-width:0}
+.cell-bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.78rem;color:var(--prompt)}
+.cell-bar .sp{flex:1}
+.cell-bar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:3px 9px;font-size:.78rem;font-family:var(--f-body);font-weight:600}
+.cell-bar button.run{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+pre.py,pre.plain{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--f-mono);font-size:.86rem;line-height:1.55;color:var(--code-ink);tab-size:4}
+.cell-out{border-top:1px dashed var(--line);padding:10px 14px;font-family:var(--f-mono);font-size:.84rem;white-space:pre-wrap;word-break:break-word;color:var(--ok)}
+.cell-out.err{color:var(--ko)}
+.cell-out::before{content:"Out:";display:block;color:var(--prompt);font-size:.75rem}
+.tk-kw{color:var(--kw);font-weight:600}.tk-str{color:var(--str)}.tk-num{color:var(--num)}.tk-com{color:var(--com);font-style:italic}.tk-fn{color:var(--fn);font-weight:600}.tk-bi{color:var(--fn)}
+
+/* ---------- Pratique ---------- */
+.prac{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start}
+.exlist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100vh - 100px);overflow:auto}
+.exlist h4{font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 8px 4px}
+.exlist button{display:grid;grid-template-columns:20px 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;background:transparent;border:0;color:var(--ink);padding:7px 8px;border-radius:8px;font-size:.92rem}
+.exlist button:hover{background:var(--surface-2)}
+.exlist button.on{background:var(--accent-soft);font-weight:600}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--line)}
+.dot.done{background:var(--ok);border-color:var(--ok)}
+.lvl{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.exo{min-width:0}
+.exo-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{font-family:var(--f-mono);font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--surface-2);color:var(--muted)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.editor-wrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--code-bg);margin-top:14px}
+textarea.editor{display:block;width:100%;min-height:260px;resize:vertical;border:0;background:transparent;color:var(--code-ink);font-family:var(--f-mono);font-size:.88rem;line-height:1.55;padding:12px 14px;tab-size:4;white-space:pre;overflow:auto}
+textarea.editor:focus{outline:none}
+.actions{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-top:1px solid var(--line);background:var(--surface)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 14px;font-weight:600;font-size:.9rem}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.5;cursor:wait}
+.console{font-family:var(--f-mono);font-size:.84rem;white-space:pre-wrap;word-break:break-word;padding:12px 14px;border-top:1px solid var(--line);background:var(--surface);min-height:44px}
+.console .e{color:var(--ko)}
+.tests{display:grid;gap:4px;margin-top:6px}
+.tests div{display:grid;grid-template-columns:22px minmax(0,1fr);gap:6px;font-family:var(--f-mono);font-size:.82rem;overflow-wrap:anywhere}
+.tests .p{color:var(--ok)}.tests .f{color:var(--ko)}
+.reveal{margin-top:14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px 16px}
+.reveal h4{margin-top:0}
+.engine{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:8px;margin-top:8px}
+.engine i{width:8px;height:8px;border-radius:50%;background:var(--warn);display:inline-block}
+.engine.ready i{background:var(--ok)} .engine.fail i{background:var(--ko)}
+
+/* ---------- Quiz / Examen ---------- */
+.qsetup{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:6px 14px;font-weight:600;font-size:.88rem}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-top:14px;min-width:0}
+.qcard .qn{font-family:var(--f-mono);font-size:.75rem;color:var(--prompt);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.qcard .qt{font-weight:600;margin:.3rem 0 .6rem;font-size:1.02rem}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--surface);color:var(--ink);text-align:left;width:100%}
+.opt:hover{border-color:var(--accent)}
+.opt .k{font-family:var(--f-mono);font-weight:600;color:var(--muted);flex:none}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.good{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--ko);background:var(--ko-soft)}
+.opt code{background:transparent;padding:0}
+.ansin{font-family:var(--f-mono);font-size:.95rem;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--code-bg);color:var(--ink);width:100%;max-width:420px}
+.ansin.good{border-color:var(--ok);background:var(--ok-soft)} .ansin.bad{border-color:var(--ko);background:var(--ko-soft)}
+.expl{margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--surface-2);font-size:.93rem}
+.expl b{font-family:var(--f-mono);font-size:.78rem}
+.score-big{font-family:var(--f-display);font-weight:800;font-size:3.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.score-row{display:flex;flex-wrap:wrap;gap:24px;align-items:end}
+.exam-bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:10;background:var(--bg);padding:10px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;border-bottom:1px solid var(--line)}
+.clock{font-family:var(--f-mono);font-size:1.4rem;font-weight:600;font-variant-numeric:tabular-nums;padding:4px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.clock.low{color:var(--ko);border-color:var(--ko)}
+.part-h{margin-top:30px;display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.part-h span{font-family:var(--f-mono);color:var(--muted);font-size:.85rem}
+.breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.history{font-size:.9rem;color:var(--muted)}
+
+/* ---------- Mémo ---------- */
+.memo{columns:3 300px;column-gap:20px}
+.memo .panel{break-inside:avoid;margin-bottom:20px;display:block}
+.memo .panel h3{font-size:1.05rem}
+.memo ul{padding-left:1.1rem;margin:.4rem 0;font-size:.92rem}
+.memo pre{margin:.4rem 0;font-size:.8rem;background:var(--code-bg);border-radius:8px;padding:8px 10px;overflow-x:auto;font-family:var(--f-mono)}
+
+@media (max-width:900px){
+  .hero,.grid2{grid-template-columns:1fr}
+  .course,.prac{grid-template-columns:1fr}
+  .toc,.exlist{position:static;max-height:none}
+  .toc{display:flex;overflow-x:auto;gap:4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .toc a{display:block;white-space:nowrap}
+  .toc a span{display:none}
+  .exlist{max-height:300px}
+  .breakdown{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:560px){
+  .brand .tag{display:none}
+  .stats{grid-template-columns:1fr 1fr 1fr}
+  .stat b{font-size:1.25rem}
+  .theme-btn{display:none}
+  h2{font-size:1.45rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Algo B2 <span class="tag">In [ ]:</span></div>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#accueil" data-v="accueil">Plan</a>
+      <a href="#cours" data-v="cours">Cours</a>
+      <a href="#pratique" data-v="pratique">Pratique</a>
+      <a href="#quiz" data-v="quiz">Quiz</a>
+      <a href="#examen" data-v="examen">Examen blanc</a>
+      <a href="#memo" data-v="memo">Mémo</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">Thème</button>
+  </div>
+</header>
+
+<main>
+<!-- =========================================================== ACCUEIL -->
+<div class="view" id="v-accueil">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Algorithmes &amp; structures de données · B1 → B2</div>
+      <h1>Tout réviser pour l'<em>évaluation de 1h30</em></h1>
+      <p class="lede">Le contenu vient de tes cinq documents : le cours B1 (bases Python, récursivité, tris), le TD codes B1, les TD récursivité et complexité, et le notebook B2. Lis les fiches, entraîne-toi sur du vrai code corrigé automatiquement, puis fais un examen blanc chronométré.</p>
+      <div class="stats">
+        <div class="stat"><b id="stEx">0/0</b><span>exercices réussis</span></div>
+        <div class="stat"><b id="stQuiz">–</b><span>meilleur quiz</span></div>
+        <div class="stat"><b id="stExam">–</b><span>dernier examen blanc</span></div>
+      </div>
+    </div>
+    <div class="term" aria-label="Exemple de cellule">
+<span class="in">In [14]:</span> def fact(n):
+    if n==0 or n==1:     # cas de base
+        return 1
+    return n*fact(n-1)   # récurrence
+
+fact(5)
+<span class="in">Out[14]:</span> <span class="out">120</span>
+
+<span class="in">In [15]:</span> # complexité ?  →  O(n)
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3>Parcours conseillé</h3>
+      <ol class="steps">
+        <li><div><b>Fiches 1 à 7 : bases Python et algos du TD</b><small>types, //, %, boucles, listes, compréhensions, glouton, Syracuse. ≈ 40 min</small></div></li>
+        <li><div><b>Fiche 8 : récursivité</b><small>les 3 étapes, la pile, toutes les fonctions du notebook B2. ≈ 30 min</small></div></li>
+        <li><div><b>Fiches 9 et 10 : tris, dichotomie, complexité</b><small>règles de calcul Big O et exemples corrigés du TD. ≈ 30 min</small></div></li>
+        <li><div><b>Pratique : au moins 3 exercices par thème</b><small>écris le code toi-même avant d'ouvrir la solution</small></div></li>
+        <li><div><b>Quiz par thème jusqu'à 80 %</b><small>relis l'explication de chaque erreur</small></div></li>
+        <li><div><b>Examen blanc de 1h30 en conditions réelles</b><small>puis revois les parties où tu perds des points</small></div></li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Gérer les 1h30 le jour J</h3>
+      <div class="timeline">
+        <div><b>0:00–0:05</b><span>Lire tout le sujet. Repérer les questions de cours rapides et les exercices de code.</span></div>
+        <div><b>0:05–0:25</b><span>Questions de cours et QCM : les points faciles d'abord.</span></div>
+        <div><b>0:25–0:45</b><span>Lecture de code et complexité : simuler à la main, écrire la trace des appels.</span></div>
+        <div><b>0:45–1:20</b><span>Écriture de fonctions : cas de base, récurrence, puis version itérative si demandée.</span></div>
+        <div><b>1:20–1:30</b><span>Relire : indentation, <code>return</code> oublié, <code>//</code> au lieu de <code>/</code>, bornes de <code>range</code>.</span></div>
+      </div>
+      <div class="trap">Même si une fonction récursive n'est pas parfaite, écris le cas de base et la relation de récurrence en commentaire : ce sont souvent eux qui rapportent les points.</div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:20px">
+    <h3>Je sais… <span class="history" id="ckCount"></span></h3>
+    <div class="bar"><i id="ckBar" style="width:0"></i></div>
+    <ul class="checklist" id="checklist"></ul>
+  </div>
+</div>
+
+<!-- =========================================================== COURS -->
+<div class="view" id="v-cours" hidden>
+  <div class="course">
+    <nav class="toc" id="toc" aria-label="Sommaire du cours"></nav>
+    <article class="chap" id="chap">
+
+<section id="c1" data-t="Algorithme & Python">
+  <div class="eyebrow">Fiche 1 · Cours B1</div>
+  <h2>Algorithme, Python et variables</h2>
+  <div class="def"><b>Algorithme :</b> suite d'instructions permettant la résolution d'un problème <b>en un nombre fini d'étapes</b>. À partir de données (les <b>entrées</b>), on parvient à un résultat (la <b>sortie</b>).</div>
+  <h3>Pourquoi Python 3 ?</h3>
+  <ul>
+    <li><b>Syntaxe simple</b> et mode console pour tester immédiatement.</li>
+    <li><b>Langage interprété</b> : les instructions sont exécutées au fur et à mesure. Un langage <i>compilé</i> traduit d'abord tout le programme en langage machine. Conséquence : un programme Python s'exécute jusqu'à la première erreur.</li>
+    <li><b>Haut niveau</b> : pas de gestion de la mémoire à faire.</li>
+    <li>Structures de données évoluées (listes, ensembles, dictionnaires), open source, beaucoup de bibliothèques.</li>
+  </ul>
+  <h3>Variables et types</h3>
+  <p>Une <b>variable</b> est un nom qui désigne une donnée susceptible de changer. Elle a un <b>type</b> qui fixe les valeurs possibles et les opérations permises.</p>
+  <ul>
+    <li><b>Typage dynamique</b> : on ne déclare pas le type, l'interpréteur le déduit à l'affectation.</li>
+    <li><b>Typage fort</b> : les opérations possibles dépendent du type (on ne peut pas faire <code>3 + 'b'</code>).</li>
+  </ul>
+  <div class="cell"><pre class="py">a = 3        ; print(type(a))    # int
+a = 3.5      ; print(type(a))    # float
+a = 'Campus' ; print(type(a))    # str
+a = True     ; print(type(a))    # bool
+b = 4/2      ; print(type(b), b) # float 2.0 : / donne TOUJOURS un float</pre></div>
+  <h3>Transtypage (conversion de type)</h3>
+  <div class="cell"><pre class="py">print(int(3.84))        # 3   → int() TRONQUE, il n'arrondit pas
+print(round(3.84, 1))   # 3.8
+print(round(3.84))      # 4
+print(int('1234') + 1)  # 1235 : str → int
+print(str(123) + '4')   # '1234' : int → str puis concaténation</pre></div>
+  <div class="trap"><code>int('Campus')</code> → <b>ValueError</b> (le texte n'est pas un nombre). <code>3 + 'b'</code> → <b>TypeError</b> (types incompatibles). Mais <code>3 * 'b'</code> → <code>'bbb'</code> (répétition).</div>
+  <h3>Opérateurs à connaître par cœur</h3>
+  <div class="tbl"><table>
+    <tr><th>Expression</th><th>Résultat</th><th>Sens</th></tr>
+    <tr><td><code>10 / 3</code></td><td><code>3.3333…</code></td><td>division dans ℝ (float)</td></tr>
+    <tr><td><code>10 // 3</code></td><td><code>3</code></td><td>quotient de la division euclidienne</td></tr>
+    <tr><td><code>10 % 3</code></td><td><code>1</code></td><td>reste de la division euclidienne (modulo)</td></tr>
+    <tr><td><code>2 ** 10</code> ou <code>pow(2,10)</code></td><td><code>1024</code></td><td>puissance</td></tr>
+    <tr><td><code>'a' + 'b'</code></td><td><code>'ab'</code></td><td>concaténation</td></tr>
+    <tr><td><code>0.1 + 0.2</code></td><td><code>0.30000000000000004</code></td><td>les float sont approchés</td></tr>
+  </table></div>
+  <div class="tip">Astuces à base de <code>//</code> et <code>%</code> (très fréquentes à l'examen) : <code>n % 2 == 0</code> teste la parité · <code>n % 10</code> donne le dernier chiffre · <code>n // 10</code> enlève le dernier chiffre · <code>n % 2</code> et <code>n // 2</code> servent à convertir en binaire.</div>
+  <p>Convention du prof : écrire <code>x = x + 1</code> plutôt que <code>x += 1</code>.</p>
+</section>
+
+<section id="c2" data-t="Chaînes de caractères">
+  <div class="eyebrow">Fiche 2 · Cours B1</div>
+  <h2>Chaînes de caractères (str)</h2>
+  <p>Une chaîne est une <b>suite de caractères</b> : on accède à chaque caractère par sa position (indice), en commençant à <b>0</b>. Les indices négatifs partent de la fin.</p>
+  <div class="cell"><pre class="py">s = 'Campus'
+print(s[0], s[-1])   # C s
+print(s[1:4])        # 'amp'  → de l'indice 1 inclus à 4 EXCLU
+print(s[1:])         # 'ampus' → tout sauf le premier (utile en récursivité !)
+print(s[::-1])       # 'supmaC' → chaîne inversée
+print(len(s))        # 6
+for c in s:
+    print(c, end=' * ')</pre></div>
+  <div class="trap">Les chaînes sont <b>non modifiables</b> (immuables) : <code>s[0] = 'c'</code> provoque une <b>TypeError</b>. Il faut construire une nouvelle chaîne.</div>
+  <p>Transtyper un nombre en chaîne permet de parcourir ses chiffres : <code>for c in str(1234): total = total + int(c)</code>.</p>
+</section>
+
+<section id="c3" data-t="Conditions">
+  <div class="eyebrow">Fiche 3 · Cours B1 + TD</div>
+  <h2>Structure conditionnelle</h2>
+  <p>Une condition est une <b>expression booléenne</b> qui vaut <code>True</code> ou <code>False</code>. Comparateurs : <code>&lt; &lt;= &gt; &gt;= == !=</code>. Opérateurs logiques : <code>and</code>, <code>or</code>, <code>not</code>.</p>
+  <p>Syntaxe : la ligne du test se termine par <b><code>:</code></b> et le bloc est <b>indenté</b>. Forme générale SI… ALORS / SINON SI / SINON :</p>
+  <div class="cell"><pre class="py">age = 16
+if age >= 18:
+    print("Majeur(e)")
+elif age &lt; 15:
+    print('Pas de conduite encore')
+else:
+    print('Conduite accompagnée')</pre></div>
+  <h3>La parité : 6 versions vues en TD</h3>
+  <div class="tbl"><table>
+    <tr><th>Version</th><th>Test « pair »</th></tr>
+    <tr><td>1. Classique (à privilégier)</td><td><code>nombre % 2 == 0</code></td></tr>
+    <tr><td>2. Why not</td><td><code>nombre/2 == int(nombre/2)</code> ou <code>nombre/2 == nombre//2</code></td></tr>
+    <tr><td>3. Dernier chiffre</td><td><code>nombre % 10 in [0,2,4,6,8]</code></td></tr>
+    <tr><td>4. Via chaîne</td><td><code>int(str(nombre)[-1]) in [0,2,4,6,8]</code></td></tr>
+    <tr><td>5. Comparaisons de caractères</td><td><code>nombre[-1]=='0' or nombre[-1]=='2' or …</code></td></tr>
+    <tr><td>6. Binaire (Halloween)</td><td><code>bin(nombre)[-1] == '0'</code></td></tr>
+  </table></div>
+  <h3>Équation du second degré (TD)</h3>
+  <div class="cell"><pre class="py">a, b, c = 1, -3, 2
+delta = b**2 - 4*a*c
+if delta > 0:
+    x1 = (-b - delta**0.5) / (2*a)
+    x2 = (-b + delta**0.5) / (2*a)
+    print('Deux solutions :', x1, x2)
+elif delta == 0:
+    print('Une solution double :', -b/(2*a))
+else:
+    print('Pas de solution réelle')</pre></div>
+</section>
+
+<section id="c4" data-t="Boucles for / while">
+  <div class="eyebrow">Fiche 4 · Cours B1 + TD</div>
+  <h2>Structures itératives : for et while</h2>
+  <div class="def"><b>for</b> : nombre d'itérations <b>fixe et connu</b> à l'avance, piloté par <code>range</code>.<br><b>while</b> : nombre d'itérations <b>non connu</b>, dépend d'une condition évaluée <b>avant</b> chaque tour (itération conditionnelle).</div>
+  <h3>range(début, fin, pas) : la fin est exclue</h3>
+  <div class="tbl"><table>
+    <tr><th>Appel</th><th>Valeurs</th></tr>
+    <tr><td><code>range(5)</code></td><td>0 1 2 3 4</td></tr>
+    <tr><td><code>range(1, 11)</code></td><td>1 à 10</td></tr>
+    <tr><td><code>range(0, 10, 3)</code></td><td>0 3 6 9</td></tr>
+    <tr><td><code>range(10, 0, -2)</code></td><td>10 8 6 4 2</td></tr>
+    <tr><td><code>range(2, n+1)</code></td><td>2 à n (factorielle itérative)</td></tr>
+  </table></div>
+  <h3>Boucle while : l'inflation (TD)</h3>
+  <p>Un ticket coûte 2 € en 2024 et augmente de 4 % par an. Augmenter de 4 % revient à <b>multiplier par 1,04</b> (coefficient = 1 + taux). En quelle année le prix aura-t-il doublé ?</p>
+  <div class="cell"><pre class="py">prix = 2                 # initialisation du prix
+annee = 2024             # initialisation de l'année
+while prix &lt; 4:          # tant que le prix n'a pas doublé
+    annee = annee + 1
+    prix = prix * 1.04
+print('Ce sera en', annee)</pre></div>
+  <div class="trap">Le prof considère <code>for</code> + <code>if</code> + <code>break</code> comme « ce qu'il ne faut pas faire en algo » : quand on ne connaît pas le nombre de tours, on utilise <code>while</code>.</div>
+  <h3>Boucles imbriquées</h3>
+  <div class="cell"><pre class="py">for i in range(1, 4):          # tables de 1 à 3
+    for j in range(1, 4):
+        print(i, 'x', j, '=', i*j)</pre></div>
+  <p>La boucle intérieure fait tous ses tours pour <b>chaque</b> tour de la boucle extérieure : 3 × 3 = 9 affichages. C'est la source des complexités O(n²).</p>
+  <h3>break et continue</h3>
+  <ul>
+    <li><code>break</code> : sort <b>définitivement</b> de la boucle qui le contient.</li>
+    <li><code>continue</code> : passe <b>directement à l'itération suivante</b>.</li>
+  </ul>
+  <div class="cell"><pre class="py">for i in range(10):
+    if i % 2 == 0:
+        continue      # saute les pairs
+    if i > 7:
+        break         # arrête tout à 9
+    print(i)          # 1 3 5 7</pre></div>
+</section>
+
+<section id="c5" data-t="Fonctions & procédures">
+  <div class="eyebrow">Fiche 5 · Cours B1</div>
+  <h2>Sous-programmes : fonctions et procédures</h2>
+  <p>Un sous-programme est un bloc d'instructions nommé, exécuté quand on l'appelle. Le programme principal se suspend, exécute le sous-programme, puis reprend.</p>
+  <div class="def"><b>Procédure :</b> modifie l'état du programme (affiche, modifie une liste…) <b>sans retourner de résultat</b>.<br><b>Fonction :</b> <b>retourne un résultat</b> avec <code>return</code>.</div>
+  <div class="cell"><pre class="py">def calcul_aire(longueur, largeur):   # FONCTION : renvoie une valeur
+    return longueur * largeur
+
+def table_de_multiplication(valeur):  # PROCÉDURE : affiche, ne renvoie rien
+    for i in range(0, 11):
+        print(valeur, 'x', i, '=', i*valeur)
+
+print(calcul_aire(10, 5))
+table_de_multiplication(9)</pre></div>
+  <h3>Trois avantages (question de cours classique)</h3>
+  <ol>
+    <li><b>Éviter la duplication de code</b> : un bloc utilisé à plusieurs endroits est écrit une seule fois.</li>
+    <li><b>Favoriser la réutilisation</b> : on peut créer des bibliothèques de sous-programmes.</li>
+    <li><b>Améliorer la conception</b> : découper un problème en sous-problèmes plus simples (hiérarchie de tâches).</li>
+  </ol>
+  <h3>assert : protéger le domaine de définition</h3>
+  <div class="cell"><pre class="py">def fact(n):
+    assert n >= 0 and int(n) == n, "La factorielle n'existe pas !"
+    if n == 0 or n == 1:
+        return 1
+    return n * fact(n-1)
+print(fact(5))</pre></div>
+  <p><code>assert condition, message</code> lève une <b>AssertionError</b> si la condition est fausse. C'est l'étape 3 de la méthode récursive (le « cas non voulu »).</p>
+  <div class="trap"><code>return</code> arrête immédiatement la fonction. Une fonction sans <code>return</code> renvoie <code>None</code>. Ne confonds pas <code>print</code> (affiche) et <code>return</code> (renvoie).</div>
+</section>
+
+<section id="c6" data-t="Listes, tuples, compréhensions">
+  <div class="eyebrow">Fiche 6 · Cours B1 + TD</div>
+  <h2>Séquences : listes, tuples, chaînes</h2>
+  <div class="tbl"><table>
+    <tr><th>Séquence</th><th>Éléments</th><th>Modifiable ?</th></tr>
+    <tr><td>Liste <code>[1, 'a', 2.5]</code></td><td>quelconques</td><td><b>Oui</b> (muable)</td></tr>
+    <tr><td>Tuple <code>(1, 'a')</code></td><td>quelconques</td><td>Non</td></tr>
+    <tr><td>Chaîne <code>'abc'</code></td><td>caractères</td><td>Non</td></tr>
+  </table></div>
+  <h3>Méthodes de liste vues en TD</h3>
+  <div class="cell"><pre class="py">tab = [5]
+tab.append(16)           # ajoute à la fin       → [5, 16]
+tab.append(20); tab.append(20)
+tab.extend([15, 13])     # ajoute PLUSIEURS éléments → [5, 16, 20, 20, 15, 13]
+tab.remove(15)           # supprime la 1re occurrence de la VALEUR 15
+print(tab.pop())         # retire et renvoie le DERNIER → 13   (PILE)
+print(tab.pop(0))        # retire et renvoie le PREMIER → 5    (FILE)
+tab.insert(1, 18)        # insère 18 à l'indice 1
+tab.sort()               # trie sur place
+print(tab, len(tab), min(tab), max(tab), sum(tab), 20 in tab)</pre></div>
+  <div class="def"><b>Pile (LIFO)</b> : dernier entré, premier sorti → <code>append</code> + <code>pop()</code>. <b>File (FIFO)</b> : premier entré, premier sorti → <code>append</code> + <code>pop(0)</code>. La récursivité utilise une pile.</div>
+  <h3>Listes imbriquées</h3>
+  <div class="cell"><pre class="py">tab2 = ['Olivier', 24, [12, 16, 19]]
+print(tab2[2])       # [12, 16, 19]
+print(tab2[2][0])    # 12
+print(tab2[2][-1])   # 19
+print(tab2[0][0])    # 'O' : 1re lettre de 'Olivier'</pre></div>
+  <h3>Les listes sont muables</h3>
+  <p>Deux conséquences : on peut modifier, ajouter, supprimer des éléments, et <b>une liste passée en paramètre peut être modifiée par la fonction</b>.</p>
+  <div class="cell"><pre class="py">def vider(t):
+    while len(t) > 0:
+        t.pop()
+L = [1, 2, 3]
+vider(L)
+print(L)   # [] : la liste d'origine a été modifiée</pre></div>
+  <h3>Listes en compréhension</h3>
+  <p>On applique une opération à chaque élément d'une séquence pour construire une liste, en une ligne : <code>[expression for x in séquence if condition]</code>.</p>
+  <div class="cell"><pre class="py">print([(i, i**2) for i in range(1, 6)])                 # couples (i, i²)
+print([(i, i**2) for i in range(1, 11) if i % 2 == 0])  # seulement les pairs
+print([i**3 for i in [4, 5, 8, 11]])                    # [64, 125, 512, 1331]
+print([(i, j) for i in range(1, 5) for j in range(1, 5) if i != j])
+print([(i, j) for i in range(1, 5) for j in range(i+1, 5)])  # sans doublons</pre></div>
+  <p>Équivalent avec une boucle classique :</p>
+  <div class="cell"><pre class="py">tab = []
+for i in range(1, 11):
+    tab.append((i, i**2))
+print(tab)</pre></div>
+  <h3>Listes à deux dimensions (matrices, plateaux de jeu)</h3>
+  <div class="cell"><pre class="py">plateau = [[0, 0, 0] for i in range(3)]   # 3 lignes, 3 colonnes
+plateau[1][1] = 'X'                       # ligne 1, colonne 1
+for ligne in plateau:
+    print(ligne)
+grille = [[0]*3 for i in range(4)]        # 4 lignes × 3 colonnes
+grille[2][1] = 666
+print(grille)</pre></div>
+  <div class="trap"><code>[[0]*3]*3</code> crée 3 fois <b>la même</b> ligne : modifier <code>p[0][0]</code> modifie les trois lignes. Utilise toujours la compréhension <code>[[0]*3 for i in range(3)]</code>.</div>
+</section>
+
+<section id="c7" data-t="Algorithmes du TD">
+  <div class="eyebrow">Fiche 7 · TD codes B1</div>
+  <h2>Les algorithmes classiques du TD</h2>
+  <h3>Statistiques : min, max, moyenne sans tableau</h3>
+  <div class="cell"><pre class="py">notes = [12, 16, 5, 9]
+mini, maxi, somme = 20, 0, 0       # mini part du max possible, maxi du min possible
+for note in notes:
+    if note &lt; mini:
+        mini = note
+    if note > maxi:
+        maxi = note
+    somme = somme + note
+print(mini, maxi, somme / len(notes))</pre></div>
+  <h3>Médiane (il faut trier)</h3>
+  <div class="cell"><pre class="py">notes = [7, 10, 13, 5]
+notes.sort()
+milieu = len(notes) // 2
+if len(notes) % 2 != 0:
+    print(notes[milieu])
+else:
+    print((notes[milieu] + notes[milieu-1]) / 2)   # 8.5</pre></div>
+  <h3>Rendu de monnaie : algorithme glouton</h3>
+  <div class="def"><b>Algorithme glouton :</b> à chaque étape, on fait le choix qui paraît le meilleur <b>localement</b> (ici : la plus grande pièce ou le plus grand billet ≤ au reste à rendre), sans revenir en arrière.</div>
+  <div class="cell"><pre class="py">MONNAIE = [500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01]
+rendre = round(200 - 64.08, 2)
+rendu = []
+i = 0
+while rendre > 0:
+    if MONNAIE[i] &lt;= rendre:
+        rendu.append(MONNAIE[i])
+        rendre = round(rendre - MONNAIE[i], 2)   # round : à cause des float !
+    else:
+        i = i + 1
+print(rendu)</pre></div>
+  <div class="trap">Avec des centimes, toujours <code>round(…, 2)</code> après une soustraction de float, sinon <code>0.30000000000000004</code> fausse les comparaisons.</div>
+  <h3>Suite de Syracuse</h3>
+  <p>Tant que n ≠ 1 : si n est pair on le divise par 2, sinon on fait 3n + 1.</p>
+  <div class="cell"><pre class="py">n = 6
+etapes = 0
+while n != 1:
+    if n % 2 == 0:
+        n = n // 2
+    else:
+        n = 3*n + 1
+    etapes = etapes + 1
+    print(n, end=' ')
+print('\nTemps de vol :', etapes)</pre></div>
+  <h3>Fibonacci (avec et sans tableau)</h3>
+  <div class="cell"><pre class="py">n = 10
+tab = [1, 1]
+for i in range(2, n):
+    tab.append(tab[i-1] + tab[i-2])
+print(tab)
+
+a, b = 1, 1                 # sans tableau : deux variables suffisent
+for i in range(2, n):
+    a, b = b, a + b
+print(b, b / a)             # le rapport tend vers le nombre d'or ≈ 1,618</pre></div>
+  <h3>Morpion : tester la victoire</h3>
+  <p>Il y a <b>8 alignements</b> : 3 lignes, 3 colonnes, 2 diagonales. La case ne doit pas être vide (≠ 0).</p>
+  <div class="cell"><pre class="py">def test(t):
+    for i in range(3):   # colonnes
+        if t[0][i] == t[1][i] == t[2][i] != 0:
+            return True
+    for i in range(3):   # lignes
+        if t[i][0] == t[i][1] == t[i][2] != 0:
+            return True
+    if t[0][0] == t[1][1] == t[2][2] != 0:   # diagonale
+        return True
+    if t[0][2] == t[1][1] == t[2][0] != 0:   # anti-diagonale
+        return True
+    return False
+
+print(test([[0, 2, 1], [0, 1, 0], [1, 0, 2]]))   # True (anti-diagonale de 1)</pre></div>
+  <h3>Deviner un nombre et Monte-Carlo</h3>
+  <p><code>from random import randint</code> puis <code>randint(1, 100)</code> donne un entier entre 1 et 100 <b>inclus</b>. <code>random()</code> donne un float dans [0 ; 1[. Monte-Carlo : on tire des points au hasard dans un carré de côté 1 ; la proportion de points dans le quart de cercle (x² + y² ≤ 1) tend vers π/4.</p>
+  <div class="cell"><pre class="py">from random import random
+dedans = 0
+N = 20000
+for i in range(N):
+    x, y = random(), random()
+    if x*x + y*y &lt;= 1:
+        dedans = dedans + 1
+print(4 * dedans / N)   # ≈ 3.14, convergence très lente</pre></div>
+</section>
+
+<section id="c8" data-t="Récursivité">
+  <div class="eyebrow">Fiche 8 · Cours B1, TD récursivité, notebook B2</div>
+  <h2>Récursivité</h2>
+  <div class="def"><b>Sous-programme récursif :</b> un sous-programme qui <b>s'appelle lui-même</b>. On ramène le problème à un problème similaire mais plus petit, jusqu'à un problème élémentaire dont on connaît la solution. Par opposition, un sous-programme qui ne s'appelle pas est <b>itératif</b>.</div>
+  <p>Les problèmes intermédiaires sont stockés dans une <b>pile</b> (on y accède dans l'ordre inverse de leur ajout). Image du TD : les poupées russes, on ouvre jusqu'à la plus petite.</p>
+  <h3>Écrire une fonction récursive en 3 étapes</h3>
+  <ol>
+    <li><b>Cas récursif (relation de récurrence)</b> : n! = n × (n−1)!</li>
+    <li><b>Cas de base (critère d'arrêt)</b> : 0! = 1 et 1! = 1</li>
+    <li><b>Cas non voulu (contrainte)</b> : factorielle(−1) ? factorielle(1.5) ? → <code>assert</code></li>
+  </ol>
+  <div class="cell"><pre class="py">def factorielle(n):
+    assert n >= 0 and int(n) == n, 'n doit être entier positif ou nul'  # étape 3
+    if n in [0, 1]:                                                    # étape 2
+        return 1
+    return n * factorielle(n-1)                                        # étape 1
+print(factorielle(4))</pre></div>
+  <h3>Trace de factorielle(4) : la pile d'appels</h3>
+  <div class="term">factorielle(4) = 4 * factorielle(3)        ← empilé
+                   3 * factorielle(2)     ← empilé
+                       2 * factorielle(1) ← empilé
+                           1              ← cas de base atteint, on dépile
+                       2 * 1 = 2
+                   3 * 2 = 6
+               4 * 6 = 24  <span class="out">→ 24</span></div>
+  <div class="trap">Sans cas de base (ou si on ne s'en rapproche jamais), la fonction s'appelle à l'infini → <b>RecursionError: maximum recursion depth exceeded</b>.</div>
+
+  <h3>Récursif ou itératif ? (tableau du TD)</h3>
+  <div class="tbl"><table>
+    <tr><th>Critère</th><th>Récursif</th><th>Itératif</th><th>Pourquoi</th></tr>
+    <tr><td>Économe en mémoire ?</td><td>Non</td><td>Oui</td><td>la récursion utilise la pile</td></tr>
+    <tr><td>Rapide ?</td><td>Non</td><td>Oui</td><td>empiler/dépiler les appels coûte du temps</td></tr>
+    <tr><td>Facile à écrire ?</td><td>Oui</td><td>Non</td><td>quand le problème se découpe en sous-problèmes similaires</td></tr>
+  </table></div>
+  <p>On peut <b>toujours</b> transformer un algorithme récursif en itératif et inversement. La récursivité est indispensable sur les structures complexes : listes, arbres, graphes.</p>
+
+  <h3>Le catalogue du notebook B2 (récursif ↔ itératif)</h3>
+  <h4>Puissance xⁿ</h4>
+  <div class="cell"><pre class="py">def puissance(x, n):            # xⁿ = x × xⁿ⁻¹ ; x⁰ = 1
+    assert n >= 0 and int(n) == n
+    if n == 0:
+        return 1
+    return x * puissance(x, n-1)
+
+def puissance_iter(x, n):
+    resultat = 1
+    for _ in range(n):          # _ : variable inutilisée
+        resultat = x * resultat
+    return resultat
+
+def puissance_rapide(x, n):     # diviser pour régner : O(log n)
+    if n == 0:
+        return 1
+    m = puissance_rapide(x, n // 2)
+    if n % 2 == 0:
+        return m * m
+    return x * m * m
+
+print(puissance(2, 10), puissance_iter(2, 10), puissance_rapide(2, 10))</pre></div>
+  <h4>Fibonacci (récursivité multiple)</h4>
+  <p>Quand une fonction s'appelle <b>plusieurs fois</b>, on parle de <b>récursivité multiple</b>. Attention à la convention du prof : <code>fibo(0) = fibo(1) = 1</code>, donc <code>fibo(5) = 8</code>.</p>
+  <div class="cell"><pre class="py">def fibo(n):
+    if n == 0 or n == 1:
+        return 1
+    return fibo(n-1) + fibo(n-2)      # 2 appels → O(2ⁿ)
+
+def fibo_iteratif(n):
+    a, b = 1, 1
+    for _ in range(n):
+        a, b = b, a + b               # affectation simultanée
+    return a                          # O(n)
+
+print(fibo(5), fibo_iteratif(5))</pre></div>
+  <h4>Coefficients binomiaux (autre récursivité multiple, cours B1)</h4>
+  <div class="cell"><pre class="py">def binomial(n, k):
+    if k == 0 or k == n:
+        return 1
+    return binomial(n-1, k-1) + binomial(n-1, k)   # triangle de Pascal
+print(binomial(4, 2), binomial(10, 3))</pre></div>
+  <h4>RecursiveRange : somme de 0 à n</h4>
+  <div class="cell"><pre class="py">def Rr(n):
+    if n == 0:
+        return 0
+    return n + Rr(n-1)
+
+def Ir(n):
+    resultat = 0
+    for i in range(1, n+1):
+        resultat = resultat + i
+    return resultat
+
+def formule(n):                 # formule directe : O(1)
+    return (n+1) * n // 2
+
+print(Rr(10), Ir(10), formule(10))</pre></div>
+  <h4>Produit des éléments d'un tableau</h4>
+  <div class="cell"><pre class="py">def ProductofArray(tab):
+    if len(tab) == 0:
+        return 1                         # élément neutre de la multiplication
+    return tab[0] * ProductofArray(tab[1:])   # premier × produit du reste
+
+def ProductofArray2(tab):
+    if len(tab) == 0:
+        return 1
+    return tab.pop() * ProductofArray2(tab)   # avec pop : MODIFIE la liste !
+
+print(ProductofArray([1, 8, 5, 4]), ProductofArray2([1, 8, 5, 4]))</pre></div>
+  <h4>Somme des chiffres d'un nombre</h4>
+  <p>Ici « / » dans l'énoncé signifie la division euclidienne <code>//</code>. Applications : nombres Harshad (divisibles par la somme de leurs chiffres), nombres parfaits…</p>
+  <div class="cell"><pre class="py">def somme_chiffre(n):
+    if n &lt; 10:
+        return n
+    return n % 10 + somme_chiffre(n // 10)
+# 1234 → 4 + sc(123) → 4 + 3 + sc(12) → 4 + 3 + 2 + sc(1) → 4+3+2+1 = 10
+
+def somme_chiffre_iterative(n):
+    resultat = 0
+    while n > 0:
+        resultat = resultat + n % 10
+        n = n // 10
+    return resultat
+
+def defi1(n):                     # version récursive par transtypage
+    n = str(n)
+    if n == '':
+        return 0
+    return int(n[0]) + defi1(n[1:])
+
+print(somme_chiffre(1234), somme_chiffre_iterative(1234), defi1(123456))</pre></div>
+  <h4>Conversion décimal → binaire</h4>
+  <div class="cell"><pre class="py">def conversion(n):
+    if n == 0:
+        return 0
+    return n % 2 + 10 * conversion(n // 2)
+
+def conversion_iter(n):           # le « petit défi » du TD
+    if n == 0:
+        return '0'
+    bits = ''
+    while n > 0:
+        bits = str(n % 2) + bits  # on ajoute le reste devant
+        n = n // 2
+    return bits
+
+print(conversion(42), conversion_iter(42))   # 101010</pre></div>
+  <p>Pourquoi ça marche : 42 = 2 × 21 + 0, 21 = 2 × 10 + 1, 10 = 2 × 5 + 0, 5 = 2 × 2 + 1, 2 = 2 × 1 + 0, 1 = 2 × 0 + 1. On lit les restes de bas en haut : 101010.</p>
+
+  <h3>Diviser pour régner</h3>
+  <div class="def">Trois phases : <b>Diviser</b> les données en sous-parties · <b>Régner</b> : résoudre chaque sous-problème (récursivement ou directement) · <b>Combiner</b> les résultats pour résoudre le problème initial. Exemples : recherche dichotomique, tri fusion, tri rapide, puissance rapide.</div>
+
+  <h3>Lire une fonction récursive qui affiche</h3>
+  <div class="cell"><pre class="py">def avant(n):
+    if n > 0:
+        print(n, end=' ')   # affichage AVANT l'appel → 3 2 1
+        avant(n-1)
+
+def apres(n):
+    if n > 0:
+        apres(n-1)
+        print(n, end=' ')   # affichage APRÈS l'appel (au dépilement) → 1 2 3
+
+avant(3); print(); apres(3)</pre></div>
+</section>
+
+<section id="c9" data-t="Tris & dichotomie">
+  <div class="eyebrow">Fiche 9 · Cours B1 (programme B2)</div>
+  <h2>Algorithmes de tri et recherche dichotomique</h2>
+  <p>Objectif : réordonner une liste de nombres par ordre croissant, <b>sur place</b> (sans liste intermédiaire, pour économiser la mémoire). Le cours annonce 5 tris : 3 itératifs (sélection, bulles, insertion) et 2 récursifs (fusion, rapide).</p>
+  <h3>Recherche dichotomique (tableau TRIÉ)</h3>
+  <p>On compare avec l'élément du milieu et on élimine la moitié du tableau à chaque étape. Taille 16 → 8 → 4 → 2 → 1 : 2ᵏ = N donc k = log₂N étapes.</p>
+  <div class="cell"><pre class="py">def dichotomie(tab, x):
+    debut, fin = 0, len(tab) - 1
+    while debut &lt;= fin:
+        milieu = (debut + fin) // 2
+        if tab[milieu] == x:
+            return milieu
+        elif tab[milieu] &lt; x:
+            debut = milieu + 1      # on garde la moitié droite
+        else:
+            fin = milieu - 1        # on garde la moitié gauche
+    return -1                       # absent
+
+print(dichotomie([1, 5, 8, 9, 11, 13, 15, 19, 21], 9))   # 3</pre></div>
+  <h3>Tri par sélection</h3>
+  <p>Pour chaque position i, on cherche le <b>minimum</b> de la partie non triée et on l'échange avec <code>tab[i]</code>.</p>
+  <div class="cell"><pre class="py">def tri_selection(tab):
+    n = len(tab)
+    for i in range(n - 1):
+        imin = i
+        for j in range(i + 1, n):
+            if tab[j] &lt; tab[imin]:
+                imin = j
+        tab[i], tab[imin] = tab[imin], tab[i]   # échange
+    return tab
+print(tri_selection([5, 1, 4, 2, 8]))</pre></div>
+  <h3>Tri à bulles</h3>
+  <p>On compare les éléments <b>voisins</b> et on les échange s'ils sont mal rangés. Après chaque passage, le plus grand élément « remonte » à la fin.</p>
+  <div class="cell"><pre class="py">def tri_bulles(tab):
+    n = len(tab)
+    for i in range(n - 1):
+        for j in range(n - 1 - i):
+            if tab[j] > tab[j+1]:
+                tab[j], tab[j+1] = tab[j+1], tab[j]
+    return tab
+print(tri_bulles([5, 1, 4, 2, 8]))</pre></div>
+  <h3>Tri par insertion</h3>
+  <p>Comme quand on range des cartes en main : on prend chaque élément et on l'<b>insère</b> à sa place dans la partie déjà triée à sa gauche.</p>
+  <div class="cell"><pre class="py">def tri_insertion(tab):
+    for i in range(1, len(tab)):
+        cle = tab[i]
+        j = i - 1
+        while j >= 0 and tab[j] > cle:
+            tab[j+1] = tab[j]     # décale vers la droite
+            j = j - 1
+        tab[j+1] = cle
+    return tab
+print(tri_insertion([5, 1, 4, 2, 8]))</pre></div>
+  <h3>Tri fusion (diviser pour régner)</h3>
+  <p>On coupe la liste en deux, on trie chaque moitié récursivement, puis on <b>fusionne</b> deux listes triées.</p>
+  <div class="cell"><pre class="py">def fusion(a, b):
+    res = []
+    i, j = 0, 0
+    while i &lt; len(a) and j &lt; len(b):
+        if a[i] &lt;= b[j]:
+            res.append(a[i]); i = i + 1
+        else:
+            res.append(b[j]); j = j + 1
+    return res + a[i:] + b[j:]
+
+def tri_fusion(tab):
+    if len(tab) &lt;= 1:
+        return tab
+    m = len(tab) // 2
+    return fusion(tri_fusion(tab[:m]), tri_fusion(tab[m:]))
+print(tri_fusion([6, 3, 9, 8, 5, 1]))</pre></div>
+  <h3>Tri rapide (quicksort)</h3>
+  <p>On choisit un <b>pivot</b>, on place à gauche les éléments plus petits et à droite les plus grands, puis on trie récursivement chaque côté.</p>
+  <div class="cell"><pre class="py">def tri_rapide(tab):
+    if len(tab) &lt;= 1:
+        return tab
+    pivot = tab[-1]
+    gauche = [x for x in tab[:-1] if x &lt; pivot]
+    droite = [x for x in tab[:-1] if x >= pivot]
+    return tri_rapide(gauche) + [pivot] + tri_rapide(droite)
+print(tri_rapide([6, 3, 9, 8, 5]))</pre></div>
+  <h3>Récapitulatif</h3>
+  <div class="tbl"><table>
+    <tr><th>Tri</th><th>Meilleur cas</th><th>Moyen</th><th>Pire cas</th><th>Type</th></tr>
+    <tr><td>Sélection</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>itératif</td></tr>
+    <tr><td>Bulles</td><td>O(n)*</td><td>O(n²)</td><td>O(n²)</td><td>itératif</td></tr>
+    <tr><td>Insertion</td><td>O(n) (déjà trié)</td><td>O(n²)</td><td>O(n²)</td><td>itératif</td></tr>
+    <tr><td>Fusion</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>récursif</td></tr>
+    <tr><td>Rapide</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²) (mauvais pivot)</td><td>récursif</td></tr>
+  </table></div>
+  <p style="font-size:.88rem;color:var(--muted)">* bulles optimisé : on s'arrête si aucun échange n'a eu lieu pendant un passage. La diapo du TD complexité simplifie le tri rapide en « meilleur cas O(N) » ; la valeur habituelle est O(n log n).</p>
+</section>
+
+<section id="c10" data-t="Complexité (Big O)">
+  <div class="eyebrow">Fiche 10 · TD complexité</div>
+  <h2>Complexité algorithmique</h2>
+  <div class="def"><b>Big O</b> est la métrique utilisée pour décrire l'<b>efficacité</b> d'un algorithme : comment le nombre d'opérations grandit quand la taille n des données grandit. Exemple du TD : peindre un mur de largeur w et hauteur h → <b>O(w × h)</b>.</div>
+  <h3>Pire cas, cas moyen, meilleur cas</h3>
+  <ul>
+    <li><b>Big O</b> : borne du <b>pire cas</b> (complexité inférieure ou égale au pire cas).</li>
+    <li><b>Big Ω (Oméga)</b> : borne du <b>meilleur cas</b>.</li>
+    <li><b>Big Θ (Thêta)</b> : présenté en TD comme la complexité « médiane » entre pire et meilleur cas.</li>
+  </ul>
+  <p>Exemple : rechercher une valeur en parcourant un tableau de n cases → <b>O(n)</b> (elle est à la fin ou absente), <b>Ω(1)</b> (elle est en première case), <b>Θ(n/2)</b> en moyenne.</p>
+  <h3>Les classes de complexité</h3>
+  <div class="tbl"><table>
+    <tr><th>Complexité</th><th>Nom</th><th>Exemple</th><th class="num">n = 1 000</th></tr>
+    <tr><td>O(1)</td><td>constante</td><td>accéder à <code>tab[0]</code>, formule n(n+1)/2</td><td class="num">1</td></tr>
+    <tr><td>O(log n)</td><td>logarithmique</td><td>recherche dichotomique, boucle où n est divisé par 2</td><td class="num">≈ 10</td></tr>
+    <tr><td>O(n)</td><td>linéaire</td><td>parcourir un tableau, fact récursive</td><td class="num">1 000</td></tr>
+    <tr><td>O(n log n)</td><td>quasi-linéaire</td><td>tri fusion, tri rapide (moyen)</td><td class="num">≈ 10 000</td></tr>
+    <tr><td>O(n²)</td><td>quadratique</td><td>deux boucles imbriquées, tris simples</td><td class="num">1 000 000</td></tr>
+    <tr><td>O(2ⁿ)</td><td>exponentielle</td><td>Fibonacci à double récursion</td><td class="num">≈ 10³⁰¹</td></tr>
+    <tr><td>O(n!)</td><td>factorielle</td><td>tester toutes les permutations</td><td class="num">énorme</td></tr>
+  </table></div>
+  <p>Ordre à retenir (de la meilleure à la pire) : <b>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ) &lt; O(n!)</b>.</p>
+  <h3>Règles de calcul</h3>
+  <div class="tbl"><table>
+    <tr><th>Règle</th><th>Exemple</th></tr>
+    <tr><td><b>On supprime les constantes</b></td><td>O(2N) → O(N) ; O(n/2) → O(n)</td></tr>
+    <tr><td><b>On garde le terme dominant</b></td><td>O(N² + N) → O(N²) ; O(N + log N) → O(N) ; O(2·2ᴺ + 1000N¹⁰⁰) → O(2ᴺ)</td></tr>
+    <tr><td><b>« Fais ceci, puis cela » → on ADDITIONNE</b></td><td>une boucle sur A puis une boucle sur B : O(A + B)</td></tr>
+    <tr><td><b>« Fais ceci pour chaque fois que tu fais cela » → on MULTIPLIE</b></td><td>boucle sur B imbriquée dans une boucle sur A : O(A × B)</td></tr>
+  </table></div>
+  <div class="tbl"><table>
+    <tr><th>Règle</th><th>Description</th><th>Complexité</th></tr>
+    <tr><td>1</td><td>Affectations et <code>if</code> exécutés une fois quelle que soit la taille</td><td>O(1)</td></tr>
+    <tr><td>2</td><td>Une boucle <code>for</code> simple de 0 à n (sans boucle interne)</td><td>O(n)</td></tr>
+    <tr><td>3</td><td>Deux boucles imbriquées de même type</td><td>O(n²)</td></tr>
+    <tr><td>4</td><td>Boucle dont la variable de contrôle est divisée par 2 à chaque tour</td><td>O(log n)</td></tr>
+    <tr><td>5</td><td>Plusieurs instructions à la suite : on additionne</td><td>somme</td></tr>
+  </table></div>
+
+  <h3>Exemples corrigés du TD</h3>
+  <h4>findBiggestNumber → O(n)</h4>
+  <div class="cell"><pre class="py">def findBiggestNumber(sampleArray):
+    biggestNumber = sampleArray[0]                    # O(1)
+    for index in range(1, len(sampleArray)):          # O(n)
+        if sampleArray[index] > biggestNumber:        #   O(1)
+            biggestNumber = sampleArray[index]        #   O(1)
+    print(biggestNumber)                              # O(1)
+findBiggestNumber([5, 4, 10, 8, 11, 68, 87])
+# O(1) + O(n) + O(1) → O(n)</pre></div>
+  <h4>Fonction récursive simple → O(n)</h4>
+  <div class="cell"><pre class="py">def findMaxNumRec(sampleArray, n):          # M(n)
+    if n == 1:                              # O(1)
+        return sampleArray[0]               # O(1)
+    return max(sampleArray[n-1], findMaxNumRec(sampleArray, n-1))   # M(n-1)
+print(findMaxNumRec([5, 4, 10, 8, 11, 68, 87, 10], 8))</pre></div>
+  <p>On pose M(n) = O(1) + M(n−1) et M(1) = O(1). En déroulant : M(n) = 1 + M(n−1) = 2 + M(n−2) = … = a + M(n−a). Avec a = n−1 : M(n) = n − 1 + M(1) = n. Donc <b>O(n)</b>.</p>
+  <h4>Fonction à double appel récursif → O(2ⁿ)</h4>
+  <div class="cell"><pre class="py">def f(n):
+    if n &lt;= 1:
+        return 1
+    return f(n-1) + f(n-1)
+print(f(4))</pre></div>
+  <p>Arbre des appels : niveau 0 → 1 appel, niveau 1 → 2, niveau 2 → 4… soit 2⁰ + 2¹ + … + 2ⁿ⁻¹ = 2ⁿ − 1 appels → <b>O(2ⁿ)</b>. Règle générale : <b>O(branches^profondeur)</b>.</p>
+  <h4>Deux boucles successives → O(n)</h4>
+  <div class="cell"><pre class="py">def foo(array):
+    sum = 0                       # O(1)
+    product = 1                   # O(1)
+    for i in array:               # O(n)
+        sum = sum + i
+    for i in array:               # O(n)
+        product = product * i
+    print("Sum =", sum, ", Product =", product)
+foo([1, 2, 3, 4])
+# O(n) + O(n) = O(2n) → O(n)</pre></div>
+  <h4>Deux boucles imbriquées → O(n²)</h4>
+  <div class="cell"><pre class="py">def printPairs(array):
+    for i in array:           # O(n)
+        for j in array:       # O(n) pour CHAQUE i
+            print(i, j)       # → O(n × n) = O(n²)
+printPairs([1, 2, 3])</pre></div>
+  <h4>Paires non ordonnées → O(n²) quand même</h4>
+  <div class="cell"><pre class="py">def printUnorderedPairs(array):
+    for i in range(0, len(array)):
+        for j in range(i+1, len(array)):
+            print(array[i], array[j])
+printUnorderedPairs([1, 2, 3, 4])</pre></div>
+  <p>Méthode 1 (compter) : (n−1) + (n−2) + … + 2 + 1 = n(n−1)/2 = n²/2 − n/2 → <b>O(n²)</b>. Méthode 2 (travail moyen) : la boucle externe fait n tours, la boucle interne fait en moyenne n/2 tours → n × n/2 = n²/2 → <b>O(n²)</b>.</p>
+  <h4>Deux tableaux différents → O(a × b)</h4>
+  <div class="cell"><pre class="py">def pairs(arrayA, arrayB):
+    for i in range(len(arrayA)):              # a tours
+        for j in range(len(arrayB)):          # b tours
+            for k in range(0, 100000):        # constante ! O(1)
+                pass
+# O(a × b × 100000) → on supprime la constante → O(a × b)</pre></div>
+  <div class="trap">Ne pas écrire O(n²) quand les deux boucles parcourent deux tableaux différents : c'est <b>O(a × b)</b>. Et une boucle de taille fixe (100 000, 10…) ne compte pas : c'est une constante.</div>
+
+  <h3>Complexité des fonctions du notebook</h3>
+  <div class="tbl"><table>
+    <tr><th>Fonction</th><th>Temps</th><th>Raison</th></tr>
+    <tr><td><code>fact</code>, <code>puissance</code>, <code>Rr</code> (récursives)</td><td>O(n)</td><td>n appels, chacun en O(1). Mémoire de pile O(n).</td></tr>
+    <tr><td><code>fact_iter</code>, <code>Ir</code>, <code>fibo_iteratif</code></td><td>O(n)</td><td>une boucle de n tours. Mémoire O(1).</td></tr>
+    <tr><td><code>formule(n)</code></td><td>O(1)</td><td>un seul calcul</td></tr>
+    <tr><td><code>fibo</code> récursif</td><td>O(2ⁿ)</td><td>deux appels par niveau</td></tr>
+    <tr><td><code>somme_chiffre</code>, <code>conversion</code></td><td>O(log n)</td><td>n est divisé par 10 ou par 2 à chaque appel (nombre de chiffres)</td></tr>
+    <tr><td><code>puissance_rapide</code></td><td>O(log n)</td><td>n est divisé par 2</td></tr>
+    <tr><td><code>ProductofArray(tab[1:])</code></td><td>O(n²)</td><td>le découpage <code>tab[1:]</code> copie la liste à chaque appel</td></tr>
+    <tr><td><code>ProductofArray2</code> (pop)</td><td>O(n)</td><td><code>pop()</code> en fin de liste est en O(1)</td></tr>
+  </table></div>
+  <div class="tip">Pour trouver une complexité : (1) repère ce qui dépend de n ; (2) donne O(1) aux lignes simples ; (3) boucle simple → n, imbriquée → multiplie, à la suite → additionne, divisée par 2 → log n ; (4) récursif : nombre d'appels × coût d'un appel ; (5) supprime constantes et termes non dominants.</div>
+</section>
+
+    </article>
+  </div>
+</div>
+
+<!-- =========================================================== PRATIQUE -->
+<div class="view" id="v-pratique" hidden>
+  <div class="eyebrow">Pratique · code corrigé automatiquement</div>
+  <h2>Exercices de programmation</h2>
+  <p class="lede">Écris la fonction, clique sur <b>Tester</b> : ton code est exécuté dans le navigateur et comparé aux résultats attendus. Ton code est sauvegardé sur cet appareil.</p>
+  <div class="engine" id="engine"><i></i><span>Le moteur Python se charge au premier lancement.</span></div>
+  <div class="prac" style="margin-top:18px">
+    <nav class="exlist" id="exlist" aria-label="Liste des exercices"></nav>
+    <div class="exo" id="exo"></div>
+  </div>
+</div>
+
+<!-- =========================================================== QUIZ -->
+<div class="view" id="v-quiz" hidden>
+  <div class="eyebrow">Quiz · questions de cours, lecture de code, complexité</div>
+  <h2>Quiz d'entraînement</h2>
+  <p class="lede">Choisis un ou plusieurs thèmes, puis réponds à 10 questions tirées au hasard. Chaque réponse est corrigée et expliquée immédiatement.</p>
+  <div class="qsetup" id="qthemes"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn primary" id="qstart" type="button">Nouveau quiz (10 questions)</button>
+    <button class="btn" id="qall" type="button">Toutes les questions du thème</button>
+  </div>
+  <div id="qzone"></div>
+</div>
+
+<!-- =========================================================== EXAMEN -->
+<div class="view" id="v-examen" hidden>
+  <div class="eyebrow">Examen blanc · 1h30 · noté sur 20</div>
+  <h2>Examen blanc en conditions réelles</h2>
+  <div id="examzone"></div>
+</div>
+
+<!-- =========================================================== MÉMO -->
+<div class="view" id="v-memo" hidden>
+  <div class="eyebrow">Mémo · à relire juste avant l'épreuve</div>
+  <h2 style="margin-bottom:18px">L'essentiel sur une page</h2>
+  <div class="memo">
+    <div class="panel"><h3>Opérateurs</h3><ul>
+      <li><code>/</code> float · <code>//</code> quotient · <code>%</code> reste · <code>**</code> puissance</li>
+      <li><code>n%2==0</code> pair · <code>n%10</code> dernier chiffre · <code>n//10</code> retire le dernier chiffre</li>
+      <li><code>int(3.84)=3</code> (tronque) · <code>round(3.84)=4</code></li>
+      <li><code>3*'b'='bbb'</code> · <code>3+'b'</code> TypeError · <code>int('abc')</code> ValueError</li>
+    </ul></div>
+    <div class="panel"><h3>Boucles</h3><ul>
+      <li><code>range(a,b,p)</code> : b est exclu</li>
+      <li>for : nombre de tours connu · while : condition</li>
+      <li>break : sort · continue : tour suivant</li>
+    </ul></div>
+    <div class="panel"><h3>Listes</h3><ul>
+      <li><code>append(x)</code> · <code>extend([..])</code> · <code>insert(i,x)</code></li>
+      <li><code>remove(v)</code> par valeur · <code>pop()</code> fin (pile) · <code>pop(0)</code> début (file)</li>
+      <li><code>t[1:]</code> tout sauf le 1er · <code>t[-1]</code> dernier · <code>t[::-1]</code> inversé</li>
+      <li>Liste muable : modifiée par une fonction · tuple et str : non modifiables</li>
+      <li>Matrice : <code>[[0]*c for i in range(l)]</code></li>
+    </ul><pre>[x**2 for x in range(10) if x%2==0]</pre></div>
+    <div class="panel"><h3>Récursivité en 3 étapes</h3><ul>
+      <li>1. Relation de récurrence (cas récursif)</li>
+      <li>2. Cas de base (arrêt)</li>
+      <li>3. Cas non voulu → <code>assert</code></li>
+      <li>Pile d'appels · sans cas de base → RecursionError</li>
+      <li>Récursivité multiple : plusieurs appels (fibo, binomial)</li>
+    </ul><pre>def f(n):
+    if n == 0:        # base
+        return ...
+    return ... f(n-1) # récurrence</pre></div>
+    <div class="panel"><h3>Modèles récursifs</h3><pre>liste : t[0] ⊕ f(t[1:])  ; vide → neutre
+chaîne : s[0] ⊕ f(s[1:]) ; ''  → neutre
+nombre : n%10 ⊕ f(n//10) ; n&lt;10 → n
+binaire: n%2 + 10*f(n//2); 0 → 0</pre><ul><li>Neutre : 0 pour +, 1 pour ×, '' pour une chaîne, [] pour une liste</li></ul></div>
+    <div class="panel"><h3>Valeurs à connaître</h3><ul>
+      <li>fact(5)=120 · 2¹⁰=1024</li>
+      <li>fibo du prof : 1 1 2 3 5 8 13 21 → fibo(5)=8</li>
+      <li>Rr(10)=55 = 10×11/2</li>
+      <li>somme_chiffre(1234)=10 · conversion(42)=101010</li>
+      <li>Inflation 4 % : prix doublé en 2042</li>
+    </ul></div>
+    <div class="panel"><h3>Complexité</h3><ul>
+      <li>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ) &lt; O(n!)</li>
+      <li>Supprimer les constantes, garder le terme dominant</li>
+      <li>À la suite : + · Imbriqué : ×</li>
+      <li>Divisé par 2 à chaque tour : log n</li>
+      <li>Récursif : branches^profondeur</li>
+      <li>O : pire cas · Ω : meilleur cas · Θ : moyen</li>
+      <li>Deux tableaux différents : O(a×b)</li>
+    </ul></div>
+    <div class="panel"><h3>Tris</h3><ul>
+      <li>Sélection : min → échange · O(n²)</li>
+      <li>Bulles : voisins échangés · O(n²)</li>
+      <li>Insertion : cartes en main · O(n²), O(n) si déjà trié</li>
+      <li>Fusion : couper, trier, fusionner · O(n log n)</li>
+      <li>Rapide : pivot · O(n log n), pire O(n²)</li>
+      <li>Dichotomie : tableau trié · O(log n)</li>
+    </ul></div>
+    <div class="panel"><h3>Relecture finale</h3><ul>
+      <li><code>:</code> en fin de def, if, for, while</li>
+      <li>Indentation cohérente</li>
+      <li><code>return</code> et non <code>print</code> dans une fonction</li>
+      <li><code>==</code> pour comparer, <code>=</code> pour affecter</li>
+      <li>Bornes de range (fin exclue)</li>
+      <li>round(…, 2) avec les centimes</li>
+    </ul></div>
+  </div>
+</div>
+</main>
+
+<script>
+/* =====================================================================
+   Utilitaires
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('algoB2:' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('algoB2:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/* ---------- coloration syntaxique Python ---------- */
+const KW = new Set('def return if elif else for while in not and or is None True False import from as break continue pass lambda assert global try except with class yield del'.split(' '));
+const BI = new Set('print range len int str float bool list tuple type round pow min max sum abs sorted input append pop extend remove insert sort randint random bin'.split(' '));
+function hl(code) {
+  const re = /(#[^\n]*)|('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")|\b(\d+(?:\.\d+)?)\b|([A-Za-z_]\w*)/g;
+  let out = '', last = 0, m, prevDef = false;
+  while ((m = re.exec(code))) {
+    out += esc(code.slice(last, m.index));
+    if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + '</span>';
+    else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + '</span>';
+    else if (m[3]) out += '<span class="tk-num">' + m[3] + '</span>';
+    else {
+      const w = m[4];
+      if (prevDef) out += '<span class="tk-fn">' + w + '</span>';
+      else if (KW.has(w)) out += '<span class="tk-kw">' + w + '</span>';
+      else if (BI.has(w)) out += '<span class="tk-bi">' + w + '</span>';
+      else out += w;
+      prevDef = (w === 'def');
+      last = re.lastIndex; continue;
+    }
+    prevDef = false; last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+
+/* =====================================================================
+   Moteur Python (Skulpt, chargé à la demande)
+   ===================================================================== */
+let pyPromise = null;
+function loadScript(src) {
+  return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('load ' + src)); document.head.appendChild(s); });
+}
+function setEngine(state, msg) {
+  $$('.engine').forEach(e => { e.className = 'engine ' + state; e.querySelector('span').textContent = msg; });
+}
+function ensurePy() {
+  if (!pyPromise) {
+    setEngine('', 'Chargement du moteur Python…');
+    pyPromise = loadScript('https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js')
+      .then(() => loadScript('https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'))
+      .then(() => { setEngine('ready', 'Moteur Python prêt.'); })
+      .catch(e => { setEngine('fail', 'Le moteur Python n\'a pas pu se charger (connexion ?). Tu peux toujours comparer ton code à la solution.'); pyPromise = null; throw e; });
+  }
+  return pyPromise;
+}
+async function runPy(code) {
+  await ensurePy();
+  let out = '';
+  Sk.configure({
+    output: t => { out += t; },
+    read: x => { if (Sk.builtinFiles === undefined || Sk.builtinFiles.files[x] === undefined) throw "Fichier introuvable : '" + x + "'"; return Sk.builtinFiles.files[x]; },
+    __future__: Sk.python3, execLimit: 8000, yieldLimit: 200, killableWhile: true, killableFor: true,
+    inputfun: () => '', inputfunTakesPrompt: true
+  });
+  try {
+    await Sk.misceval.asyncToPromise(() => Sk.importMainWithBody('<stdin>', false, code, true));
+    return { out, err: null };
+  } catch (e) {
+    let msg = e.toString();
+    if (/TimeLimitError|time limit/i.test(msg)) msg = 'Temps dépassé : boucle infinie ou récursion sans fin ?';
+    return { out, err: msg };
+  }
+}
+function pyTests(tests) {
+  return '\n' + tests.map((t, i) =>
+`try:
+    _g = ${t[0]}
+    _e = ${t[1]}
+    print("@@T|${i}|" + str(_g == _e) + "|" + repr(_g))
+except Exception as _x:
+    print("@@T|${i}|ERR|" + str(_x))`).join('\n') + '\n';
+}
+
+/* ---------- cellules de code du cours ---------- */
+function enhanceCells(root) {
+  let n = 1;
+  $$('.cell', root).forEach(cell => {
+    const pre = cell.querySelector('pre.py');
+    if (!pre || cell.dataset.done) return;
+    cell.dataset.done = '1';
+    const code = pre.textContent;
+    pre.innerHTML = hl(code);
+    const bar = document.createElement('div');
+    bar.className = 'cell-bar';
+    bar.innerHTML = '<span>In [' + (n++) + ']:</span><span class="sp"></span><button type="button" class="cp">Copier vers l\'éditeur</button><button type="button" class="run">Exécuter</button>';
+    cell.prepend(bar);
+    const outEl = document.createElement('div'); outEl.className = 'cell-out'; outEl.hidden = true; cell.append(outEl);
+    bar.querySelector('.run').addEventListener('click', async ev => {
+      const b = ev.currentTarget; b.disabled = true; b.textContent = 'Exécution…';
+      outEl.hidden = false; outEl.className = 'cell-out'; outEl.textContent = 'Chargement du moteur Python…';
+      try {
+        const r = await runPy(code);
+        outEl.textContent = (r.out || '') + (r.err ? '\n' + r.err : '') || '(aucun affichage)';
+        if (r.err) outEl.classList.add('err');
+      } catch (e) { outEl.classList.add('err'); outEl.textContent = 'Moteur Python indisponible. Vérifie ta connexion puis réessaie.'; }
+      b.disabled = false; b.textContent = 'Exécuter';
+    });
+    bar.querySelector('.cp').addEventListener('click', () => { sandboxCode = code; openExo('bac'); location.hash = '#pratique'; });
+  });
+}
+
+/* =====================================================================
+   Données : exercices
+   ===================================================================== */
+const EXOS = [
+ {id:'parite', th:'Bases', lvl:1, title:'Parité', fn:'est_pair',
+  en:'Écris <code>est_pair(n)</code> qui renvoie <code>True</code> si l\'entier n est pair, <code>False</code> sinon.',
+  start:'def est_pair(n):\n    # ton code ici\n    pass\n',
+  tests:[['est_pair(4)','True'],['est_pair(121)','False'],['est_pair(0)','True'],['est_pair(-3)','False']],
+  hint:'Le reste de la division euclidienne par 2 : <code>n % 2</code>.',
+  sol:'def est_pair(n):\n    return n % 2 == 0\n', cx:'O(1)'},
+ {id:'maximum', th:'Bases', lvl:1, title:'Maximum sans max()', fn:'maximum',
+  en:'Écris <code>maximum(tab)</code> qui renvoie le plus grand élément d\'une liste non vide, <b>sans</b> utiliser <code>max()</code>.',
+  start:'def maximum(tab):\n    pass\n',
+  tests:[['maximum([5, 4, 10, 8])','10'],['maximum([-3, -1, -7])','-1'],['maximum([42])','42'],['maximum([1, 87, 68, 87])','87']],
+  hint:'Initialise avec <code>tab[0]</code> (et pas 0 : les nombres peuvent être négatifs), puis parcours la liste.',
+  sol:'def maximum(tab):\n    m = tab[0]\n    for x in tab:\n        if x > m:\n            m = x\n    return m\n', cx:'O(n)'},
+ {id:'moyenne', th:'Bases', lvl:1, title:'Moyenne d\'une liste', fn:'moyenne',
+  en:'Écris <code>moyenne(notes)</code> qui renvoie la moyenne d\'une liste de notes, <b>sans</b> <code>sum()</code>.',
+  start:'def moyenne(notes):\n    pass\n',
+  tests:[['moyenne([10, 12, 15, 8])','11.25'],['moyenne([20])','20'],['moyenne([0, 10])','5']],
+  hint:'Accumule la somme dans une variable initialisée à 0, puis divise par <code>len(notes)</code>.',
+  sol:'def moyenne(notes):\n    somme = 0\n    for n in notes:\n        somme = somme + n\n    return somme / len(notes)\n', cx:'O(n)'},
+ {id:'voyelles', th:'Bases', lvl:1, title:'Compter les voyelles', fn:'compte_voyelles',
+  en:'Écris <code>compte_voyelles(s)</code> qui renvoie le nombre de voyelles (a, e, i, o, u, y) dans une chaîne en minuscules.',
+  start:'def compte_voyelles(s):\n    pass\n',
+  tests:[['compte_voyelles("algorithme")','4'],['compte_voyelles("python")','2'],['compte_voyelles("bcd")','0'],['compte_voyelles("")','0']],
+  hint:'<code>for c in s:</code> puis <code>if c in "aeiouy":</code>.',
+  sol:'def compte_voyelles(s):\n    total = 0\n    for c in s:\n        if c in "aeiouy":\n            total = total + 1\n    return total\n', cx:'O(n)'},
+ {id:'inverse', th:'Bases', lvl:1, title:'Inverser une chaîne (itératif)', fn:'inverse',
+  en:'Écris <code>inverse(s)</code> qui renvoie la chaîne à l\'envers avec une boucle (sans <code>[::-1]</code>).',
+  start:'def inverse(s):\n    pass\n',
+  tests:[['inverse("algo")','"ogla"'],['inverse("")','""'],['inverse("radar")','"radar"']],
+  hint:'Construis une nouvelle chaîne en ajoutant chaque caractère <b>devant</b> : <code>res = c + res</code>.',
+  sol:'def inverse(s):\n    res = ""\n    for c in s:\n        res = c + res\n    return res\n', cx:'O(n)'},
+ {id:'inflation', th:'Bases', lvl:2, title:'Inflation (while)', fn:'annee_doublement',
+  en:'Un prix augmente chaque année de <code>taux</code> (ex. 0.04 pour 4 %). Écris <code>annee_doublement(prix, taux, annee)</code> qui renvoie l\'année où le prix aura au moins doublé, en partant de <code>annee</code>.',
+  start:'def annee_doublement(prix, taux, annee):\n    pass\n',
+  tests:[['annee_doublement(2, 0.04, 2024)','2042'],['annee_doublement(100, 0.10, 2000)','2008'],['annee_doublement(5, 1, 2024)','2025']],
+  hint:'Garde le prix de départ dans une variable, puis <code>while prix &lt; 2*depart:</code> multiplie par <code>(1 + taux)</code> et ajoute 1 à l\'année.',
+  sol:'def annee_doublement(prix, taux, annee):\n    cible = 2 * prix\n    while prix < cible:\n        prix = prix * (1 + taux)\n        annee = annee + 1\n    return annee\n', cx:'O(log(2)/log(1+taux)) : dépend du taux, pas d\'une taille de données'},
+ {id:'mediane', th:'Bases', lvl:2, title:'Médiane', fn:'mediane',
+  en:'Écris <code>mediane(tab)</code> qui renvoie la médiane d\'une liste de nombres (non vide). Si le nombre d\'éléments est pair, c\'est la moyenne des deux valeurs centrales.',
+  start:'def mediane(tab):\n    pass\n',
+  tests:[['mediane([7, 10, 13, 5])','8.5'],['mediane([3, 1, 2])','2'],['mediane([4])','4'],['mediane([1, 2, 3, 4, 5, 6])','3.5']],
+  hint:'Trie d\'abord (<code>t = sorted(tab)</code>), puis <code>milieu = len(t) // 2</code>.',
+  sol:'def mediane(tab):\n    t = sorted(tab)\n    milieu = len(t) // 2\n    if len(t) % 2 != 0:\n        return t[milieu]\n    return (t[milieu] + t[milieu - 1]) / 2\n', cx:'O(n log n) à cause du tri'},
+ {id:'compr', th:'Bases', lvl:1, title:'Liste en compréhension', fn:'carres_pairs',
+  en:'Écris <code>carres_pairs(n)</code> qui renvoie, <b>en une seule ligne de compréhension</b>, la liste des carrés des nombres pairs de 1 à n inclus.',
+  start:'def carres_pairs(n):\n    return []\n',
+  tests:[['carres_pairs(10)','[4, 16, 36, 64, 100]'],['carres_pairs(1)','[]'],['carres_pairs(4)','[4, 16]']],
+  hint:'<code>[expression for i in range(…) if condition]</code>. Attention à la borne : n inclus.',
+  sol:'def carres_pairs(n):\n    return [i**2 for i in range(1, n + 1) if i % 2 == 0]\n', cx:'O(n)'},
+ {id:'syracuse', th:'Bases', lvl:2, title:'Temps de vol de Syracuse', fn:'syracuse',
+  en:'Écris <code>syracuse(n)</code> qui renvoie le nombre d\'étapes nécessaires pour atteindre 1 (si n pair → n//2, sinon → 3n+1).',
+  start:'def syracuse(n):\n    pass\n',
+  tests:[['syracuse(6)','8'],['syracuse(1)','0'],['syracuse(7)','16'],['syracuse(27)','111']],
+  hint:'<code>while n != 1:</code> avec un compteur. Utilise <code>//</code> pour rester en entier.',
+  sol:'def syracuse(n):\n    etapes = 0\n    while n != 1:\n        if n % 2 == 0:\n            n = n // 2\n        else:\n            n = 3 * n + 1\n        etapes = etapes + 1\n    return etapes\n', cx:'inconnue (conjecture de Syracuse)'},
+ {id:'monnaie', th:'Bases', lvl:2, title:'Rendu de monnaie glouton', fn:'rendu_monnaie',
+  en:'Avec le système <code>[500, 200, 100, 50, 20, 10, 5, 2, 1]</code> (euros entiers), écris <code>rendu_monnaie(somme)</code> qui renvoie la liste des billets et pièces rendus par l\'algorithme glouton.',
+  start:'def rendu_monnaie(somme):\n    MONNAIE = [500, 200, 100, 50, 20, 10, 5, 2, 1]\n    rendu = []\n    # ton code ici\n    return rendu\n',
+  tests:[['rendu_monnaie(135)','[100, 20, 10, 5]'],['rendu_monnaie(388)','[200, 100, 50, 20, 10, 5, 2, 1]'],['rendu_monnaie(0)','[]'],['rendu_monnaie(1000)','[500, 500]']],
+  hint:'Pour chaque valeur v de MONNAIE (de la plus grande à la plus petite) : <code>while somme >= v:</code> ajoute v et soustrais-la.',
+  sol:'def rendu_monnaie(somme):\n    MONNAIE = [500, 200, 100, 50, 20, 10, 5, 2, 1]\n    rendu = []\n    for v in MONNAIE:\n        while somme >= v:\n            rendu.append(v)\n            somme = somme - v\n    return rendu\n', cx:'O(nombre de pièces rendues)'},
+ {id:'fiboliste', th:'Bases', lvl:1, title:'Fibonacci en liste', fn:'fibo_liste',
+  en:'Écris <code>fibo_liste(n)</code> qui renvoie la liste des n premiers termes de Fibonacci (convention du TD : 1, 1, 2, 3, 5…). n ≥ 1.',
+  start:'def fibo_liste(n):\n    pass\n',
+  tests:[['fibo_liste(10)','[1, 1, 2, 3, 5, 8, 13, 21, 34, 55]'],['fibo_liste(1)','[1]'],['fibo_liste(2)','[1, 1]']],
+  hint:'Pars de <code>[1, 1]</code>, ajoute <code>tab[i-1] + tab[i-2]</code>, et renvoie <code>tab[:n]</code> pour gérer n = 1.',
+  sol:'def fibo_liste(n):\n    tab = [1, 1]\n    for i in range(2, n):\n        tab.append(tab[i - 1] + tab[i - 2])\n    return tab[:n]\n', cx:'O(n)'},
+ {id:'morpion', th:'Bases', lvl:3, title:'Victoire au morpion', fn:'gagne',
+  en:'Un plateau 3×3 contient 0 (vide), 1 ou 2. Écris <code>gagne(t)</code> qui renvoie <code>True</code> si un joueur a aligné 3 symboles (ligne, colonne ou diagonale), <code>False</code> sinon.',
+  start:'def gagne(t):\n    pass\n',
+  tests:[['gagne([[1,1,1],[0,2,0],[2,0,0]])','True'],['gagne([[1,2,0],[2,1,0],[0,0,1]])','True'],['gagne([[0,0,2],[0,2,1],[2,1,0]])','True'],['gagne([[2,1,0],[2,1,0],[2,0,1]])','True'],['gagne([[1,2,1],[2,1,2],[2,1,2]])','False'],['gagne([[0,0,0],[0,0,0],[0,0,0]])','False']],
+  hint:'8 alignements à tester. N\'oublie pas que trois cases vides (0) ne sont pas une victoire, et le <code>return False</code> final.',
+  sol:'def gagne(t):\n    for i in range(3):\n        if t[i][0] == t[i][1] == t[i][2] != 0:\n            return True\n        if t[0][i] == t[1][i] == t[2][i] != 0:\n            return True\n    if t[0][0] == t[1][1] == t[2][2] != 0:\n        return True\n    if t[0][2] == t[1][1] == t[2][0] != 0:\n        return True\n    return False\n', cx:'O(1) (plateau de taille fixe)'},
+
+ {id:'fact', th:'Récursivité', lvl:1, title:'Factorielle récursive', fn:'fact',
+  en:'Écris <code>fact(n)</code> <b>récursive</b> qui renvoie n! (n entier ≥ 0).',
+  start:'def fact(n):\n    pass\n',
+  tests:[['fact(5)','120'],['fact(0)','1'],['fact(1)','1'],['fact(10)','3628800']],
+  hint:'Cas de base : <code>n == 0 or n == 1</code> → 1. Récurrence : <code>n * fact(n-1)</code>.',
+  sol:'def fact(n):\n    assert n >= 0 and int(n) == n\n    if n == 0 or n == 1:\n        return 1\n    return n * fact(n - 1)\n', cx:'O(n)', rec:true},
+ {id:'puiss', th:'Récursivité', lvl:1, title:'Puissance récursive', fn:'puissance',
+  en:'Écris <code>puissance(x, n)</code> <b>récursive</b> qui renvoie xⁿ (n entier ≥ 0), sans <code>**</code>.',
+  start:'def puissance(x, n):\n    pass\n',
+  tests:[['puissance(2, 10)','1024'],['puissance(5, 0)','1'],['puissance(3, 4)','81'],['puissance(1.5, 2)','2.25']],
+  hint:'x⁰ = 1 et xⁿ = x × xⁿ⁻¹.',
+  sol:'def puissance(x, n):\n    if n == 0:\n        return 1\n    return x * puissance(x, n - 1)\n', cx:'O(n)', rec:true},
+ {id:'rr', th:'Récursivité', lvl:1, title:'RecursiveRange', fn:'Rr',
+  en:'Écris <code>Rr(n)</code> <b>récursive</b> qui renvoie 0 + 1 + 2 + … + n.',
+  start:'def Rr(n):\n    pass\n',
+  tests:[['Rr(10)','55'],['Rr(0)','0'],['Rr(1)','1'],['Rr(100)','5050']],
+  hint:'Rr(0) = 0 et Rr(n) = n + Rr(n−1).',
+  sol:'def Rr(n):\n    if n == 0:\n        return 0\n    return n + Rr(n - 1)\n', cx:'O(n)', rec:true},
+ {id:'fibo', th:'Récursivité', lvl:1, title:'Fibonacci récursif (version du prof)', fn:'fibo',
+  en:'Écris <code>fibo(n)</code> <b>récursive</b> avec la convention du cours : fibo(0) = fibo(1) = 1.',
+  start:'def fibo(n):\n    pass\n',
+  tests:[['fibo(5)','8'],['fibo(0)','1'],['fibo(1)','1'],['fibo(10)','89']],
+  hint:'Deux cas de base, puis <code>fibo(n-1) + fibo(n-2)</code> : c\'est une récursivité multiple.',
+  sol:'def fibo(n):\n    if n == 0 or n == 1:\n        return 1\n    return fibo(n - 1) + fibo(n - 2)\n', cx:'O(2ⁿ)', rec:true},
+ {id:'prod', th:'Récursivité', lvl:2, title:'ProductofArray', fn:'produit',
+  en:'Écris <code>produit(tab)</code> <b>récursive</b> qui renvoie le produit des éléments de la liste (1 pour une liste vide). Ne modifie pas la liste.',
+  start:'def produit(tab):\n    pass\n',
+  tests:[['produit([1, 8, 5, 4])','160'],['produit([])','1'],['produit([7])','7'],['produit([2, 0, 9])','0']],
+  hint:'Liste vide → 1 (élément neutre). Sinon <code>tab[0] * produit(tab[1:])</code>.',
+  sol:'def produit(tab):\n    if len(tab) == 0:\n        return 1\n    return tab[0] * produit(tab[1:])\n', cx:'O(n²) avec le découpage tab[1:] (copie), O(n) en passant un indice', rec:true},
+ {id:'chiffres', th:'Récursivité', lvl:2, title:'Somme des chiffres', fn:'somme_chiffres',
+  en:'Écris <code>somme_chiffres(n)</code> <b>récursive</b> qui renvoie la somme des chiffres de l\'entier n ≥ 0, avec <code>%</code> et <code>//</code> (sans transtypage).',
+  start:'def somme_chiffres(n):\n    pass\n',
+  tests:[['somme_chiffres(1234)','10'],['somme_chiffres(9)','9'],['somme_chiffres(99999)','45'],['somme_chiffres(0)','0']],
+  hint:'Si n &lt; 10 → n. Sinon dernier chiffre <code>n % 10</code> + somme_chiffres(<code>n // 10</code>).',
+  sol:'def somme_chiffres(n):\n    if n < 10:\n        return n\n    return n % 10 + somme_chiffres(n // 10)\n', cx:'O(log n) = nombre de chiffres', rec:true},
+ {id:'binaire', th:'Récursivité', lvl:2, title:'Décimal → binaire', fn:'binaire',
+  en:'Écris <code>binaire(n)</code> <b>récursive</b> qui renvoie l\'écriture binaire de n sous forme d\'<b>entier</b> (comme dans le notebook : binaire(42) → 101010).',
+  start:'def binaire(n):\n    pass\n',
+  tests:[['binaire(42)','101010'],['binaire(0)','0'],['binaire(5)','101'],['binaire(255)','11111111'],['binaire(8)','1000']],
+  hint:'binaire(0) = 0 et binaire(n) = <code>n % 2 + 10 * binaire(n // 2)</code>.',
+  sol:'def binaire(n):\n    if n == 0:\n        return 0\n    return n % 2 + 10 * binaire(n // 2)\n', cx:'O(log n)', rec:true},
+ {id:'binit', th:'Récursivité', lvl:2, title:'Défi : binaire itératif', fn:'binaire_iter',
+  en:'Le « petit défi » du TD : écris <code>binaire_iter(n)</code> <b>itérative</b> qui renvoie l\'écriture binaire de n sous forme de <b>chaîne</b>.',
+  start:'def binaire_iter(n):\n    pass\n',
+  tests:[['binaire_iter(42)','"101010"'],['binaire_iter(0)','"0"'],['binaire_iter(1)','"1"'],['binaire_iter(10)','"1010"']],
+  hint:'<code>while n > 0:</code> ajoute <code>str(n % 2)</code> <b>devant</b> la chaîne, puis <code>n = n // 2</code>. Cas n = 0 à part.',
+  sol:'def binaire_iter(n):\n    if n == 0:\n        return "0"\n    bits = ""\n    while n > 0:\n        bits = str(n % 2) + bits\n        n = n // 2\n    return bits\n', cx:'O(log n)'},
+ {id:'longueur', th:'Récursivité', lvl:1, title:'Longueur récursive', fn:'longueur',
+  en:'Écris <code>longueur(s)</code> <b>récursive</b> qui renvoie le nombre de caractères de s <b>sans</b> utiliser <code>len</code>.',
+  start:'def longueur(s):\n    pass\n',
+  tests:[['longueur("python")','6'],['longueur("")','0'],['longueur("a")','1']],
+  hint:'Chaîne vide → 0. Sinon 1 + longueur(<code>s[1:]</code>).',
+  sol:'def longueur(s):\n    if s == "":\n        return 0\n    return 1 + longueur(s[1:])\n', cx:'O(n²) avec s[1:] (copies), O(n) appels', rec:true},
+ {id:'invrec', th:'Récursivité', lvl:2, title:'Inverser une chaîne (récursif)', fn:'inverse_rec',
+  en:'Écris <code>inverse_rec(s)</code> <b>récursive</b> qui renvoie la chaîne à l\'envers.',
+  start:'def inverse_rec(s):\n    pass\n',
+  tests:[['inverse_rec("algo")','"ogla"'],['inverse_rec("")','""'],['inverse_rec("ab")','"ba"']],
+  hint:'L\'inverse de s, c\'est l\'inverse de <code>s[1:]</code> suivi de <code>s[0]</code>.',
+  sol:'def inverse_rec(s):\n    if s == "":\n        return ""\n    return inverse_rec(s[1:]) + s[0]\n', cx:'O(n²) à cause des copies de chaînes', rec:true},
+ {id:'palin', th:'Récursivité', lvl:2, title:'Palindrome', fn:'palindrome',
+  en:'Écris <code>palindrome(s)</code> <b>récursive</b> qui renvoie <code>True</code> si s se lit pareil dans les deux sens.',
+  start:'def palindrome(s):\n    pass\n',
+  tests:[['palindrome("radar")','True'],['palindrome("kayak")','True'],['palindrome("algo")','False'],['palindrome("")','True'],['palindrome("ab")','False']],
+  hint:'Longueur ≤ 1 → True. Si <code>s[0] != s[-1]</code> → False. Sinon on teste <code>s[1:-1]</code>.',
+  sol:'def palindrome(s):\n    if len(s) <= 1:\n        return True\n    if s[0] != s[-1]:\n        return False\n    return palindrome(s[1:-1])\n', cx:'O(n) appels', rec:true},
+ {id:'maxrec', th:'Récursivité', lvl:2, title:'Maximum récursif (findMaxNumRec)', fn:'max_rec',
+  en:'Écris <code>max_rec(tab, n)</code> <b>récursive</b> qui renvoie le maximum des n premiers éléments de tab (comme dans le TD complexité). Tu peux utiliser <code>max(a, b)</code> sur deux nombres.',
+  start:'def max_rec(tab, n):\n    pass\n',
+  tests:[['max_rec([5, 4, 10, 8, 11, 68, 87, 10], 8)','87'],['max_rec([3], 1)','3'],['max_rec([-5, -2, -9], 3)','-2'],['max_rec([9, 1, 50], 2)','9']],
+  hint:'n == 1 → tab[0]. Sinon <code>max(tab[n-1], max_rec(tab, n-1))</code>.',
+  sol:'def max_rec(tab, n):\n    if n == 1:\n        return tab[0]\n    return max(tab[n - 1], max_rec(tab, n - 1))\n', cx:'O(n)', rec:true},
+ {id:'compte', th:'Récursivité', lvl:2, title:'Compter les occurrences', fn:'compte',
+  en:'Écris <code>compte(tab, x)</code> <b>récursive</b> qui renvoie le nombre de fois où x apparaît dans tab.',
+  start:'def compte(tab, x):\n    pass\n',
+  tests:[['compte([1, 2, 1, 3, 1], 1)','3'],['compte([], 5)','0'],['compte([4, 4], 7)','0']],
+  hint:'Liste vide → 0. Sinon (1 si <code>tab[0] == x</code>, 0 sinon) + compte(<code>tab[1:]</code>, x).',
+  sol:'def compte(tab, x):\n    if len(tab) == 0:\n        return 0\n    if tab[0] == x:\n        return 1 + compte(tab[1:], x)\n    return compte(tab[1:], x)\n', cx:'O(n) appels', rec:true},
+ {id:'pgcd', th:'Récursivité', lvl:2, title:'PGCD d\'Euclide', fn:'pgcd',
+  en:'Écris <code>pgcd(a, b)</code> <b>récursive</b> avec l\'algorithme d\'Euclide : pgcd(a, 0) = a et pgcd(a, b) = pgcd(b, a % b).',
+  start:'def pgcd(a, b):\n    pass\n',
+  tests:[['pgcd(48, 18)','6'],['pgcd(17, 5)','1'],['pgcd(10, 0)','10'],['pgcd(100, 75)','25']],
+  hint:'Traduis directement les deux égalités de l\'énoncé.',
+  sol:'def pgcd(a, b):\n    if b == 0:\n        return a\n    return pgcd(b, a % b)\n', cx:'O(log min(a, b))', rec:true},
+ {id:'binom', th:'Récursivité', lvl:3, title:'Coefficient binomial', fn:'binomial',
+  en:'Écris <code>binomial(n, k)</code> <b>récursive</b> : C(n, 0) = C(n, n) = 1 et C(n, k) = C(n−1, k−1) + C(n−1, k).',
+  start:'def binomial(n, k):\n    pass\n',
+  tests:[['binomial(4, 2)','6'],['binomial(5, 0)','1'],['binomial(6, 3)','20'],['binomial(10, 3)','120']],
+  hint:'Deux cas de base et deux appels récursifs (récursivité multiple).',
+  sol:'def binomial(n, k):\n    if k == 0 or k == n:\n        return 1\n    return binomial(n - 1, k - 1) + binomial(n - 1, k)\n', cx:'exponentielle (≈ O(2ⁿ))', rec:true},
+
+ {id:'dicho', th:'Tris & complexité', lvl:2, title:'Recherche dichotomique', fn:'dichotomie',
+  en:'Écris <code>dichotomie(tab, x)</code> qui renvoie l\'indice de x dans la liste <b>triée</b> tab, ou -1 s\'il est absent. Complexité attendue : O(log n).',
+  start:'def dichotomie(tab, x):\n    pass\n',
+  tests:[['dichotomie([1, 5, 8, 9, 11, 13, 15, 19, 21], 9)','3'],['dichotomie([1, 5, 8, 9, 11, 13, 15, 19, 21], 21)','8'],['dichotomie([1, 5, 8, 9, 11, 13, 15, 19, 21], 1)','0'],['dichotomie([1, 5, 8, 9], 4)','-1'],['dichotomie([], 3)','-1']],
+  hint:'<code>debut, fin = 0, len(tab) - 1</code> ; <code>while debut &lt;= fin:</code> ; <code>milieu = (debut + fin) // 2</code>.',
+  sol:'def dichotomie(tab, x):\n    debut, fin = 0, len(tab) - 1\n    while debut <= fin:\n        milieu = (debut + fin) // 2\n        if tab[milieu] == x:\n            return milieu\n        elif tab[milieu] < x:\n            debut = milieu + 1\n        else:\n            fin = milieu - 1\n    return -1\n', cx:'O(log n)'},
+ {id:'select', th:'Tris & complexité', lvl:2, title:'Tri par sélection', fn:'tri_selection',
+  en:'Écris <code>tri_selection(tab)</code> qui trie la liste <b>sur place</b> par sélection du minimum, puis la renvoie.',
+  start:'def tri_selection(tab):\n    pass\n',
+  tests:[['tri_selection([5, 1, 4, 2, 8])','[1, 2, 4, 5, 8]'],['tri_selection([])','[]'],['tri_selection([3, 3, 1])','[1, 3, 3]'],['tri_selection([9, 8, 7, 6])','[6, 7, 8, 9]']],
+  hint:'Pour chaque i : cherche l\'indice du minimum entre i et la fin, puis échange <code>tab[i], tab[imin] = tab[imin], tab[i]</code>.',
+  sol:'def tri_selection(tab):\n    n = len(tab)\n    for i in range(n - 1):\n        imin = i\n        for j in range(i + 1, n):\n            if tab[j] < tab[imin]:\n                imin = j\n        tab[i], tab[imin] = tab[imin], tab[i]\n    return tab\n', cx:'O(n²)'},
+ {id:'bulles', th:'Tris & complexité', lvl:2, title:'Tri à bulles', fn:'tri_bulles',
+  en:'Écris <code>tri_bulles(tab)</code> qui trie la liste en échangeant les voisins mal rangés, puis la renvoie.',
+  start:'def tri_bulles(tab):\n    pass\n',
+  tests:[['tri_bulles([5, 1, 4, 2, 8])','[1, 2, 4, 5, 8]'],['tri_bulles([])','[]'],['tri_bulles([2, 1])','[1, 2]'],['tri_bulles([4, 4, 0, -1])','[-1, 0, 4, 4]']],
+  hint:'Deux boucles imbriquées : <code>for i in range(n-1):</code> puis <code>for j in range(n-1-i):</code> et compare <code>tab[j]</code> et <code>tab[j+1]</code>.',
+  sol:'def tri_bulles(tab):\n    n = len(tab)\n    for i in range(n - 1):\n        for j in range(n - 1 - i):\n            if tab[j] > tab[j + 1]:\n                tab[j], tab[j + 1] = tab[j + 1], tab[j]\n    return tab\n', cx:'O(n²)'},
+ {id:'insert', th:'Tris & complexité', lvl:3, title:'Tri par insertion', fn:'tri_insertion',
+  en:'Écris <code>tri_insertion(tab)</code> qui trie la liste par insertion (comme des cartes en main), puis la renvoie.',
+  start:'def tri_insertion(tab):\n    pass\n',
+  tests:[['tri_insertion([5, 1, 4, 2, 8])','[1, 2, 4, 5, 8]'],['tri_insertion([])','[]'],['tri_insertion([1, 2, 3])','[1, 2, 3]'],['tri_insertion([3, 2, 1])','[1, 2, 3]']],
+  hint:'Pour i de 1 à n−1 : <code>cle = tab[i]</code>, décale vers la droite tant que <code>tab[j] > cle</code>, puis place <code>cle</code> en <code>j+1</code>.',
+  sol:'def tri_insertion(tab):\n    for i in range(1, len(tab)):\n        cle = tab[i]\n        j = i - 1\n        while j >= 0 and tab[j] > cle:\n            tab[j + 1] = tab[j]\n            j = j - 1\n        tab[j + 1] = cle\n    return tab\n', cx:'O(n²), O(n) si déjà trié'},
+ {id:'fusion', th:'Tris & complexité', lvl:2, title:'Fusionner deux listes triées', fn:'fusion',
+  en:'Écris <code>fusion(a, b)</code> qui renvoie une liste triée contenant les éléments des deux listes triées a et b, en O(len(a) + len(b)).',
+  start:'def fusion(a, b):\n    pass\n',
+  tests:[['fusion([1, 4, 9], [2, 3, 10])','[1, 2, 3, 4, 9, 10]'],['fusion([], [1, 2])','[1, 2]'],['fusion([5], [])','[5]'],['fusion([1, 1], [1])','[1, 1, 1]']],
+  hint:'Deux indices i et j ; à chaque tour, ajoute le plus petit des deux éléments courants. Ajoute ensuite les restes : <code>a[i:] + b[j:]</code>.',
+  sol:'def fusion(a, b):\n    res = []\n    i, j = 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            res.append(a[i])\n            i = i + 1\n        else:\n            res.append(b[j])\n            j = j + 1\n    return res + a[i:] + b[j:]\n', cx:'O(a + b)'},
+ {id:'trifusion', th:'Tris & complexité', lvl:3, title:'Tri fusion récursif', fn:'tri_fusion',
+  en:'Écris <code>tri_fusion(tab)</code> <b>récursive</b> (diviser pour régner). Tu peux réécrire <code>fusion</code> dans ta cellule.',
+  start:'def fusion(a, b):\n    # recopie ta fonction fusion ici\n    pass\n\ndef tri_fusion(tab):\n    pass\n',
+  tests:[['tri_fusion([6, 3, 9, 8, 5, 1])','[1, 3, 5, 6, 8, 9]'],['tri_fusion([])','[]'],['tri_fusion([2])','[2]'],['tri_fusion([5, 5, 2, 9, 0])','[0, 2, 5, 5, 9]']],
+  hint:'Longueur ≤ 1 → renvoyer tab. Sinon <code>m = len(tab)//2</code> et <code>fusion(tri_fusion(tab[:m]), tri_fusion(tab[m:]))</code>.',
+  sol:'def fusion(a, b):\n    res = []\n    i, j = 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            res.append(a[i])\n            i = i + 1\n        else:\n            res.append(b[j])\n            j = j + 1\n    return res + a[i:] + b[j:]\n\ndef tri_fusion(tab):\n    if len(tab) <= 1:\n        return tab\n    m = len(tab) // 2\n    return fusion(tri_fusion(tab[:m]), tri_fusion(tab[m:]))\n', cx:'O(n log n)', rec:true}
+];
+
+/* =====================================================================
+   Données : banque de questions
+   t: 'qcm' (choix) | 'val' (réponse à taper) ; th: thème ; c: code affiché
+   ===================================================================== */
+const THEMES = {bases:'Bases Python', listes:'Listes & chaînes', algo:'Algos du TD', rec:'Récursivité', tris:'Tris & dichotomie', cx:'Complexité'};
+const Q = [
+ // ---------- BASES
+ {th:'bases',t:'qcm',q:'Qu\'est-ce qu\'un algorithme ?',ch:['Un programme écrit en Python','Une suite d\'instructions qui résout un problème en un nombre fini d\'étapes','Une suite infinie d\'instructions répétées','Un langage de programmation compilé'],a:1,ex:'Définition du cours : suite d\'instructions permettant la résolution d\'un problème en un nombre fini d\'étapes, des entrées vers une sortie.'},
+ {th:'bases',t:'qcm',q:'Python est un langage…',ch:['compilé, à typage statique','interprété, à typage dynamique et fort','interprété, à typage faible','compilé, à typage dynamique'],a:1,ex:'Interprété (exécuté au fur et à mesure), typage dynamique (pas de déclaration de type) et fort (les opérations dépendent du type).'},
+ {th:'bases',t:'qcm',q:'Que signifie « langage interprété » ?',ch:['Le programme est traduit entièrement en langage machine avant exécution','Les instructions sont exécutées au fur et à mesure ; le programme tourne jusqu\'à la première erreur','Le programme ne peut pas contenir d\'erreur','Le code est exécuté sur un serveur distant'],a:1,ex:'Par opposition au langage compilé, traduit en totalité avant exécution.'},
+ {th:'bases',t:'val',q:'Que vaut cette expression ?',c:'type(4/2)',acc:['float',"<class 'float'>"],sol:'float',ex:'L\'opérateur / renvoie toujours un float : 4/2 = 2.0.'},
+ {th:'bases',t:'val',q:'Que vaut cette expression ?',c:'10 // 3',acc:['3'],sol:'3',ex:'// donne le quotient de la division euclidienne.'},
+ {th:'bases',t:'val',q:'Que vaut cette expression ?',c:'10 % 3',acc:['1'],sol:'1',ex:'% donne le reste de la division euclidienne : 10 = 3×3 + 1.'},
+ {th:'bases',t:'val',q:'Que vaut cette expression ?',c:'int(3.84)',acc:['3'],sol:'3',ex:'int() tronque la partie décimale, il n\'arrondit pas. round(3.84) donnerait 4.'},
+ {th:'bases',t:'val',q:'Que vaut cette expression ?',c:"3 * 'b'",acc:["'bbb'",'bbb'],sol:"'bbb'",ex:'Multiplier une chaîne par un entier la répète.'},
+ {th:'bases',t:'qcm',q:'Que provoque ce code ?',c:"a = 3\nb = 'b'\nprint(a + b)",ch:['Affiche 3b','Affiche bbb','TypeError','ValueError'],a:2,ex:'Typage fort : on ne peut pas additionner un int et un str → TypeError.'},
+ {th:'bases',t:'qcm',q:'Que provoque int(\'Campus\') ?',ch:['0','ValueError','TypeError','6'],a:1,ex:'La chaîne ne représente pas un nombre → ValueError: invalid literal for int().'},
+ {th:'bases',t:'qcm',q:'0.1 + 0.2 == 0.3 vaut…',ch:['True','False','Erreur'],a:1,ex:'0.1 + 0.2 = 0.30000000000000004 : les float sont des valeurs approchées. D\'où les round(…, 2) dans le rendu de monnaie.'},
+ {th:'bases',t:'val',q:'Combien de fois « x » est-il affiché ?',c:"for i in range(2, 11):\n    print('x')",acc:['9'],sol:'9',ex:'range(2, 11) va de 2 à 10 inclus : 9 valeurs.'},
+ {th:'bases',t:'val',q:'Quelles valeurs prend i ? (sépare par des espaces)',c:'for i in range(0, 10, 3):\n    print(i)',acc:['0 3 6 9','0,3,6,9'],sol:'0 3 6 9',ex:'Pas de 3 en partant de 0, 10 est exclu.'},
+ {th:'bases',t:'qcm',q:'Quand utilise-t-on une boucle while plutôt que for ?',ch:['Quand on parcourt une liste','Quand le nombre d\'itérations n\'est pas connu à l\'avance','Quand on veut aller plus vite','Jamais, for suffit toujours'],a:1,ex:'for : nombre d\'itérations fixe et connu (range). while : dépend d\'une condition évaluée avant chaque tour.'},
+ {th:'bases',t:'qcm',q:'Que fait l\'instruction continue ?',ch:['Elle sort définitivement de la boucle','Elle passe directement à l\'itération suivante','Elle relance la boucle depuis le début','Elle arrête le programme'],a:1,ex:'break sort de la boucle ; continue saute le reste du tour courant.'},
+ {th:'bases',t:'val',q:'Qu\'affiche ce code ? (sépare par des espaces)',c:"for i in range(10):\n    if i % 2 == 0:\n        continue\n    if i > 7:\n        break\n    print(i)",acc:['1 3 5 7'],sol:'1 3 5 7',ex:'Les pairs sont sautés ; à i = 9 (> 7) on sort.'},
+ {th:'bases',t:'qcm',q:'Quelle est la différence entre une procédure et une fonction ?',ch:['Une procédure a des paramètres, une fonction non','Une fonction retourne un résultat avec return, une procédure non','Une procédure est récursive','Aucune'],a:1,ex:'Procédure : modifie l\'état du programme sans retourner de résultat. Fonction : retourne un résultat.'},
+ {th:'bases',t:'qcm',q:'Lequel n\'est PAS un avantage des sous-programmes cité en cours ?',ch:['Éviter la duplication de code','Favoriser la réutilisation','Améliorer la conception','Rendre le programme plus rapide à l\'exécution'],a:3,ex:'Les trois avantages du cours : éviter la duplication, réutiliser, améliorer la conception (hiérarchie de tâches).'},
+ {th:'bases',t:'val',q:'Que renvoie f(3) ?',c:"def f(n):\n    print(n * 2)\n\nresultat = f(3)\n# que vaut resultat ?",acc:['None'],sol:'None',ex:'f affiche 6 mais ne renvoie rien : une fonction sans return renvoie None.'},
+ {th:'bases',t:'qcm',q:'Que fait assert n >= 0, "erreur" si n vaut -2 ?',ch:['Rien','Affiche "erreur" et continue','Lève une AssertionError','Remplace n par 0'],a:2,ex:'assert lève AssertionError si la condition est fausse. On l\'utilise pour le « cas non voulu ».'},
+ {th:'bases',t:'val',q:'Que vaut cette expression ?',c:'not (3 > 2) or 5 == 5',acc:['True'],sol:'True',ex:'not True = False ; False or True = True.'},
+ // ---------- LISTES
+ {th:'listes',t:'val',q:'Que vaut cette expression ?',c:"s = 'Campus'\ns[-1]",acc:["'s'",'s'],sol:"'s'",ex:'L\'indice -1 désigne le dernier caractère.'},
+ {th:'listes',t:'val',q:'Que vaut cette expression ?',c:"s = 'Campus'\ns[1:4]",acc:["'amp'",'amp'],sol:"'amp'",ex:'De l\'indice 1 inclus à 4 exclu : a, m, p.'},
+ {th:'listes',t:'qcm',q:'Que provoque ce code ?',c:"s = 'algo'\ns[0] = 'A'",ch:["s devient 'Algo'",'TypeError : les chaînes ne sont pas modifiables','IndexError','Rien'],a:1,ex:'Les chaînes (et les tuples) sont immuables.'},
+ {th:'listes',t:'val',q:'Qu\'affiche ce code ?',c:'tab = [5, 16, 20]\nx = tab.pop()\nprint(x, tab)',acc:['20 [5, 16]','20 [5,16]'],sol:'20 [5, 16]',ex:'pop() retire et renvoie le dernier élément (comportement de PILE).'},
+ {th:'listes',t:'qcm',q:'Avec append et pop(0), une liste se comporte comme…',ch:['une pile (LIFO)','une file (FIFO)','un tuple','un dictionnaire'],a:1,ex:'pop(0) retire le premier arrivé : premier entré, premier sorti = file.'},
+ {th:'listes',t:'val',q:'Que vaut tab ?',c:'tab = [1, 2]\ntab.append([3, 4])\ntab',acc:['[1, 2, [3, 4]]'],sol:'[1, 2, [3, 4]]',ex:'append ajoute UN élément (ici une liste). extend([3, 4]) aurait donné [1, 2, 3, 4].'},
+ {th:'listes',t:'val',q:'Que vaut tab ?',c:'tab = [5, 15, 20, 15]\ntab.remove(15)\ntab',acc:['[5, 20, 15]'],sol:'[5, 20, 15]',ex:'remove supprime la PREMIÈRE occurrence de la valeur.'},
+ {th:'listes',t:'val',q:'Que vaut cette liste ?',c:'[i**2 for i in range(1, 6) if i % 2 == 1]',acc:['[1, 9, 25]'],sol:'[1, 9, 25]',ex:'i impair parmi 1..5 : 1, 3, 5 → carrés 1, 9, 25.'},
+ {th:'listes',t:'val',q:'Que vaut cette liste ?',c:'[(i, j) for i in range(1, 4) for j in range(i+1, 4)]',acc:['[(1, 2), (1, 3), (2, 3)]'],sol:'[(1, 2), (1, 3), (2, 3)]',ex:'j commence à i+1 : pas de doublons ni de couples (i, i).'},
+ {th:'listes',t:'val',q:'Que vaut cette expression ?',c:"tab2 = ['Olivier', 24, [12, 16, 19]]\ntab2[2][-1]",acc:['19'],sol:'19',ex:'tab2[2] est la liste [12, 16, 19] ; son dernier élément est 19.'},
+ {th:'listes',t:'val',q:'Que vaut cette expression ?',c:"tab2 = ['Olivier', 24, [12, 16, 19]]\ntab2[0][0]",acc:["'O'",'O'],sol:"'O'",ex:'tab2[0] est la chaîne \'Olivier\', son premier caractère est \'O\'.'},
+ {th:'listes',t:'qcm',q:'Que vaut p après ce code ?',c:'p = [[0] * 3] * 3\np[0][0] = 1',ch:['[[1, 0, 0], [0, 0, 0], [0, 0, 0]]','[[1, 0, 0], [1, 0, 0], [1, 0, 0]]','Erreur','[[1, 1, 1], [0, 0, 0], [0, 0, 0]]'],a:1,ex:'* 3 duplique la RÉFÉRENCE de la même ligne. Il faut [[0]*3 for i in range(3)].'},
+ {th:'listes',t:'qcm',q:'Une liste passée en paramètre à une fonction…',ch:['ne peut jamais être modifiée par la fonction','peut être modifiée par la fonction car les listes sont muables','est toujours copiée automatiquement','devient un tuple'],a:1,ex:'Conséquence de la mutabilité vue en cours (ProductofArray2 avec pop vide la liste !).'},
+ {th:'listes',t:'qcm',q:'Lequel de ces types est modifiable ?',ch:['str','tuple','list','aucun'],a:2,ex:'Listes : éléments quelconques et modifiables. Tuples et chaînes : non modifiables.'},
+ {th:'listes',t:'val',q:'Que vaut cette expression ?',c:'len([[1, 2], [3], []])',acc:['3'],sol:'3',ex:'La liste contient 3 éléments (qui sont eux-mêmes des listes).'},
+ // ---------- ALGO TD
+ {th:'algo',t:'qcm',q:'Un prix augmente de 4 % par an. Par quoi le multiplie-t-on chaque année ?',ch:['0.04','1.4','1.04','4'],a:2,ex:'Coefficient multiplicateur = 1 + taux = 1.04.'},
+ {th:'algo',t:'qcm',q:'Qu\'est-ce qu\'un algorithme glouton (rendu de monnaie) ?',ch:['Il teste toutes les combinaisons possibles','Il choisit à chaque étape la plus grande pièce possible sans revenir en arrière','Il rend toujours le plus de pièces possible','Il est récursif'],a:1,ex:'Choix localement optimal à chaque étape.'},
+ {th:'algo',t:'val',q:'Combien d\'éléments contient la liste rendue par l\'algorithme glouton pour 388 € avec [500, 200, 100, 50, 20, 10, 5, 2, 1] ?',acc:['8'],sol:'8',ex:'200 + 100 + 50 + 20 + 10 + 5 + 2 + 1 = 388 : 8 billets/pièces.'},
+ {th:'algo',t:'qcm',q:'Suite de Syracuse : si n est impair, on le remplace par…',ch:['n // 2','3n + 1','n − 1','2n + 1'],a:1,ex:'Pair → n // 2 ; impair → 3n + 1. On s\'arrête à 1.'},
+ {th:'algo',t:'val',q:'Quelle est la médiane de [7, 10, 13, 5] ?',acc:['8.5','8,5'],sol:'8.5',ex:'Triée : [5, 7, 10, 13] ; nombre pair → (7 + 10) / 2 = 8.5.'},
+ {th:'algo',t:'val',q:'Combien d\'alignements faut-il tester pour détecter une victoire au morpion 3×3 ?',acc:['8'],sol:'8',ex:'3 lignes + 3 colonnes + 2 diagonales.'},
+ {th:'algo',t:'qcm',q:'Vers quoi tend le rapport de deux termes consécutifs de Fibonacci ?',ch:['π','2','le nombre d\'or ≈ 1,618','e ≈ 2,718'],a:2,ex:'Vu en TD : 1.0, 2.0, 1.5, 1.666…, 1.6, 1.625… → 1.6180339…'},
+ {th:'algo',t:'qcm',q:'Dans le code « sans tableau » des statistiques de notes sur 20, comment initialiser mini et maxi ?',ch:['mini = 0, maxi = 20','mini = 20, maxi = 0','mini = maxi = 0','mini = maxi = 10'],a:1,ex:'mini part de la plus grande valeur possible pour être battu par la première note, et inversement.'},
+ {th:'algo',t:'qcm',q:'Méthode de Monte-Carlo pour π : la proportion de points dans le quart de cercle tend vers…',ch:['π','π/2','π/4','1/π'],a:2,ex:'Aire du quart de cercle / aire du carré = (π/4)/1. Donc π ≈ 4 × proportion.'},
+ {th:'algo',t:'qcm',q:'Pour l\'équation ax² + bx + c = 0 avec Δ < 0 :',ch:['deux solutions réelles','une solution double','pas de solution réelle','une infinité de solutions'],a:2,ex:'Δ = b² − 4ac. Δ < 0 : pas de solution dans ℝ (deux complexes conjuguées dans ℂ).'},
+ {th:'algo',t:'val',q:'En quelle année le ticket de 2 € (2024, +4 %/an) aura-t-il doublé ?',acc:['2042'],sol:'2042',ex:'Résultat du TD : 1.04¹⁸ ≈ 2.03, donc 2024 + 18 = 2042.'},
+ // ---------- RÉCURSIVITÉ
+ {th:'rec',t:'qcm',q:'Une fonction récursive est une fonction…',ch:['qui contient une boucle','qui s\'appelle elle-même','qui renvoie une liste','qui n\'a pas de paramètre'],a:1,ex:'Elle se ramène à un problème similaire plus petit jusqu\'au cas élémentaire.'},
+ {th:'rec',t:'qcm',q:'Dans quelle structure sont stockés les appels récursifs en attente ?',ch:['une file','une pile','un tuple','un dictionnaire'],a:1,ex:'La pile : on accède aux éléments dans l\'ordre inverse de leur ajout.'},
+ {th:'rec',t:'qcm',q:'Quel est le rôle du cas de base ?',ch:['Accélérer le calcul','Arrêter la récursion','Vérifier le type des paramètres','Afficher le résultat'],a:1,ex:'Étape 2 de la méthode : le critère d\'arrêt.'},
+ {th:'rec',t:'qcm',q:'Les 3 étapes pour écrire une fonction récursive sont :',ch:['Initialiser, boucler, renvoyer','Cas récursif (récurrence), cas de base (arrêt), cas non voulu (contrainte)','Diviser, régner, combiner','Empiler, calculer, dépiler'],a:1,ex:'Diviser/régner/combiner est la méthode « diviser pour régner », pas les 3 étapes de la récursion.'},
+ {th:'rec',t:'qcm',q:'Qu\'arrive-t-il si une fonction récursive n\'a pas de cas de base ?',ch:['Elle renvoie None','Elle boucle jusqu\'à RecursionError','Elle renvoie 0','Python ajoute un cas de base automatiquement'],a:1,ex:'Maximum recursion depth exceeded.'},
+ {th:'rec',t:'val',q:'Que renvoie fibo(5) ?',c:'def fibo(n):\n    if n == 0 or n == 1:\n        return 1\n    return fibo(n-1) + fibo(n-2)',acc:['8'],sol:'8',ex:'Avec fibo(0) = fibo(1) = 1 : 1, 1, 2, 3, 5, 8 → fibo(5) = 8.'},
+ {th:'rec',t:'val',q:'Que renvoie Rr(10) ?',c:'def Rr(n):\n    if n == 0:\n        return 0\n    return n + Rr(n-1)',acc:['55'],sol:'55',ex:'0 + 1 + … + 10 = 10 × 11 / 2 = 55.'},
+ {th:'rec',t:'val',q:'Que renvoie somme_chiffre(2026) ?',c:'def somme_chiffre(n):\n    if n < 10:\n        return n\n    return n % 10 + somme_chiffre(n // 10)',acc:['10'],sol:'10',ex:'6 + 2 + 0 + 2 = 10.'},
+ {th:'rec',t:'val',q:'Que renvoie conversion(13) ?',c:'def conversion(n):\n    if n == 0:\n        return 0\n    return n % 2 + 10 * conversion(n // 2)',acc:['1101'],sol:'1101',ex:'13 = 8 + 4 + 1 → 1101.'},
+ {th:'rec',t:'val',q:'Que renvoie mystere("abc") ?',c:"def mystere(s):\n    if s == '':\n        return ''\n    return mystere(s[1:]) + s[0]",acc:["'cba'",'cba'],sol:"'cba'",ex:'La fonction inverse la chaîne : mystere("bc") + "a" = "cb" + "a".'},
+ {th:'rec',t:'val',q:'Que renvoie g(7) ?',c:'def g(n):\n    if n <= 0:\n        return 0\n    return 2 + g(n - 2)',acc:['8'],sol:'8',ex:'g(7) = 2 + g(5) = 2 + 2 + g(3) = 6 + g(1) = 8 + g(-1) = 8.'},
+ {th:'rec',t:'qcm',q:'Qu\'affiche apres(3) ?',c:"def apres(n):\n    if n > 0:\n        apres(n - 1)\n        print(n, end=' ')",ch:['3 2 1','1 2 3','3','rien'],a:1,ex:'Le print est exécuté APRÈS le retour de l\'appel récursif, donc au dépilement : 1 puis 2 puis 3.'},
+ {th:'rec',t:'val',q:'Combien de lignes affiche h(3) ?',c:'def h(n):\n    print(n)\n    if n > 0:\n        h(n - 1)',acc:['4'],sol:'4',ex:'h(3), h(2), h(1), h(0) affichent chacun : 3, 2, 1, 0.'},
+ {th:'rec',t:'val',q:'Que renvoie ProductofArray([1, 8, 5, 4]) ?',c:'def ProductofArray(tab):\n    if len(tab) == 0:\n        return 1\n    return tab[0] * ProductofArray(tab[1:])',acc:['160'],sol:'160',ex:'1 × 8 × 5 × 4 = 160. Le cas de base renvoie 1, l\'élément neutre de la multiplication.'},
+ {th:'rec',t:'qcm',q:'Que vaut L après ce code ?',c:'def P2(tab):\n    if len(tab) == 0:\n        return 1\n    return tab.pop() * P2(tab)\n\nL = [2, 3]\nP2(L)',ch:['[2, 3]','[]','[2]','6'],a:1,ex:'pop() modifie la liste passée en paramètre : elle est vidée.'},
+ {th:'rec',t:'qcm',q:'Qu\'appelle-t-on récursivité multiple ?',ch:['Une fonction appelée plusieurs fois dans le programme','Une fonction qui s\'appelle plusieurs fois elle-même dans son corps','Deux fonctions qui s\'appellent mutuellement','Une récursion sur plusieurs listes'],a:1,ex:'Exemples : Fibonacci, coefficients binomiaux.'},
+ {th:'rec',t:'qcm',q:'En général, comparé à sa version itérative, un algorithme récursif est…',ch:['plus rapide et plus économe en mémoire','plus lent et plus gourmand en mémoire, mais souvent plus simple à écrire','toujours impossible à rendre itératif','identique en tout point'],a:1,ex:'Tableau du TD : récursion = non économe, non rapide, mais facile à coder. On peut toujours passer de l\'un à l\'autre.'},
+ {th:'rec',t:'val',q:'Que renvoie binomial(5, 2) ?',c:'def binomial(n, k):\n    if k == 0 or k == n:\n        return 1\n    return binomial(n-1, k-1) + binomial(n-1, k)',acc:['10'],sol:'10',ex:'Triangle de Pascal : C(5, 2) = 10.'},
+ {th:'rec',t:'qcm',q:'Dans fact, à quoi sert assert n >= 0 and int(n) == n ?',ch:['Au cas de base','À la relation de récurrence','Au cas non voulu : refuser n négatif ou non entier','À accélérer le calcul'],a:2,ex:'Étape 3 : factorielle(-1) ou factorielle(1.5) n\'existent pas.'},
+ {th:'rec',t:'qcm',q:'Les trois phases de « diviser pour régner » sont :',ch:['Diviser, Régner, Combiner','Diviser, Trier, Afficher','Empiler, Dépiler, Combiner','Initialiser, Itérer, Terminer'],a:0,ex:'Diviser les données, résoudre chaque sous-problème, combiner les résultats.'},
+ // ---------- TRIS
+ {th:'tris',t:'qcm',q:'Quelle condition est nécessaire pour une recherche dichotomique ?',ch:['La liste doit être triée','La liste doit contenir des entiers positifs','La liste doit avoir une taille paire','Aucune'],a:0,ex:'On élimine la moitié qui ne peut pas contenir la valeur : cela suppose l\'ordre.'},
+ {th:'tris',t:'qcm',q:'Le tri par sélection consiste à…',ch:['échanger les voisins mal placés','chercher le minimum de la partie non triée et le placer en tête','insérer chaque élément dans la partie triée','couper la liste en deux et fusionner'],a:1,ex:'Bulles = voisins ; insertion = cartes en main ; fusion = couper/fusionner.'},
+ {th:'tris',t:'qcm',q:'Quel tri ressemble au rangement de cartes dans une main ?',ch:['Sélection','Bulles','Insertion','Rapide'],a:2,ex:'On insère chaque nouvelle carte à sa place parmi celles déjà triées.'},
+ {th:'tris',t:'qcm',q:'Quel tri utilise un pivot ?',ch:['Tri fusion','Tri rapide','Tri à bulles','Tri par insertion'],a:1,ex:'Quicksort : plus petits que le pivot à gauche, plus grands à droite.'},
+ {th:'tris',t:'qcm',q:'Trier « sur place » signifie…',ch:['trier sans liste intermédiaire','trier en une seule boucle','trier sans comparer','trier une liste déjà triée'],a:0,ex:'Pour économiser la mémoire, on ne stocke pas les valeurs dans une liste provisoire.'},
+ {th:'tris',t:'val',q:'Que vaut la liste après le PREMIER passage du tri à bulles ?',c:'[5, 1, 4, 2]',acc:['[1, 4, 2, 5]'],sol:'[1, 4, 2, 5]',ex:'5↔1, 5↔4, 5↔2 : le plus grand remonte à la fin.'},
+ {th:'tris',t:'val',q:'Que vaut la liste après la PREMIÈRE étape du tri par sélection ?',c:'[5, 1, 4, 2]',acc:['[1, 5, 4, 2]'],sol:'[1, 5, 4, 2]',ex:'Le minimum (1) est échangé avec le premier élément (5).'},
+ {th:'tris',t:'val',q:'Combien de comparaisons fait au maximum une recherche dichotomique dans 16 éléments ? (ordre de grandeur log₂)',acc:['4','5'],sol:'4 (log₂16), 5 en comptant la dernière case',ex:'16 → 8 → 4 → 2 → 1 : log₂(16) = 4 divisions.'},
+ {th:'tris',t:'qcm',q:'Quels sont les deux tris récursifs du cours ?',ch:['Sélection et bulles','Fusion et rapide','Insertion et fusion','Bulles et rapide'],a:1,ex:'Itératifs : sélection, bulles, insertion. Récursifs : fusion, rapide.'},
+ // ---------- COMPLEXITÉ
+ {th:'cx',t:'qcm',q:'Big O décrit…',ch:['la mémoire de l\'ordinateur','l\'efficacité d\'un algorithme selon la taille des données (pire cas)','le nombre de lignes du code','la vitesse du processeur'],a:1,ex:'Big O est la métrique de l\'efficacité ; elle borne le pire cas.'},
+ {th:'cx',t:'qcm',q:'Big Ω (Oméga) correspond au…',ch:['pire cas','meilleur cas','cas moyen','cas impossible'],a:1,ex:'O : pire cas ; Ω : meilleur cas ; Θ : entre les deux (cas moyen dans le TD).'},
+ {th:'cx',t:'qcm',q:'Recherche séquentielle d\'une valeur dans un tableau de n cases : meilleur et pire cas ?',ch:['Ω(1) et O(n)','Ω(n) et O(n²)','Ω(log n) et O(n)','Ω(1) et O(1)'],a:0,ex:'Meilleur cas : en première case. Pire cas : en dernière case ou absente. Moyenne Θ(n/2).'},
+ {th:'cx',t:'qcm',q:'Simplifier O(2n + 5)',ch:['O(2n)','O(n)','O(1)','O(n + 5)'],a:1,ex:'On supprime les constantes multiplicatives et additives.'},
+ {th:'cx',t:'qcm',q:'Simplifier O(n² + n)',ch:['O(n²)','O(n)','O(n³)','O(2n²)'],a:0,ex:'On garde le terme dominant.'},
+ {th:'cx',t:'qcm',q:'Simplifier O(2·2ⁿ + 1000·n¹⁰⁰)',ch:['O(n¹⁰⁰)','O(2ⁿ)','O(1000)','O(n)'],a:1,ex:'L\'exponentielle finit toujours par dominer un polynôme.'},
+ {th:'cx',t:'qcm',q:'Classe de la plus rapide à la plus lente :',ch:['O(n) < O(log n) < O(1) < O(n²)','O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ)','O(1) < O(n) < O(log n) < O(2ⁿ) < O(n²)','O(log n) < O(1) < O(n²) < O(n)'],a:1,ex:'À connaître par cœur, avec O(n!) tout au bout.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'for a in arrayA:\n    print(a)\nfor b in arrayB:\n    print(b)',ch:['O(A × B)','O(A + B)','O(1)','O(n²)'],a:1,ex:'« Fais ceci, puis cela » : on additionne.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'for a in arrayA:\n    for b in arrayB:\n        print(a, b)',ch:['O(A + B)','O(A × B)','O(n)','O(log n)'],a:1,ex:'« Pour chaque a, fais tout b » : on multiplie. Ce n\'est O(n²) que si A et B ont la même taille n.'},
+ {th:'cx',t:'qcm',q:'Complexité de l\'accès tab[0] ?',ch:['O(1)','O(n)','O(log n)','O(n²)'],a:0,ex:'Temps constant, quelle que soit la taille du tableau.'},
+ {th:'cx',t:'qcm',q:'Complexité de la recherche dichotomique ?',ch:['O(n)','O(log n)','O(n²)','O(1)'],a:1,ex:'On divise par 2 à chaque étape : 2ᵏ = N donc k = log₂ N.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'while n > 1:\n    n = n // 2',ch:['O(n)','O(log n)','O(n/2)','O(1)'],a:1,ex:'Règle 4 : variable divisée par 2 à chaque tour.'},
+ {th:'cx',t:'qcm',q:'Complexité du Fibonacci récursif (deux appels) ?',ch:['O(n)','O(n²)','O(2ⁿ)','O(log n)'],a:2,ex:'L\'arbre double à chaque niveau : O(branches^profondeur) = O(2ⁿ).'},
+ {th:'cx',t:'qcm',q:'Complexité de findMaxNumRec (un appel récursif sur n−1, travail O(1)) ?',ch:['O(1)','O(n)','O(2ⁿ)','O(n²)'],a:1,ex:'M(n) = 1 + M(n−1) → M(n) = n.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'for i in range(0, len(array)):\n    for j in range(i+1, len(array)):\n        print(array[i], array[j])',ch:['O(n)','O(n log n)','O(n²)','O(n²/2)'],a:2,ex:'(n−1) + (n−2) + … + 1 = n(n−1)/2 ; on supprime la constante 1/2 → O(n²). « O(n²/2) » n\'est pas une forme simplifiée.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'for i in range(len(A)):\n    for j in range(len(B)):\n        for k in range(0, 100000):\n            print(A[i], B[j])',ch:['O(a × b × 100000)','O(a × b)','O(n³)','O(100000)'],a:1,ex:'La boucle de 100 000 tours est de taille fixe : c\'est une constante, on la supprime.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'for i in range(n):\n    for j in range(10):\n        print(i, j)',ch:['O(n²)','O(10n)','O(n)','O(1)'],a:2,ex:'10n → on supprime la constante 10.'},
+ {th:'cx',t:'qcm',q:'Complexité de la fonction foo (deux boucles successives sur array) ?',ch:['O(n²)','O(2n)','O(n)','O(1)'],a:2,ex:'O(1) + O(n) + O(n) + O(1) = O(2n) → O(n).'},
+ {th:'cx',t:'qcm',q:'Peindre un mur de largeur w et de hauteur h :',ch:['O(w + h)','O(w × h)','O(n²)','O(1)'],a:1,ex:'Exemple d\'ouverture du TD complexité.'},
+ {th:'cx',t:'qcm',q:'Complexité de formule(n) = (n+1)*n//2 ?',ch:['O(1)','O(n)','O(n²)','O(log n)'],a:0,ex:'Un calcul direct, quelle que soit n. Rr(n) fait la même chose en O(n).'},
+ {th:'cx',t:'qcm',q:'Complexité de somme_chiffre(n) (division par 10 à chaque appel) ?',ch:['O(n)','O(log n)','O(1)','O(n²)'],a:1,ex:'Nombre d\'appels = nombre de chiffres de n ≈ log₁₀ n.'},
+ {th:'cx',t:'qcm',q:'Complexité du tri fusion ?',ch:['O(n²)','O(n log n)','O(n)','O(log n)'],a:1,ex:'log n niveaux de découpage, chacun avec une fusion en O(n).'},
+ {th:'cx',t:'qcm',q:'Pire cas du tri rapide ?',ch:['O(n log n)','O(n²)','O(n)','O(2ⁿ)'],a:1,ex:'Quand le pivot est toujours le plus petit ou le plus grand (liste déjà triée avec pivot en bout). Moyenne : O(n log n).'},
+ {th:'cx',t:'qcm',q:'Complexité du tri par sélection ?',ch:['O(n) dans le meilleur cas','O(n²) dans tous les cas','O(n log n)','O(log n)'],a:1,ex:'On cherche toujours le minimum dans toute la partie restante, même si la liste est triée.'},
+ {th:'cx',t:'qcm',q:'Tri par insertion sur une liste DÉJÀ triée :',ch:['O(1)','O(n)','O(n²)','O(n log n)'],a:1,ex:'La boucle while interne ne tourne jamais : un seul passage.'},
+ {th:'cx',t:'qcm',q:'Complexité en MÉMOIRE de fact récursive pour n ?',ch:['O(1)','O(n)','O(n²)','O(log n)'],a:1,ex:'n appels empilés en même temps sur la pile. La version itérative est en O(1) mémoire.'},
+ {th:'cx',t:'qcm',q:'Complexité de f(n) = f(n−1) + f(n−1) (cas de base n ≤ 1) ?',ch:['O(n)','O(2n)','O(2ⁿ)','O(n²)'],a:2,ex:'2⁰ + 2¹ + … + 2ⁿ⁻¹ = 2ⁿ − 1 appels.'},
+ {th:'cx',t:'qcm',q:'Complexité de ce code ?',c:'for i in range(n):\n    for j in range(i):\n        print(i, j)',ch:['O(n)','O(n²)','O(n log n)','O(i × n)'],a:1,ex:'0 + 1 + … + (n−1) = n(n−1)/2 → O(n²).'},
+ {th:'cx',t:'qcm',q:'ProductofArray(tab) avec tab[1:] à chaque appel : complexité ?',ch:['O(n)','O(n²)','O(log n)','O(1)'],a:1,ex:'n appels, mais chaque tab[1:] copie la liste (coût ≈ n) : n + (n−1) + … → O(n²). Avec pop() on reste en O(n).'}
+];
+
+/* =====================================================================
+   Accueil : checklist + stats
+   ===================================================================== */
+const CHECK = [
+ 'Expliquer interprété / compilé, typage dynamique / fort',
+ 'Utiliser /, //, % et ** sans hésiter (dernier chiffre, parité, binaire)',
+ 'Prédire les erreurs : TypeError, ValueError, IndexError, RecursionError',
+ 'Écrire un for avec range (bornes) et un while avec condition d\'arrêt',
+ 'Distinguer fonction et procédure, return et print',
+ 'Manipuler append, extend, remove, pop(), pop(0), slicing [1:]',
+ 'Écrire une liste en compréhension avec condition',
+ 'Créer et parcourir une matrice (plateau de morpion)',
+ 'Coder rendu de monnaie glouton, Syracuse, médiane',
+ 'Écrire une fonction récursive en 3 étapes (récurrence, base, assert)',
+ 'Dessiner la pile d\'appels de fact(4)',
+ 'Écrire fact, puissance, fibo, Rr, produit, somme des chiffres, binaire en récursif ET en itératif',
+ 'Expliquer récursif vs itératif (mémoire, vitesse, facilité)',
+ 'Expliquer diviser pour régner et la recherche dichotomique',
+ 'Décrire les 5 tris et leurs complexités',
+ 'Classer O(1), O(log n), O(n), O(n log n), O(n²), O(2ⁿ)',
+ 'Appliquer les règles : constantes, terme dominant, + ou ×',
+ 'Calculer la complexité d\'une fonction récursive (M(n) = 1 + M(n−1), arbre 2ⁿ)'
+];
+function renderChecklist() {
+  const done = store.get('check', []);
+  $('#checklist').innerHTML = CHECK.map((c, i) => `<li><label><input type="checkbox" id="ck${i}" ${done.includes(i) ? 'checked' : ''}><span>${esc(c)}</span></label></li>`).join('');
+  const upd = () => { const d = CHECK.map((_, i) => $('#ck' + i).checked ? i : -1).filter(i => i >= 0); store.set('check', d); $('#ckCount').textContent = '· ' + d.length + '/' + CHECK.length; $('#ckBar').style.width = (100 * d.length / CHECK.length) + '%'; };
+  $$('#checklist input').forEach(i => i.addEventListener('change', upd)); upd();
+}
+function renderStats() {
+  const solved = store.get('solved', []);
+  $('#stEx').textContent = solved.filter(id => EXOS.some(e => e.id === id)).length + '/' + EXOS.length;
+  const bq = store.get('bestQuiz', null); $('#stQuiz').textContent = bq === null ? '–' : bq + ' %';
+  const ex = store.get('exams', []); $('#stExam').textContent = ex.length ? ex[ex.length - 1].note.toFixed(1).replace('.', ',') + '/20' : '–';
+}
+
+/* =====================================================================
+   Cours : sommaire
+   ===================================================================== */
+function renderToc() {
+  const secs = $$('#chap section');
+  $('#toc').innerHTML = secs.map((s, i) => `<a href="#cours" data-s="${s.id}"><span>${String(i + 1).padStart(2, '0')}</span>${esc(s.dataset.t)}</a>`).join('');
+  $$('#toc a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); document.getElementById(a.dataset.s).scrollIntoView({ behavior: 'smooth' }); }));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(ents => ents.forEach(en => { if (en.isIntersecting) { $$('#toc a').forEach(a => a.classList.toggle('on', a.dataset.s === en.target.id)); } }), { rootMargin: '-30% 0px -60% 0px' });
+    secs.forEach(s => io.observe(s));
+  }
+}
+
+/* =====================================================================
+   Pratique
+   ===================================================================== */
+let curExo = null, sandboxCode = '# Bac à sable : écris et exécute librement du Python\ndef carre(x):\n    return x * x\n\nprint([carre(i) for i in range(6)])\n';
+function renderExList() {
+  const solved = store.get('solved', []);
+  const groups = {};
+  EXOS.forEach(e => (groups[e.th] = groups[e.th] || []).push(e));
+  let h = '<button type="button" data-id="bac" class="' + (curExo === 'bac' ? 'on' : '') + '"><span class="dot"></span><span>Bac à sable</span><span class="lvl"></span></button>';
+  for (const g in groups) {
+    const n = groups[g].filter(e => solved.includes(e.id)).length;
+    h += `<h4>${esc(g)} · ${n}/${groups[g].length}</h4>`;
+    h += groups[g].map(e => `<button type="button" data-id="${e.id}" class="${curExo === e.id ? 'on' : ''}"><span class="dot ${solved.includes(e.id) ? 'done' : ''}"></span><span>${esc(e.title)}</span><span class="lvl">${'●'.repeat(e.lvl)}</span></button>`).join('');
+  }
+  $('#exlist').innerHTML = h;
+  $$('#exlist button').forEach(b => b.addEventListener('click', () => { openExo(b.dataset.id); if (window.innerWidth < 900) $('#exo').scrollIntoView({ behavior: 'smooth' }); }));
+}
+function editorKeys(ta) {
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const s = ta.selectionStart, en = ta.selectionEnd;
+      ta.value = ta.value.slice(0, s) + '    ' + ta.value.slice(en);
+      ta.selectionStart = ta.selectionEnd = s + 4;
+      ta.dispatchEvent(new Event('input'));
+    } else if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
+      const s = ta.selectionStart; const line = ta.value.slice(0, s).split('\n').pop();
+      let ind = line.match(/^\s*/)[0]; if (/:\s*$/.test(line)) ind += '    ';
+      e.preventDefault();
+      ta.value = ta.value.slice(0, s) + '\n' + ind + ta.value.slice(ta.selectionEnd);
+      ta.selectionStart = ta.selectionEnd = s + 1 + ind.length;
+      ta.dispatchEvent(new Event('input'));
+    }
+  });
+}
+function parseTests(out) {
+  const res = {}; const lines = [];
+  out.split('\n').forEach(l => { const m = l.match(/^@@T\|(\d+)\|([^|]*)\|(.*)$/); if (m) res[m[1]] = { ok: m[2] === 'True', err: m[2] === 'ERR', got: m[3] }; else lines.push(l); });
+  return { res, rest: lines.join('\n').replace(/\n+$/, '') };
+}
+async function gradeExo(ex, code) {
+  const r = await runPy(code + pyTests(ex.tests));
+  const { res, rest } = parseTests(r.out);
+  const rows = ex.tests.map((t, i) => { const x = res[i]; return { call: t[0], exp: t[1], ok: !!(x && x.ok), got: x ? x.got : null, err: x && x.err }; });
+  return { rows, passed: rows.filter(x => x.ok).length, out: rest, err: r.err };
+}
+function testRowsHtml(g) {
+  return '<div class="tests">' + g.rows.map(x => `<div class="${x.ok ? 'p' : 'f'}"><span>${x.ok ? '✓' : '✗'}</span><span>${esc(x.call)} → attendu ${esc(x.exp)}${x.ok ? '' : (x.got === null ? ' · non exécuté' : (x.err ? ' · erreur : ' : ' · obtenu ') + esc(x.got))}</span></div>`).join('') + '</div>';
+}
+function openExo(id) {
+  curExo = id; renderExList();
+  const box = $('#exo');
+  if (id === 'bac') {
+    box.innerHTML = `<div class="exo-head"><h2>Bac à sable</h2></div><p class="lede">Teste n'importe quel code du cours. Les fonctions <code>input()</code> renvoient une chaîne vide ici.</p>
+    <div class="editor-wrap"><textarea class="editor" id="ed" spellcheck="false" aria-label="Éditeur Python"></textarea>
+    <div class="actions"><button class="btn primary" id="bRun" type="button">Exécuter</button><button class="btn" id="bClr" type="button">Effacer la console</button></div>
+    <div class="console" id="con">Clique sur Exécuter.</div></div>`;
+    const ed = $('#ed'); ed.value = sandboxCode; editorKeys(ed);
+    ed.addEventListener('input', () => { sandboxCode = ed.value; });
+    $('#bRun').addEventListener('click', async () => { const b = $('#bRun'); b.disabled = true; $('#con').textContent = 'Exécution…'; try { const r = await runPy(ed.value); $('#con').innerHTML = esc(r.out || '') + (r.err ? '<span class="e">' + esc((r.out ? '\n' : '') + r.err) + '</span>' : (r.out ? '' : '(aucun affichage)')); } catch (e) { $('#con').innerHTML = '<span class="e">Moteur Python indisponible.</span>'; } b.disabled = false; });
+    $('#bClr').addEventListener('click', () => { $('#con').textContent = ''; });
+    return;
+  }
+  const ex = EXOS.find(e => e.id === id); if (!ex) return;
+  const solved = store.get('solved', []).includes(ex.id);
+  box.innerHTML = `<div class="exo-head"><span class="pill">${esc(ex.th)}</span><span class="pill">Niveau ${'●'.repeat(ex.lvl)}</span>${ex.rec ? '<span class="pill">récursif</span>' : ''}${solved ? '<span class="pill ok">Réussi</span>' : ''}</div>
+  <h2 style="margin-top:8px">${esc(ex.title)}</h2>
+  <p>${ex.en}</p>
+  <div class="editor-wrap"><textarea class="editor" id="ed" spellcheck="false" aria-label="Éditeur Python"></textarea>
+  <div class="actions"><button class="btn primary" id="bTest" type="button">Tester</button><button class="btn" id="bRun" type="button">Exécuter</button><button class="btn" id="bHint" type="button">Indice</button><button class="btn" id="bSol" type="button">Solution</button><button class="btn" id="bReset" type="button">Réinitialiser</button></div>
+  <div class="console" id="con">Écris ta fonction puis clique sur <b>Tester</b>.</div></div>
+  <div id="extra"></div>`;
+  const ed = $('#ed'); ed.value = store.get('code:' + ex.id, ex.start); editorKeys(ed);
+  ed.addEventListener('input', () => store.set('code:' + ex.id, ed.value));
+  $('#bRun').addEventListener('click', async () => { $('#con').textContent = 'Exécution…'; try { const r = await runPy(ed.value); $('#con').innerHTML = esc(r.out || '') + (r.err ? '<span class="e">' + esc(r.err) + '</span>' : (r.out ? '' : '(aucun affichage — pense à appeler ta fonction avec print)')); } catch (e) { $('#con').innerHTML = '<span class="e">Moteur Python indisponible.</span>'; } });
+  $('#bTest').addEventListener('click', async () => {
+    const b = $('#bTest'); b.disabled = true; $('#con').textContent = 'Tests en cours…';
+    try {
+      const g = await gradeExo(ex, ed.value);
+      let h = `<b>${g.passed}/${g.rows.length} tests réussis</b>`;
+      if (g.err) h += `\n<span class="e">${esc(g.err)}</span>`;
+      h += testRowsHtml(g);
+      if (g.out) h += '\nAffichage :\n' + esc(g.out);
+      if (g.passed === g.rows.length && !g.err) {
+        h = '<b style="color:var(--ok)">Bravo, tous les tests passent.</b> Complexité : ' + esc(ex.cx) + h.replace(/^<b>[^<]*<\/b>/, '');
+        const s = store.get('solved', []); if (!s.includes(ex.id)) { s.push(ex.id); store.set('solved', s); renderExList(); renderStats(); }
+      }
+      $('#con').innerHTML = h;
+    } catch (e) { $('#con').innerHTML = '<span class="e">Moteur Python indisponible. Compare ton code à la solution.</span>'; }
+    b.disabled = false;
+  });
+  $('#bHint').addEventListener('click', () => { $('#extra').innerHTML = `<div class="reveal"><h4>Indice</h4><p>${ex.hint}</p></div>`; });
+  $('#bSol').addEventListener('click', () => {
+    $('#extra').innerHTML = `<div class="reveal"><h4>Solution</h4><div class="cell"><pre class="py">${esc(ex.sol)}</pre></div><p><b>Complexité :</b> ${esc(ex.cx)}</p><button class="btn" id="bLoad" type="button">Charger la solution dans l'éditeur</button></div>`;
+    enhanceCells($('#extra'));
+    $('#bLoad').addEventListener('click', () => { ed.value = ex.sol; store.set('code:' + ex.id, ed.value); });
+  });
+  $('#bReset').addEventListener('click', () => { ed.value = ex.start; store.set('code:' + ex.id, ed.value); $('#con').textContent = 'Code réinitialisé.'; });
+}
+
+/* =====================================================================
+   Quiz
+   ===================================================================== */
+const norm = s => String(s).trim().replace(/"/g, "'").replace(/\s+/g, ' ').replace(/\s*([,\[\]\(\)])\s*/g, '$1').toLowerCase();
+function questionHtml(q, idx, label) {
+  let h = `<div class="qcard" data-i="${idx}"><div class="qn">${esc(label)} · ${esc(THEMES[q.th])}</div><div class="qt">${esc(q.q)}</div>`;
+  if (q.c) h += `<div class="cell" style="margin:8px 0 12px"><pre class="py">${esc(q.c)}</pre></div>`;
+  if (q.t === 'qcm') h += '<div class="opts">' + q.ch.map((c, k) => `<button type="button" class="opt" data-k="${k}"><span class="k">${'ABCD'[k]}</span><span>${esc(c)}</span></button>`).join('') + '</div>';
+  else h += `<input class="ansin" type="text" id="ans${idx}" autocomplete="off" spellcheck="false" placeholder="Ta réponse"> `;
+  return h + '<div class="fb"></div></div>';
+}
+function checkAnswer(q, v) { return q.t === 'qcm' ? v === q.a : q.acc.some(a => norm(a) === norm(v)); }
+function showFeedback(card, q, v) {
+  const ok = checkAnswer(q, v);
+  if (q.t === 'qcm') $$('.opt', card).forEach(o => { const k = +o.dataset.k; o.disabled = true; o.classList.remove('sel'); if (k === q.a) o.classList.add('good'); else if (k === v) o.classList.add('bad'); });
+  else { const i = $('.ansin', card); i.disabled = true; i.classList.add(ok ? 'good' : 'bad'); }
+  $('.fb', card).innerHTML = `<div class="expl"><b>${ok ? 'CORRECT' : 'INCORRECT'}</b>${!ok && q.t === 'val' ? ' · réponse : <code>' + esc(q.sol) + '</code>' : ''}<br>${esc(q.ex)}</div>`;
+  return ok;
+}
+let quizThemes = new Set(store.get('quizThemes', ['bases', 'rec', 'cx']));
+function renderQuizSetup() {
+  $('#qthemes').innerHTML = Object.entries(THEMES).map(([k, v]) => `<button type="button" class="chip" data-k="${k}" aria-pressed="${quizThemes.has(k)}">${esc(v)} <span class="lvl">${Q.filter(q => q.th === k).length}</span></button>`).join('');
+  $$('#qthemes .chip').forEach(c => c.addEventListener('click', () => { const k = c.dataset.k; quizThemes.has(k) ? quizThemes.delete(k) : quizThemes.add(k); store.set('quizThemes', [...quizThemes]); c.setAttribute('aria-pressed', quizThemes.has(k)); }));
+}
+function startQuiz(all) {
+  const pool = Q.filter(q => quizThemes.has(q.th));
+  if (!pool.length) { $('#qzone').innerHTML = '<p class="lede" style="margin-top:16px">Choisis au moins un thème.</p>'; return; }
+  const qs = all ? pool : shuffle(pool).slice(0, 10);
+  let answered = 0, good = 0;
+  $('#qzone').innerHTML = `<div class="exam-bar" style="top:calc(env(safe-area-inset-top,0px) + 58px)"><b id="qprog">0/${qs.length} répondues</b><span class="history" id="qscore"></span></div>` + qs.map((q, i) => questionHtml(q, i, 'Question ' + (i + 1))).join('') + '<div id="qend"></div>';
+  enhanceCells($('#qzone'));
+  const done = (card, q, v) => {
+    if (card.dataset.ans) return; card.dataset.ans = '1';
+    if (showFeedback(card, q, v)) good++;
+    answered++;
+    $('#qprog').textContent = answered + '/' + qs.length + ' répondues'; $('#qscore').textContent = good + ' correcte' + (good > 1 ? 's' : '');
+    if (answered === qs.length) {
+      const pct = Math.round(100 * good / qs.length);
+      if (pct > store.get('bestQuiz', -1)) store.set('bestQuiz', pct);
+      renderStats();
+      $('#qend').innerHTML = `<div class="qcard"><div class="score-row"><div class="score-big">${pct} %</div><div>${good}/${qs.length} bonnes réponses.<br>${pct >= 80 ? 'Très bien, passe à un autre thème ou à l\'examen blanc.' : 'Relis les fiches des questions ratées, puis recommence.'}</div></div><button class="btn primary" type="button" id="qagain" style="margin-top:14px">Nouveau quiz</button></div>`;
+      $('#qagain').addEventListener('click', () => { startQuiz(false); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    }
+  };
+  $$('#qzone .qcard[data-i]').forEach(card => {
+    const q = qs[+card.dataset.i];
+    if (q.t === 'qcm') $$('.opt', card).forEach(o => o.addEventListener('click', () => done(card, q, +o.dataset.k)));
+    else { const inp = $('.ansin', card); const b = document.createElement('button'); b.className = 'btn'; b.type = 'button'; b.textContent = 'Valider'; b.style.marginLeft = '6px'; inp.after(b);
+      const go = () => { if (inp.value.trim()) { done(card, q, inp.value); b.remove(); } };
+      b.addEventListener('click', go); inp.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); }
+  });
+}
+
+/* =====================================================================
+   Examen blanc
+   ===================================================================== */
+const EXAM_MIN = 90;
+function buildExam() {
+  const qcm = shuffle(Q.filter(q => q.t === 'qcm' && q.th !== 'cx')).slice(0, 10).map(q => Q.indexOf(q));
+  const val = shuffle(Q.filter(q => q.t === 'val')).slice(0, 5).map(q => Q.indexOf(q));
+  const cx = shuffle(Q.filter(q => q.th === 'cx')).slice(0, 5).map(q => Q.indexOf(q));
+  const e1 = shuffle(EXOS.filter(e => e.th === 'Bases' && e.lvl >= 2))[0].id;
+  const e2 = shuffle(EXOS.filter(e => e.rec && e.lvl >= 2 && e.id !== 'trifusion'))[0].id;
+  return { qcm, val, cx, code: [e1, e2], start: Date.now(), answers: {}, codes: {} };
+}
+let examTimer = null;
+function renderExamIntro() {
+  const hist = store.get('exams', []);
+  $('#examzone').innerHTML = `<p class="lede">Un sujet différent est tiré à chaque fois. Tes réponses et le chrono sont conservés si tu recharges la page. À la fin du temps, la copie est rendue automatiquement.</p>
+  <div class="tbl" style="max-width:640px"><table>
+    <tr><th>Partie</th><th>Contenu</th><th class="num">Points</th></tr>
+    <tr><td>1 · Cours</td><td>10 QCM (bases, listes, récursivité, tris, algos du TD)</td><td class="num">5</td></tr>
+    <tr><td>2 · Lecture de code</td><td>5 questions « que renvoie / qu'affiche ce code ? »</td><td class="num">5</td></tr>
+    <tr><td>3 · Complexité</td><td>5 questions Big O</td><td class="num">5</td></tr>
+    <tr><td>4 · Programmation</td><td>1 fonction itérative + 1 fonction récursive, testées automatiquement</td><td class="num">5</td></tr>
+    <tr><td colspan="2"><b>Total</b></td><td class="num"><b>20</b></td></tr>
+  </table></div>
+  <button class="btn primary" id="exStart" type="button">Commencer l'examen (1h30)</button>
+  ${hist.length ? '<h3>Historique</h3><div class="tbl" style="max-width:640px"><table><tr><th>Date</th><th class="num">Note</th><th class="num">Cours</th><th class="num">Lecture</th><th class="num">Complexité</th><th class="num">Code</th></tr>' + hist.slice().reverse().map(h => `<tr><td>${esc(new Date(h.date).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }))}</td><td class="num"><b>${h.note.toFixed(1)}</b></td><td class="num">${h.p[0].toFixed(1)}</td><td class="num">${h.p[1].toFixed(1)}</td><td class="num">${h.p[2].toFixed(1)}</td><td class="num">${h.p[3].toFixed(1)}</td></tr>`).join('') + '</table></div>' : ''}`;
+  $('#exStart').addEventListener('click', () => { store.set('exam', buildExam()); renderExam(); window.scrollTo({ top: 0 }); });
+}
+function renderExam() {
+  const ex = store.get('exam', null);
+  if (!ex) return renderExamIntro();
+  const save = () => store.set('exam', ex);
+  let h = `<div class="exam-bar"><span class="clock" id="clock">--:--</span><span class="history">Réponses enregistrées automatiquement</span><span style="flex:1"></span><button class="btn primary" id="exSubmit" type="button">Rendre la copie</button><button class="btn" id="exQuit" type="button">Abandonner</button></div><div id="exConfirm"></div>`;
+  h += '<div class="part-h"><h3>Partie 1 · Questions de cours</h3><span>10 × 0,5 pt</span></div>';
+  h += ex.qcm.map((qi, i) => questionHtml(Q[qi], 'p1_' + i, 'Q' + (i + 1))).join('');
+  h += '<div class="part-h"><h3>Partie 2 · Lecture de code</h3><span>5 × 1 pt</span></div>';
+  h += ex.val.map((qi, i) => questionHtml(Q[qi], 'p2_' + i, 'Q' + (i + 11))).join('');
+  h += '<div class="part-h"><h3>Partie 3 · Complexité</h3><span>5 × 1 pt</span></div>';
+  h += ex.cx.map((qi, i) => questionHtml(Q[qi], 'p3_' + i, 'Q' + (i + 16))).join('');
+  h += '<div class="part-h"><h3>Partie 4 · Programmation</h3><span>2 × 2,5 pts</span></div>';
+  h += ex.code.map((id, i) => { const e = EXOS.find(x => x.id === id); return `<div class="qcard"><div class="qn">Exercice ${i + 1} · ${e.rec ? 'récursif' : 'itératif'}</div><div class="qt">${esc(e.title)}</div><p>${e.en}</p><div class="editor-wrap"><textarea class="editor" id="exed${i}" spellcheck="false" aria-label="Code exercice ${i + 1}"></textarea><div class="actions"><button class="btn" type="button" data-run="${i}">Exécuter (sans les tests)</button></div><div class="console" id="excon${i}">Les tests ne sont lancés qu'à la remise de la copie. Tu peux exécuter ton code avec des print pour vérifier.</div></div></div>`; }).join('');
+  h += '<div style="margin-top:20px"><button class="btn primary" id="exSubmit2" type="button">Rendre la copie</button></div>';
+  $('#examzone').innerHTML = h;
+  enhanceCells($('#examzone'));
+  // restaurer et écouter
+  $$('#examzone .qcard[data-i]').forEach(card => {
+    const key = card.dataset.i; const [p, n] = key.split('_'); const q = Q[ex[{ p1: 'qcm', p2: 'val', p3: 'cx' }[p]][+n]];
+    if (q.t === 'qcm') {
+      $$('.opt', card).forEach(o => { if (ex.answers[key] === +o.dataset.k) o.classList.add('sel'); o.addEventListener('click', () => { ex.answers[key] = +o.dataset.k; $$('.opt', card).forEach(x => x.classList.toggle('sel', x === o)); save(); }); });
+    } else { const inp = $('.ansin', card); inp.value = ex.answers[key] || ''; inp.addEventListener('input', () => { ex.answers[key] = inp.value; save(); }); }
+  });
+  ex.code.forEach((id, i) => {
+    const e = EXOS.find(x => x.id === id); const ed = $('#exed' + i); ed.value = ex.codes[i] !== undefined ? ex.codes[i] : e.start; editorKeys(ed);
+    ed.addEventListener('input', () => { ex.codes[i] = ed.value; save(); });
+  });
+  $$('#examzone [data-run]').forEach(b => b.addEventListener('click', async () => { const i = +b.dataset.run; const con = $('#excon' + i); con.textContent = 'Exécution…'; try { const r = await runPy($('#exed' + i).value); con.innerHTML = esc(r.out || '(aucun affichage)') + (r.err ? '\n<span class="e">' + esc(r.err) + '</span>' : ''); } catch (err) { con.innerHTML = '<span class="e">Moteur Python indisponible.</span>'; } }));
+  const askSubmit = () => {
+    $('#exConfirm').innerHTML = `<div class="qcard" style="border-color:var(--accent)"><b>Rendre la copie maintenant ?</b> Tu ne pourras plus modifier tes réponses.<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn primary" id="exYes" type="button">Oui, rendre</button><button class="btn" id="exNo" type="button">Continuer l'examen</button></div></div>`;
+    $('#exYes').addEventListener('click', () => gradeExam()); $('#exNo').addEventListener('click', () => { $('#exConfirm').innerHTML = ''; });
+    $('#exConfirm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  $('#exSubmit').addEventListener('click', askSubmit); $('#exSubmit2').addEventListener('click', askSubmit);
+  $('#exQuit').addEventListener('click', () => {
+    $('#exConfirm').innerHTML = `<div class="qcard" style="border-color:var(--ko)"><b>Abandonner cet examen ?</b> Il ne sera pas noté.<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" id="exQY" type="button">Oui, abandonner</button><button class="btn primary" id="exQN" type="button">Continuer</button></div></div>`;
+    $('#exQY').addEventListener('click', () => { store.set('exam', null); clearInterval(examTimer); renderExamIntro(); }); $('#exQN').addEventListener('click', () => { $('#exConfirm').innerHTML = ''; });
+  });
+  clearInterval(examTimer);
+  const tick = () => {
+    const left = ex.start + EXAM_MIN * 60000 - Date.now();
+    const c = $('#clock'); if (!c) { clearInterval(examTimer); return; }
+    if (left <= 0) { clearInterval(examTimer); gradeExam(); return; }
+    const m = Math.floor(left / 60000), s = Math.floor(left / 1000) % 60;
+    c.textContent = (m >= 60 ? Math.floor(m / 60) + 'h' + String(m % 60).padStart(2, '0') : String(m).padStart(2, '0')) + ':' + String(s).padStart(2, '0');
+    c.classList.toggle('low', left < 10 * 60000);
+  };
+  tick(); examTimer = setInterval(tick, 1000);
+}
+async function gradeExam() {
+  clearInterval(examTimer);
+  const ex = store.get('exam', null); if (!ex) return;
+  $('#examzone').innerHTML = '<p class="lede">Correction en cours… (exécution des tests de programmation)</p><div class="engine"><i></i><span>…</span></div>';
+  const used = Math.min(EXAM_MIN, Math.round((Date.now() - ex.start) / 60000));
+  const part = (arr, p, pts) => arr.map((qi, i) => { const k = p + '_' + i; const v = ex.answers[k]; const ok = v !== undefined && v !== '' && checkAnswer(Q[qi], v); return { qi, k, v, ok, pts: ok ? pts : 0 }; });
+  const r1 = part(ex.qcm, 'p1', 0.5), r2 = part(ex.val, 'p2', 1), r3 = part(ex.cx, 'p3', 1);
+  const r4 = [];
+  for (let i = 0; i < ex.code.length; i++) {
+    const e = EXOS.find(x => x.id === ex.code[i]); const code = ex.codes[i] !== undefined ? ex.codes[i] : e.start;
+    let g = null; try { g = await gradeExo(e, code); } catch (err) { g = null; }
+    r4.push({ e, code, g, pts: g ? 2.5 * g.passed / g.rows.length : 0 });
+  }
+  const sum = a => a.reduce((s, x) => s + x.pts, 0);
+  const p = [sum(r1), sum(r2), sum(r3), sum(r4)];
+  const note = Math.round(p.reduce((a, b) => a + b, 0) * 10) / 10;
+  const hist = store.get('exams', []); hist.push({ date: Date.now(), note, p }); store.set('exams', hist.slice(-10));
+  store.set('exam', null); renderStats();
+  const weak = [];
+  if (p[0] < 3.5) weak.push('les fiches de cours 1 à 9 (définitions, listes, tris)');
+  if (p[1] < 3.5) weak.push('la lecture de code : simule à la main ligne par ligne, écris la pile d\'appels');
+  if (p[2] < 3.5) weak.push('la fiche 10 (règles Big O et exemples corrigés)');
+  if (p[3] < 3.5) weak.push('les exercices de la Pratique, en particulier les fonctions récursives');
+  let h = `<div class="qcard"><div class="score-row"><div class="score-big">${note.toFixed(1).replace('.', ',')}<span style="font-size:1.4rem">/20</span></div><div>Temps utilisé : ${used} min sur ${EXAM_MIN}.<br>${note >= 16 ? 'Excellent niveau, tu es prêt(e).' : note >= 12 ? 'Bon niveau. Consolide les parties ci-dessous.' : 'Il faut retravailler : suis le parcours de révision puis refais un examen.'}</div></div>
+  <div class="breakdown">${['Cours', 'Lecture de code', 'Complexité', 'Programmation'].map((n, i) => `<div class="stat"><b>${p[i].toFixed(1).replace('.', ',')}/5</b><span>${n}</span></div>`).join('')}</div>
+  ${weak.length ? '<p style="margin-top:14px"><b>À retravailler :</b> ' + weak.map(esc).join(' ; ') + '.</p>' : ''}
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn primary" id="exNew" type="button">Nouvel examen</button></div></div>`;
+  const corr = (rows, title, label0) => `<div class="part-h"><h3>${title}</h3><span>${sum(rows).toFixed(1)} pts</span></div>` + rows.map((r, i) => {
+    const q = Q[r.qi];
+    let a = q.t === 'qcm' ? (r.v === undefined ? '<i>pas de réponse</i>' : esc(q.ch[r.v])) : (r.v ? '<code>' + esc(r.v) + '</code>' : '<i>pas de réponse</i>');
+    return `<div class="qcard"><div class="qn">Q${label0 + i} · ${r.ok ? '<span style="color:var(--ok)">correct</span>' : '<span style="color:var(--ko)">incorrect</span>'}</div><div class="qt">${esc(q.q)}</div>${q.c ? '<div class="cell"><pre class="py">' + esc(q.c) + '</pre></div>' : ''}<p>Ta réponse : ${a}</p><div class="expl"><b>RÉPONSE</b> ${esc(q.t === 'qcm' ? q.ch[q.a] : q.sol)}<br>${esc(q.ex)}</div></div>`;
+  }).join('');
+  h += corr(r1, 'Partie 1 · Cours', 1) + corr(r2, 'Partie 2 · Lecture de code', 11) + corr(r3, 'Partie 3 · Complexité', 16);
+  h += `<div class="part-h"><h3>Partie 4 · Programmation</h3><span>${p[3].toFixed(1)} pts</span></div>` + r4.map((r, i) => `<div class="qcard"><div class="qn">Exercice ${i + 1} · ${r.pts.toFixed(2).replace('.', ',')}/2,5</div><div class="qt">${esc(r.e.title)}</div>${r.g ? testRowsHtml(r.g) + (r.g.err ? '<p style="color:var(--ko)">' + esc(r.g.err) + '</p>' : '') : '<p style="color:var(--ko)">Le moteur Python n\'a pas pu s\'exécuter : compare ton code à la solution.</p>'}<h4>Ton code</h4><div class="cell"><pre class="py">${esc(r.code)}</pre></div><h4>Solution</h4><div class="cell"><pre class="py">${esc(r.e.sol)}</pre></div><p><b>Complexité :</b> ${esc(r.e.cx)}</p></div>`).join('');
+  $('#examzone').innerHTML = h;
+  enhanceCells($('#examzone'));
+  $('#exNew').addEventListener('click', () => renderExamIntro());
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =====================================================================
+   Navigation, thème, démarrage
+   ===================================================================== */
+const VIEWS = ['accueil', 'cours', 'pratique', 'quiz', 'examen', 'memo'];
+function route() {
+  const v = (location.hash || '#accueil').slice(1);
+  const cur = VIEWS.includes(v) ? v : 'accueil';
+  VIEWS.forEach(x => { $('#v-' + x).hidden = x !== cur; });
+  $$('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.v === cur ? 'page' : 'false'));
+  if (cur === 'pratique') { if (!curExo) openExo(EXOS[0].id); ensurePy().catch(() => {}); }
+  if (cur === 'examen') renderExam();
+  if (cur === 'accueil') renderStats();
+  try { store.set('lastView', cur); } catch (e) {}
+}
+$('#themeBtn').addEventListener('click', () => {
+  const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark'; store.set('theme', r.dataset.theme);
+});
+(function init() {
+  const t = store.get('theme', null); if (t) document.documentElement.dataset.theme = t;
+  enhanceCells($('#chap'));
+  renderToc(); renderChecklist(); renderStats(); renderExList(); renderQuizSetup();
+  $('#qstart').addEventListener('click', () => startQuiz(false));
+  $('#qall').addEventListener('click', () => startQuiz(true));
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
