@@ -3,7 +3,7 @@
 <title>Révision Algo B2</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout : barre d'onglets collante + zone de lecture centrée ; le cours a un sommaire latéral sur grand écran.
    Esprit "cahier Jupyter" : les blocs de code portent un prompt In [ ] et s'exécutent sur place. */
@@ -245,6 +245,85 @@ textarea.editor:focus{outline:none}
 .lesson-end{margin-top:10px}
 a.btn{text-decoration:none;display:inline-block}
 
+/* ---------- Vidéo-cours (tableau noir : un seul rendu, quel que soit le thème) ---------- */
+:root{--board:#1E3B30;--board-edge:#5B3E26;--chalk:#F2F0E6;--chalk-dim:#B9C4BC;--chalk-y:#F6D365;--chalk-b:#9AD7F5;--chalk-p:#F6A9C9;--chalk-hl:rgba(246,211,101,.18);--f-chalk:"Patrick Hand","Comic Sans MS",cursive;--f-chalk-t:"Caveat","Patrick Hand",cursive}
+.vp{background:#14231C;border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-top:16px;color:var(--chalk)}
+.vp:fullscreen{display:flex;flex-direction:column;border-radius:0}
+.vp:fullscreen .vp-stage{flex:1}
+.vp:fullscreen .vp-board{height:auto}
+.vp-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 16px;background:#0F1A15;font-size:.9rem}
+.vp-top b{font-family:var(--f-display);font-size:1rem}
+.vp-top span{color:var(--chalk-dim);font-family:var(--f-mono);font-size:.78rem}
+.vp-stage{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:0;position:relative}
+.vp-board{position:relative;height:clamp(340px,58vh,560px);overflow-y:auto;background:radial-gradient(ellipse at 30% 20%,#27493B 0%,var(--board) 55%,#18302A 100%);border:10px solid var(--board-edge);border-right-width:6px;padding:18px 26px 70px;scroll-behavior:smooth}
+.vp-board .bd-h{font-family:var(--f-chalk-t);font-size:2.2rem;font-weight:700;color:var(--chalk);margin:0 0 .6rem;line-height:1.1;border-bottom:2px dashed rgba(242,240,230,.35);padding-bottom:6px}
+.vp-board .bd-p,.vp-board .bd-ok,.vp-board .bd-tip{font-family:var(--f-chalk);font-size:1.28rem;line-height:1.45;margin:.45rem 0;color:var(--chalk)}
+.vp-board .bd-ok{color:var(--chalk-b)}
+.vp-board .bd-tip{color:var(--chalk-p);border:2px solid rgba(246,169,201,.5);border-radius:10px;padding:6px 12px}
+.vp-board .bd-exo{display:inline-block;font-family:var(--f-chalk-t);font-size:2rem;font-weight:700;color:var(--chalk-y);border:2px solid var(--chalk-y);border-radius:10px;padding:0 14px;margin-bottom:.4rem;transform:rotate(-1.5deg)}
+.vp-board code{font-family:var(--f-mono);font-size:.85em;background:rgba(0,0,0,.22);color:var(--chalk);padding:.05em .35em;border-radius:5px}
+.vp-board b{color:var(--chalk-y)}
+.bd-code{font-family:var(--f-mono);font-size:1rem;line-height:1.75;background:rgba(0,0,0,.2);border-radius:10px;padding:8px 0;margin:.6rem 0;overflow-x:auto;color:var(--chalk)}
+.bd-code div{display:grid;grid-template-columns:34px 1fr;white-space:pre;padding-right:14px;border-left:4px solid transparent}
+.bd-code .no{color:rgba(242,240,230,.4);text-align:right;padding-right:12px}
+.bd-code .cur{background:var(--chalk-hl);border-left-color:var(--chalk-y)}
+.vp-board .tk-kw{color:var(--chalk-p);font-weight:600}.vp-board .tk-str{color:#B6E3A1}.vp-board .tk-num{color:var(--chalk-y)}.vp-board .tk-com{color:rgba(242,240,230,.5)}.vp-board .tk-fn{color:var(--chalk-b)}.vp-board .tk-bi{color:var(--chalk-b)}
+.new{animation:chalkin .55s ease-out both}
+@keyframes chalkin{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.vp-side{background:#0F1A15;padding:12px 14px;display:grid;align-content:start;gap:8px;min-width:0}
+.vp-side h4{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk-dim);margin:6px 0 0}
+.teacher{width:120px;height:auto;justify-self:center}
+.teacher .mouth{transform-origin:60px 63px;transform:scaleY(.35)}
+.teacher.talking .mouth{animation:talk .28s infinite alternate}
+@keyframes talk{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+.teacher .arm{transform-origin:86px 92px}
+.teacher.talking .arm{animation:wave 1.6s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+#vpVars{display:flex;flex-wrap:wrap;gap:6px}
+.vbox{display:grid;border:1px solid rgba(242,240,230,.25);border-radius:8px;padding:3px 9px;background:rgba(255,255,255,.04)}
+.vbox span{font-family:var(--f-mono);font-size:.68rem;color:var(--chalk-dim)}
+.vbox b{font-family:var(--f-mono);font-size:.95rem;color:var(--chalk-y);overflow-wrap:anywhere}
+.vempty{font-size:.82rem;color:var(--chalk-dim);font-style:italic}
+#vpOut{font-family:var(--f-mono);font-size:.85rem;background:#000;color:#7CE38B;border-radius:8px;padding:6px 10px;min-height:32px;white-space:pre-wrap;max-height:120px;overflow:auto}
+.vp-sub{background:#000;color:#fff;font-size:1.05rem;line-height:1.45;padding:12px 18px;min-height:3.6em}
+.vp-big{position:absolute;inset:0 230px 0 0;margin:auto;width:92px;height:92px;border-radius:50%;border:0;background:var(--chalk-y);color:#1E3B30;font-size:0;box-shadow:0 8px 30px rgba(0,0,0,.45);display:grid;place-items:center}
+.vp-big::before{content:"";border-left:30px solid #1E3B30;border-top:19px solid transparent;border-bottom:19px solid transparent;margin-left:8px}
+.vp-exo,.vp-end{position:absolute;left:10px;right:240px;bottom:10px;background:rgba(15,26,21,.95);border:2px solid var(--chalk-y);border-radius:12px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.vp-exo b,.vp-end b{font-family:var(--f-chalk-t);font-size:1.6rem;color:var(--chalk-y);line-height:1}
+.vp-exo p{margin:0;flex:1 1 200px;color:var(--chalk);font-size:.95rem}
+#vpExoT{font-family:var(--f-mono);font-size:1.3rem;color:var(--chalk-y);font-variant-numeric:tabular-nums}
+.vp-btn{border:1px solid rgba(242,240,230,.35);background:transparent;color:var(--chalk);border-radius:8px;padding:7px 12px;font-weight:600;font-size:.88rem}
+.vp-btn:hover{background:rgba(255,255,255,.08)}
+.vp-btn.y{background:var(--chalk-y);color:#1E3B30;border-color:var(--chalk-y)}
+.vp-btn:disabled{opacity:.45;cursor:not-allowed}
+.vp-prog{display:flex;gap:2px;padding:0 16px;background:#0F1A15}
+.vp-prog button{flex:1;height:8px;border:0;padding:0;background:rgba(242,240,230,.18);border-radius:2px;min-width:3px}
+.vp-prog button.past{background:rgba(154,215,245,.6)}
+.vp-prog button.now{background:var(--chalk-b)}
+.vp-prog button.ex{box-shadow:inset 0 -3px 0 var(--chalk-y)}
+.vp-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px 14px;background:#0F1A15}
+.vp-ctl .sp{flex:1}
+.vp-ctl select{font:inherit;font-size:.85rem;background:#14231C;color:var(--chalk);border:1px solid rgba(242,240,230,.35);border-radius:8px;padding:6px 8px}
+.vp-ctl small{color:var(--chalk-dim);font-family:var(--f-mono);font-size:.75rem}
+.vp-chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-top:16px}
+.vp-chapters button{display:grid;grid-template-columns:16px 1fr;gap:10px;align-items:start;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px}
+.vp-chapters button:hover{border-color:var(--accent)}
+.vp-chapters button.on{border-color:var(--accent);background:var(--accent-soft)}
+.vp-chapters .dot{margin-top:4px}
+.vp-chapters .ct{display:grid}
+.vp-chapters small{color:var(--muted)}
+@media (max-width:760px){
+  .vp-stage{grid-template-columns:1fr}
+  .vp-board{height:clamp(300px,52vh,460px);padding:14px 16px 80px;border-width:7px}
+  .vp-board .bd-h{font-size:1.8rem}
+  .vp-board .bd-p,.vp-board .bd-ok,.vp-board .bd-tip{font-size:1.12rem}
+  .bd-code{font-size:.85rem}
+  .vp-side{grid-template-columns:90px minmax(0,1fr);align-items:start}
+  .vp-side .teacher{width:84px;grid-row:span 4}
+  .vp-big{inset:0;top:-120px}
+  .vp-exo,.vp-end{right:10px}
+}
+
 @media (max-width:900px){
   .hero,.grid2{grid-template-columns:1fr}
   .course,.prac,.deb{grid-template-columns:1fr}
@@ -272,6 +351,7 @@ a.btn{text-decoration:none;display:inline-block}
     <div class="brand">Algo B2 <span class="tag">In [ ]:</span></div>
     <nav class="tabs" aria-label="Sections">
       <a href="#accueil" data-v="accueil">Plan</a>
+      <a href="#video" data-v="video">Vidéo-cours</a>
       <a href="#debutant" data-v="debutant">Débutant</a>
       <a href="#cours" data-v="cours">Cours</a>
       <a href="#pratique" data-v="pratique">Pratique</a>
@@ -311,14 +391,15 @@ fact(5)
   </div>
 
   <div class="start-band">
-    <p><b>Tu as l'impression de ne rien comprendre ?</b> Commence par l'onglet Débutant : 11 leçons en mots simples, avec un mode pas à pas qui montre ce que fait l'ordinateur à chaque ligne.</p>
-    <a class="btn primary" href="#debutant">Commencer la leçon 1</a>
+    <p><b>Tu as l'impression de ne rien comprendre ?</b> Commence par la <b>Vidéo-cours</b> : un prof explique tout au tableau, du plus simple à la récursivité et la complexité, avec 32 exercices et leur correction.</p>
+    <a class="btn primary" href="#video">Lancer la vidéo-cours</a>
   </div>
 
   <div class="grid2">
     <div class="panel">
       <h3>Parcours conseillé</h3>
       <ol class="steps">
+        <li><div><b>Vidéo-cours : les 11 chapitres, en faisant chaque exercice</b><small>mets en pause quand il faut, réécoute un passage avec Retour. ≈ 2 h 30</small></div></li>
         <li><div><b>Onglet Débutant : les 11 leçons dans l'ordre</b><small>utilise le bouton Suivant du pas à pas et réponds aux questions. ≈ 2 h</small></div></li>
         <li><div><b>Fiches 1 à 7 : bases Python et algos du TD</b><small>types, //, %, boucles, listes, compréhensions, glouton, Syracuse. ≈ 40 min</small></div></li>
         <li><div><b>Fiche 8 : récursivité</b><small>les 3 étapes, la pile, toutes les fonctions du notebook B2. ≈ 30 min</small></div></li>
@@ -346,6 +427,58 @@ fact(5)
     <div class="bar"><i id="ckBar" style="width:0"></i></div>
     <ul class="checklist" id="checklist"></ul>
   </div>
+</div>
+
+<!-- =========================================================== VIDÉO -->
+<div class="view" id="v-video" hidden>
+  <div class="eyebrow">Vidéo-cours · un prof t'explique tout au tableau</div>
+  <h2>La vidéo-cours</h2>
+  <p class="lede">Appuie sur Lecture : le prof écrit au tableau et explique à voix haute, avec les sous-titres. Pour chaque exercice, la vidéo te laisse du temps pour chercher sur ton brouillon, puis montre la correction pas à pas. Mets le son.</p>
+  <div class="vp" id="vpWrap">
+    <div class="vp-top"><b id="vpChapTitle"></b><span id="vpTotal"></span></div>
+    <div class="vp-stage">
+      <div class="vp-board" id="vpBoard" aria-live="polite"></div>
+      <div class="vp-side">
+        <svg class="teacher" id="vpTeacher" viewBox="0 0 120 140" aria-hidden="true">
+          <rect x="22" y="92" width="76" height="48" rx="18" fill="#3E6FB0"/>
+          <path d="M48 92 L60 112 L72 92 Z" fill="#F2F0E6"/>
+          <rect x="56" y="96" width="8" height="22" fill="#B4532A"/>
+          <g class="arm"><rect x="84" y="88" width="12" height="34" rx="6" fill="#3E6FB0" transform="rotate(-30 90 92)"/><circle cx="103" cy="78" r="6" fill="#E8B48C"/><rect x="104" y="64" width="3" height="14" rx="1.5" fill="#F2F0E6" transform="rotate(20 105 70)"/></g>
+          <circle cx="60" cy="52" r="30" fill="#E8B48C"/>
+          <path d="M30 48 C30 22 90 22 90 48 C84 34 72 30 60 30 C48 30 36 34 30 48 Z" fill="#3B2A20"/>
+          <circle cx="48" cy="52" r="8" fill="none" stroke="#1A1A1A" stroke-width="2.5"/>
+          <circle cx="72" cy="52" r="8" fill="none" stroke="#1A1A1A" stroke-width="2.5"/>
+          <line x1="56" y1="52" x2="64" y2="52" stroke="#1A1A1A" stroke-width="2.5"/>
+          <circle cx="48" cy="53" r="2.4" fill="#1A1A1A"/><circle cx="72" cy="53" r="2.4" fill="#1A1A1A"/>
+          <ellipse class="mouth" cx="60" cy="68" rx="7" ry="5" fill="#7A2E2E"/>
+        </svg>
+        <h4>Mémoire (les boîtes)</h4>
+        <div id="vpVars"></div>
+        <h4>Écran</h4>
+        <div id="vpOut"></div>
+      </div>
+      <button class="vp-big" id="vpBig" type="button" aria-label="Lancer la vidéo">Lecture</button>
+      <div class="vp-exo" id="vpExo" hidden><b>À toi !</b><p>Cherche sur ton brouillon, puis regarde la correction.</p><span id="vpExoT">0:30</span><button class="vp-btn" id="vpMore" type="button">+30 s</button><button class="vp-btn y" id="vpShow" type="button">Voir la correction</button></div>
+      <div class="vp-end" id="vpEnd" hidden><b>Bravo !</b><p id="vpEndTxt" style="margin:0;flex:1 1 200px;color:var(--chalk)"></p><button class="vp-btn y" id="vpEndNext" type="button">Chapitre suivant</button></div>
+    </div>
+    <div class="vp-sub" id="vpSub"></div>
+    <div class="vp-prog" id="vpProg"></div>
+    <div class="vp-ctl">
+      <button class="vp-btn" id="vpPrev" type="button">◀ Retour</button>
+      <button class="vp-btn y" id="vpPlay" type="button">Lecture</button>
+      <button class="vp-btn" id="vpNext" type="button">Suivant ▶</button>
+      <button class="vp-btn" id="vpRestart" type="button">Revoir le chapitre</button>
+      <span class="sp"></span>
+      <small id="vpCount"></small>
+      <label class="sr" for="vpSpeed" style="position:absolute;left:-9999px">Vitesse</label>
+      <select id="vpSpeed"><option value="0.85">Lent</option><option value="1" selected>Normal</option><option value="1.2">Rapide</option></select>
+      <button class="vp-btn" id="vpVoice" type="button" aria-pressed="true">Voix : oui</button>
+      <button class="vp-btn" id="vpFull" type="button">Plein écran</button>
+    </div>
+  </div>
+  <p class="history" id="vpVoiceName" style="margin-top:8px"></p>
+  <h3>Les chapitres</h3>
+  <div class="vp-chapters" id="vpChapters"></div>
 </div>
 
 <!-- =========================================================== DÉBUTANT -->
@@ -2466,9 +2599,393 @@ function openLesson(id) {
 }
 
 /* =====================================================================
+   Vidéo-cours : script des chapitres
+   Clés d'une scène : c (efface le tableau), a (blocs ajoutés), h ([id, ligne] surlignée),
+   v (boîtes mémoire), o (écran), s (ce que dit le prof), x (secondes de pause exercice)
+   Blocs : ['h', titre] ['p', html] ['code', id, source] ['exo', titre] ['ok', html] ['tip', html]
+   ===================================================================== */
+const VIDEO = [
+ {t:`Les variables et les calculs`, sc:[
+  {c:1,a:[['h',`1. Les variables et les calculs`]],s:`Bonjour ! Dans cette vidéo, on commence par la base de tout : les variables et les calculs. Prends une feuille et un stylo, je vais te donner des exercices.`},
+  {a:[['p',`Une variable = une <b>boîte</b> qui a un <b>nom</b>.`]],s:`Une variable, c'est une boîte qui porte un nom. Dedans, on range une valeur.`},
+  {a:[['code','c1',`a = 5\nb = a + 2\na = a * 3\nprint(a, b)`]],s:`Regarde ce petit programme de quatre lignes. L'ordinateur le lit de haut en bas, une ligne à la fois.`},
+  {h:['c1',1],v:{a:5},s:`Ligne un : a égal 5. Attention, ici le signe égal veut dire : range 5 dans la boîte a.`},
+  {h:['c1',2],v:{a:5,b:7},s:`Ligne deux : b égal a plus 2. On calcule d'abord à droite : a vaut 5, plus 2, ça fait 7. Et on range 7 dans la boîte b.`},
+  {h:['c1',3],v:{a:15,b:7},s:`Ligne trois : a égal a fois 3. À droite : 5 fois 3, 15. On range 15 dans a, et l'ancien 5 est effacé. Et b ? b ne bouge pas, il vaut toujours 7.`},
+  {h:['c1',4],o:`15 7`,s:`Ligne quatre : print affiche les valeurs à l'écran : 15 et 7.`},
+  {a:[['tip',`Règle d'or : on calcule <b>à droite</b> du <code>=</code>, puis on range dans la boîte <b>à gauche</b>.`]],s:`Retiens la règle d'or : on calcule à droite du égal, avec ce qu'il y a maintenant dans les boîtes, puis on range le résultat dans la boîte de gauche.`},
+  {c:1,a:[['h',`Les opérations`],['p',`<code>+</code> plus · <code>-</code> moins · <code>*</code> fois · <code>**</code> puissance`],['p',`<code>/</code> division : donne TOUJOURS un nombre à virgule → <code>7 / 2 = 3.5</code> et <code>4 / 2 = 2.0</code>`]],s:`Les opérations. Plus, moins, étoile pour multiplier, deux étoiles pour la puissance. Et la barre pour diviser : attention, elle donne toujours un nombre à virgule. Même 4 divisé par 2 donne 2 point 0.`},
+  {a:[['p',`<code>//</code> : combien de fois ça rentre → <code>17 // 5 = 3</code>`],['p',`<code>%</code> : ce qui reste → <code>17 % 5 = 2</code>`]],s:`Deux opérations très importantes pour l'examen. Imagine 17 bonbons pour 5 enfants. Double barre : combien chacun en reçoit ? 3, car 5 fois 3 égale 15. Et le signe pourcentage, qu'on appelle modulo : combien il en reste ? 17 moins 15, il en reste 2.`},
+  {a:[['tip',`<code>n % 2 == 0</code> → n est pair<br><code>n % 10</code> → le dernier chiffre (1234 % 10 = 4)<br><code>n // 10</code> → enlève le dernier chiffre (1234 // 10 = 123)`]],s:`Trois astuces qui tombent tout le temps. n modulo 2 égal égal 0 : n est pair. n modulo 10 : c'est le dernier chiffre. Et n double barre 10 : on enlève le dernier chiffre.`},
+  {c:1,a:[['exo',`Exercice 1`],['p',`Que valent x et y à la fin ?`],['code','e1',`x = 4\ny = x * 2\nx = x + 10\ny = y - 1`]],x:30,s:`Exercice 1. Que valent x et y à la fin de ce programme ? Fais un tableau avec une colonne x et une colonne y.`},
+  {a:[['ok',`Correction`]],h:['e1',1],v:{x:4},s:`Correction. Ligne un : x reçoit 4.`},
+  {h:['e1',2],v:{x:4,y:8},s:`Ligne deux : y égal x fois 2, donc 4 fois 2, 8.`},
+  {h:['e1',3],v:{x:14,y:8},s:`Ligne trois : x égal x plus 10, donc 14. Attention, y ne change pas : il a été calculé avant.`},
+  {h:['e1',4],v:{x:14,y:7},a:[['ok',`x = 14 et y = 7`]],s:`Ligne quatre : y égal y moins 1, donc 7. Réponse : x vaut 14 et y vaut 7.`},
+  {c:1,a:[['exo',`Exercice 2`],['p',`Calcule : <code>23 // 4</code> · <code>23 % 4</code> · <code>9 / 3</code> · <code>2 ** 4</code>`]],x:30,s:`Exercice 2. Calcule ces quatre expressions : 23 double barre 4, 23 modulo 4, 9 divisé par 3, et 2 puissance 4.`},
+  {a:[['ok',`23 // 4 = 5 (car 4 × 5 = 20)`],['ok',`23 % 4 = 3 (car 23 − 20 = 3)`]],s:`Correction. 4 rentre 5 fois dans 23, car 4 fois 5 égale 20. Donc 23 double barre 4 égale 5. Il reste 23 moins 20, donc 23 modulo 4 égale 3.`},
+  {a:[['ok',`9 / 3 = 3.0 (une seule barre → nombre à virgule)`],['ok',`2 ** 4 = 2 × 2 × 2 × 2 = 16`]],s:`9 divisé par 3 donne 3 point 0, avec une virgule, car c'est une seule barre. Et 2 puissance 4, c'est 2 fois 2 fois 2 fois 2, donc 16.`},
+  {c:1,a:[['exo',`Exercice 3`],['p',`n = 5873. Écris le calcul qui donne :<br>a) le dernier chiffre &nbsp; b) le nombre sans son dernier chiffre &nbsp; c) le test « n est pair »`]],x:40,s:`Exercice 3. n vaut 5873. Écris le calcul qui donne le dernier chiffre, puis le calcul qui enlève le dernier chiffre, puis le test qui dit si n est pair.`},
+  {a:[['ok',`a) <code>n % 10</code> → 3`],['ok',`b) <code>n // 10</code> → 587`],['ok',`c) <code>n % 2 == 0</code> → False : 5873 est impair`]],s:`Correction. Le dernier chiffre : n modulo 10, ça donne 3. Sans le dernier chiffre : n double barre 10, ça donne 587. Et pour la parité : n modulo 2 égal égal 0. Ici le reste vaut 1, donc c'est faux : 5873 est impair.`},
+  {c:1,a:[['h',`À retenir`],['p',`<code>=</code> range dans une boîte · <code>==</code> compare`],['p',`<code>//</code> quotient · <code>%</code> reste · <code>/</code> donne un nombre à virgule`]],s:`Bravo, premier chapitre terminé ! Retiens : un égal pour ranger, deux égal pour comparer. Double barre pour le quotient, modulo pour le reste. On passe à la suite.`}
+ ]},
+ {t:`Les conditions : si… sinon`, sc:[
+  {c:1,a:[['h',`2. Les conditions : si… sinon`]],s:`Chapitre 2 : les conditions. Un programme doit parfois choisir. Par exemple : si tu as 18 ans ou plus, tu es majeur, sinon tu es mineur.`},
+  {a:[['p',`Comparer : <code>==</code> égal · <code>!=</code> différent · <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code>`],['p',`La réponse est <code>True</code> (vrai) ou <code>False</code> (faux).`]],s:`Pour comparer, on a : deux égal pour égal, point d'exclamation égal pour différent, et les signes plus petit et plus grand. La réponse est toujours True, vrai, ou False, faux.`},
+  {a:[['code','c2',`note = 14\nif note >= 16:\n    print("Très bien")\nelif note >= 12:\n    print("Bien")\nelse:\n    print("Insuffisant")`]],s:`Voici la structure. if veut dire si, elif veut dire sinon si, else veut dire sinon. Remarque les deux points à la fin de chaque test, et les lignes décalées vers la droite : ce sont elles qui appartiennent au test.`},
+  {h:['c2',1],v:{note:14},s:`On range 14 dans note.`},
+  {h:['c2',2],s:`Premier test : 14 est-il supérieur ou égal à 16 ? Non, c'est faux. Donc on saute la ligne décalée en dessous.`},
+  {h:['c2',4],s:`Deuxième test : 14 est-il supérieur ou égal à 12 ? Oui ! On entre dans ce bloc.`},
+  {h:['c2',5],o:`Bien`,s:`On affiche Bien.`},
+  {h:['c2',6],a:[['tip',`Python entre dans le <b>premier</b> bloc vrai, puis ignore tous les autres.`]],s:`Et le else ? Il est ignoré. Retiens bien : Python teste dans l'ordre, entre dans le premier bloc vrai, et ignore tout le reste.`},
+  {a:[['p',`<code>and</code> : les deux doivent être vrais · <code>or</code> : au moins un · <code>not</code> : le contraire`]],s:`On peut combiner des tests. and : les deux doivent être vrais. or : il suffit qu'un seul soit vrai. not : donne le contraire.`},
+  {c:1,a:[['exo',`Exercice 4`],['p',`Qu'affiche ce programme pour x = 7 ? Et pour x = 4 ?`],['code','e4',`if x > 5:\n    print("A")\nelif x > 3:\n    print("B")\nelse:\n    print("C")`]],x:30,s:`Exercice 4. Qu'affiche ce programme si x vaut 7 ? Et si x vaut 4 ?`},
+  {a:[['ok',`x = 7 : 7 > 5 est vrai → affiche <b>A</b> (le elif n'est même pas regardé)`]],h:['e4',1],s:`Correction. Pour x égal 7 : 7 plus grand que 5, c'est vrai, donc on affiche A. Le elif n'est même pas testé, même si 7 est aussi plus grand que 3.`},
+  {a:[['ok',`x = 4 : 4 > 5 faux · 4 > 3 vrai → affiche <b>B</b>`]],h:['e4',3],s:`Pour x égal 4 : 4 plus grand que 5, faux. 4 plus grand que 3, vrai. On affiche B.`},
+  {c:1,a:[['exo',`Exercice 5`],['p',`Écris une fonction <code>est_pair(n)</code> qui renvoie True si n est pair, False sinon.`]],x:45,s:`Exercice 5. Écris une fonction est pair, qui reçoit un nombre n, et renvoie True s'il est pair et False sinon. Indice : utilise le modulo.`},
+  {a:[['ok',`Correction`],['code','s5',`def est_pair(n):\n    if n % 2 == 0:\n        return True\n    else:\n        return False`]],s:`Correction. Un nombre est pair si le reste de sa division par 2 vaut 0. Donc : si n modulo 2 égal égal 0, on renvoie True, sinon on renvoie False.`},
+  {a:[['code','s5b',`def est_pair(n):\n    return n % 2 == 0`],['tip',`Version courte : le test donne déjà True ou False.`]],s:`Version courte, encore mieux : le test n modulo 2 égal égal 0 donne déjà True ou False. On peut le renvoyer directement.`}
+ ]},
+ {t:`Répéter avec for`, sc:[
+  {c:1,a:[['h',`3. Répéter avec for`]],s:`Chapitre 3 : les boucles. Une boucle sert à répéter des instructions sans les recopier.`},
+  {a:[['code','c3',`for i in range(1, 5):\n    print(i)`]],s:`for i in range de 1 à 5 : ça veut dire, pour i qui vaut 1, puis 2, puis 3, puis 4. Attention au piège : le 5 n'est jamais atteint ! range s'arrête juste avant.`},
+  {h:['c3',2],v:{i:1},o:`1`,s:`Premier tour, i vaut 1, on affiche 1.`},
+  {v:{i:2},o:`1\n2`,s:`Deuxième tour, i vaut 2.`},
+  {v:{i:3},o:`1\n2\n3`,s:`Puis 3.`},
+  {v:{i:4},o:`1\n2\n3\n4`,s:`Puis 4. Et c'est fini, car 5 est exclu.`},
+  {a:[['p',`<code>range(5)</code> → 0 1 2 3 4 · <code>range(1, 5)</code> → 1 2 3 4 · <code>range(0, 10, 2)</code> → 0 2 4 6 8`]],s:`Quelques exemples. range de 5 tout seul part de zéro : 0, 1, 2, 3, 4. range de 1 à 5 : 1, 2, 3, 4. Et range de 0 à 10 par pas de 2 : 0, 2, 4, 6, 8.`},
+  {c:1,a:[['h',`Le modèle « tirelire »`],['code','c4',`total = 0\nfor i in range(1, 5):\n    total = total + i\nprint(total)`]],s:`Maintenant, le modèle le plus utilisé à l'examen : la tirelire. On veut calculer 1 plus 2 plus 3 plus 4.`},
+  {h:['c4',1],v:{total:0},s:`Étape 1 : avant la boucle, on crée une tirelire vide : total égal 0.`},
+  {h:['c4',3],v:{total:1,i:1},s:`Étape 2 : dans la boucle, on ajoute i dans la tirelire. Premier tour, i vaut 1 : total devient 0 plus 1, donc 1.`},
+  {v:{total:3,i:2},s:`i vaut 2 : total devient 1 plus 2, donc 3.`},
+  {v:{total:6,i:3},s:`i vaut 3 : total devient 3 plus 3, donc 6.`},
+  {v:{total:10,i:4},s:`i vaut 4 : total devient 6 plus 4, donc 10.`},
+  {h:['c4',4],o:`10`,a:[['tip',`Avant la boucle : on crée · Dans la boucle : on ajoute · Après : on affiche ou on renvoie`]],s:`Étape 3 : après la boucle, on affiche le résultat, 10. Retiens les trois temps : avant, on crée. Pendant, on ajoute. Après, on renvoie.`},
+  {c:1,a:[['exo',`Exercice 6`],['p',`Combien de fois « Bonjour » s'affiche-t-il ?`],['code','e6',`for i in range(2, 9):\n    print("Bonjour")`]],x:20,s:`Exercice 6. Combien de fois Bonjour s'affiche-t-il ?`},
+  {a:[['ok',`i = 2, 3, 4, 5, 6, 7, 8 → <b>7 fois</b> (9 est exclu). Astuce : 9 − 2 = 7`]],s:`Correction. i prend les valeurs 2, 3, 4, 5, 6, 7, 8. Le 9 est exclu. Ça fait 7 fois. Astuce : 9 moins 2 égale 7.`},
+  {c:1,a:[['exo',`Exercice 7`],['p',`Que vaut s à la fin ?`],['code','e7',`s = 0\nfor i in range(1, 4):\n    s = s + i * 2`]],x:40,s:`Exercice 7. Que vaut s à la fin ? Fais ton tableau avec les colonnes i et s.`},
+  {a:[['ok',`Correction`]],h:['e7',1],v:{s:0},s:`Correction. Au départ, s vaut 0.`},
+  {h:['e7',3],v:{s:2,i:1},s:`i vaut 1 : s égal 0 plus 1 fois 2, donc 2.`},
+  {v:{s:6,i:2},s:`i vaut 2 : s égal 2 plus 4, donc 6.`},
+  {v:{s:12,i:3},a:[['ok',`s = 12`]],s:`i vaut 3 : s égal 6 plus 6, donc 12. La boucle s'arrête, car range s'arrête avant 4. Réponse : 12.`},
+  {c:1,a:[['exo',`Exercice 8`],['p',`Écris <code>somme(n)</code> qui renvoie 1 + 2 + … + n.`]],x:60,s:`Exercice 8. Écris une fonction somme de n, qui renvoie 1 plus 2 plus et cetera jusqu'à n. Utilise le modèle tirelire.`},
+  {a:[['ok',`Correction`],['code','s8',`def somme(n):\n    total = 0\n    for i in range(1, n + 1):\n        total = total + i\n    return total`]],s:`Correction. On crée la tirelire total égal 0. On fait une boucle de 1 jusqu'à n plus 1, pour que n soit compris : c'est le piège classique ! Dans la boucle, on ajoute i. Et à la fin, on renvoie total, avec return.`},
+  {a:[['tip',`<code>range(1, n + 1)</code> pour aller jusqu'à n <b>compris</b>`]],s:`Retiens bien : pour aller jusqu'à n compris, on écrit range de 1 à n plus 1.`}
+ ]},
+ {t:`Répéter tant que : while`, sc:[
+  {c:1,a:[['h',`4. Répéter tant que : while`]],s:`Chapitre 4 : la boucle while, qui veut dire tant que.`},
+  {a:[['p',`<b>for</b> : on sait combien de tours (« fais 10 pompes »)`],['p',`<b>while</b> : on répète <b>tant que</b> c'est vrai (« cours tant que tu n'es pas fatigué »)`]],s:`Avec for, on sait à l'avance combien de tours on fait, comme : fais 10 pompes. Avec while, on répète tant qu'une condition est vraie, comme : cours tant que tu n'es pas fatigué. On ne sait pas combien de tours ça fera.`},
+  {a:[['code','c5',`prix = 2\nannee = 2024\nwhile prix < 5:\n    prix = prix * 1.5\n    annee = annee + 1\nprint(annee)`]],s:`Exemple : un prix de 2 euros augmente de 50 pour cent chaque année. En quelle année dépasse-t-il 5 euros ?`},
+  {h:['c5',3],v:{prix:2,annee:2024},s:`Au départ, prix vaut 2 et annee vaut 2024. Test : 2 est-il plus petit que 5 ? Oui, on fait un tour.`},
+  {h:['c5',5],v:{prix:3,annee:2025},s:`prix devient 2 fois 1 virgule 5, donc 3. annee devient 2025. Puis on remonte au while.`},
+  {h:['c5',3],s:`3 plus petit que 5 ? Oui, encore un tour.`},
+  {h:['c5',5],v:{prix:4.5,annee:2026},s:`prix devient 4 virgule 5, et annee 2026.`},
+  {h:['c5',3],s:`4 virgule 5 plus petit que 5 ? Oui, encore un tour.`},
+  {h:['c5',5],v:{prix:6.75,annee:2027},s:`prix devient 6 virgule 75, et annee 2027.`},
+  {h:['c5',3],s:`6 virgule 75 plus petit que 5 ? Non ! C'est faux, donc on sort de la boucle.`},
+  {h:['c5',6],o:`2027`,a:[['tip',`Dans la boucle, il faut <b>changer</b> une variable du test, sinon : boucle infinie !`]],s:`On affiche 2027. Attention : dans la boucle, il faut toujours modifier une variable du test. Sinon, le test reste vrai pour toujours : c'est une boucle infinie.`},
+  {c:1,a:[['exo',`Exercice 9`],['p',`Que vaut c à la fin ?`],['code','e9',`n = 20\nc = 0\nwhile n > 1:\n    n = n // 2\n    c = c + 1`]],x:40,s:`Exercice 9. Que vaut c à la fin ?`},
+  {a:[['ok',`n : 20 → 10 → 5 → 2 → 1`]],v:{n:1,c:4},s:`Correction. n vaut 20, puis 10, puis 5, car 10 double barre 2 égale 5. Puis 5 double barre 2 égale 2. Puis 1. À chaque tour, c augmente de 1.`},
+  {a:[['ok',`4 tours → <b>c = 4</b> (quand n = 1, le test 1 > 1 est faux)`]],s:`On a fait 4 tours. Quand n vaut 1, le test 1 plus grand que 1 est faux, on s'arrête. Réponse : c vaut 4.`},
+  {c:1,a:[['exo',`Exercice 10 · Syracuse`],['p',`Écris <code>syracuse(n)</code> : tant que n ≠ 1, si n est pair on le divise par 2, sinon on fait 3n + 1. Renvoie le nombre d'étapes.`]],x:60,s:`Exercice 10, la suite de Syracuse vue en TD. Tant que n est différent de 1 : si n est pair, on le divise par 2, sinon on le remplace par 3 n plus 1. Ta fonction doit renvoyer le nombre d'étapes.`},
+  {a:[['ok',`Correction`],['code','s10',`def syracuse(n):\n    etapes = 0\n    while n != 1:\n        if n % 2 == 0:\n            n = n // 2\n        else:\n            n = 3 * n + 1\n        etapes = etapes + 1\n    return etapes`]],s:`Correction. Un compteur etapes à 0. Tant que n est différent de 1 : si n modulo 2 égal égal 0, n égal n double barre 2. Sinon, n égal 3 fois n plus 1. Et à chaque tour, on ajoute 1 au compteur. À la fin, on renvoie etapes.`},
+  {a:[['p',`syracuse(6) : 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1 = <b>8 étapes</b>`]],s:`Par exemple, avec 6 : 3, 10, 5, 16, 8, 4, 2, 1. Ça fait 8 étapes.`}
+ ]},
+ {t:`Les fonctions`, sc:[
+  {c:1,a:[['h',`5. Les fonctions`]],s:`Chapitre 5 : les fonctions. Une fonction, c'est une recette de cuisine.`},
+  {a:[['code','c6',`def aire(longueur, largeur):\n    resultat = longueur * largeur\n    return resultat\n\nx = aire(10, 5)\nprint(x + 1)`]],s:`def veut dire : j'écris une recette. Entre parenthèses, les ingrédients qu'elle reçoit : on les appelle les paramètres. Et return, c'est le plat qu'elle rend.`},
+  {h:['c6',1],s:`Quand Python lit le def, il retient la recette, mais il ne l'exécute pas encore.`},
+  {h:['c6',5],s:`Ici, on appelle la recette avec 10 et 5. On saute dans la fonction : longueur vaut 10, largeur vaut 5.`},
+  {h:['c6',2],v:{longueur:10,largeur:5,resultat:50},s:`resultat égal 10 fois 5, donc 50.`},
+  {h:['c6',3],s:`return renvoie 50 là où on a appelé la fonction. La fonction s'arrête immédiatement.`},
+  {h:['c6',5],v:{x:50},s:`Donc aire de 10 et 5 est remplacé par 50, et x reçoit 50.`},
+  {h:['c6',6],o:`51`,s:`On affiche x plus 1 : 51.`},
+  {c:1,a:[['h',`print ou return ?`],['p',`<code>print</code> : affiche à l'écran, pour l'humain`],['p',`<code>return</code> : rend la valeur au programme`],['p',`Sans return, la fonction renvoie <code>None</code> (rien). Le cours appelle ça une <b>procédure</b>.`]],s:`Gros piège : print et return, ce n'est pas pareil. print affiche à l'écran, pour toi. return rend la valeur au programme, qui peut s'en servir. Une fonction sans return renvoie None, c'est-à-dire rien. Le cours appelle ça une procédure.`},
+  {c:1,a:[['exo',`Exercice 11`],['p',`Que vaut r1 ? Que vaut r2 ?`],['code','e11',`def f(x):\n    return x * x + 1\n\ndef g(x):\n    print(x * 2)\n\nr1 = f(3)\nr2 = g(5)`]],x:40,s:`Exercice 11. Que vaut r1 ? Et que vaut r2 ? Attention, il y a un piège.`},
+  {a:[['ok',`r1 = f(3) = 3 × 3 + 1 = <b>10</b>`],['ok',`r2 = <b>None</b> : g affiche 10, mais ne renvoie rien (pas de return)`]],v:{r1:10,r2:'None'},o:`10`,s:`Correction. f de 3 : 3 fois 3 plus 1, ça fait 10. Donc r1 vaut 10. Pour g de 5 : la fonction affiche 10 à l'écran, mais il n'y a pas de return. Elle ne renvoie rien. Donc r2 vaut None.`},
+  {c:1,a:[['exo',`Exercice 12`],['p',`Écris <code>maximum(a, b)</code> qui renvoie le plus grand des deux nombres.`]],x:40,s:`Exercice 12. Écris une fonction maximum qui reçoit deux nombres a et b, et renvoie le plus grand.`},
+  {a:[['ok',`Correction`],['code','s12',`def maximum(a, b):\n    if a > b:\n        return a\n    else:\n        return b`]],s:`Correction. Si a est plus grand que b, on renvoie a. Sinon, on renvoie b. Simple !`}
+ ]},
+ {t:`Le texte et les listes`, sc:[
+  {c:1,a:[['h',`6. Le texte et les listes`]],s:`Chapitre 6 : le texte et les listes. Les deux fonctionnent pareil : ce sont des cases numérotées.`},
+  {a:[['p',`<code>s = "Campus"</code>`],['p',`Cases : C = 0 · a = 1 · m = 2 · p = 3 · u = 4 · s = 5`],['p',`<code>s[0]</code> → "C" · <code>s[-1]</code> → "s" · <code>len(s)</code> → 6`]],s:`Le mot Campus est rangé dans des cases numérotées. Attention : la première case porte le numéro 0, pas 1 ! Donc s crochet 0 donne C. s crochet moins 1 donne la dernière lettre, s. Et len donne la longueur : 6.`},
+  {a:[['p',`<code>s[1:]</code> → "ampus" : tout <b>sauf le premier</b>`],['p',`<code>s[1:4]</code> → "amp" : de la case 1 à la case 4 <b>non comprise</b>`]],s:`s crochet 1 deux points, ça veut dire tout sauf le premier caractère : ampus. Retiens-le, il sert beaucoup en récursivité. Et s de 1 à 4 donne amp : la case 4 n'est pas comprise, comme pour range.`},
+  {a:[['tip',`<code>"3" + "4"</code> → "34" (on colle) · <code>3 + 4</code> → 7 · <code>3 + "4"</code> → erreur TypeError`]],s:`Attention aux types. Guillemets 3 plus guillemets 4 : ce sont des textes, on les colle, ça donne 34. 3 plus 4 sans guillemets, ça fait 7. Et 3 plus guillemets 4 : erreur, on ne mélange pas un nombre et un texte.`},
+  {c:1,a:[['h',`Les listes`],['code','c7',`t = [12, 17, 9]\nt.append(15)\nx = t.pop()\ny = t.pop(0)`]],s:`Une liste, c'est une rangée de casiers. t contient 12, 17 et 9.`},
+  {h:['c7',1],v:{t:'[12, 17, 9]'},s:`t crochet 0 vaut 12, t crochet 1 vaut 17.`},
+  {h:['c7',2],v:{t:'[12, 17, 9, 15]'},s:`append ajoute un élément à la fin : 15.`},
+  {h:['c7',3],v:{t:'[12, 17, 9]',x:15},s:`pop sans rien retire le dernier élément et le donne : x vaut 15. C'est comme une pile d'assiettes : on prend celle du dessus. On appelle ça une pile.`},
+  {h:['c7',4],v:{t:'[17, 9]',x:15,y:12},s:`pop de 0 retire le premier : y vaut 12. C'est comme une file d'attente : le premier arrivé part en premier. On appelle ça une file.`},
+  {c:1,a:[['h',`Trouver le maximum`],['code','c8',`def maximum(t):\n    m = t[0]\n    for x in t:\n        if x > m:\n            m = x\n    return m`]],s:`Un grand classique : trouver le plus grand élément d'une liste, sans utiliser la fonction max. C'est le modèle du champion.`},
+  {h:['c8',2],s:`On déclare que le premier élément est le champion.`},
+  {h:['c8',4],s:`Puis chaque élément vient le défier : s'il est plus grand que le champion, il devient le nouveau champion.`},
+  {h:['c8',6],s:`À la fin, on renvoie le champion.`},
+  {c:1,a:[['exo',`Exercice 13`],['p',`<code>s = "python"</code> et <code>t = [4, 8, 15, 16]</code>.<br>Donne : <code>s[0]</code> · <code>s[-1]</code> · <code>s[1:]</code> · <code>t[2]</code> · <code>len(t)</code>`]],x:40,s:`Exercice 13. s vaut python, et t vaut 4, 8, 15, 16. Donne s crochet 0, s crochet moins 1, s crochet 1 deux points, t crochet 2, et len de t.`},
+  {a:[['ok',`s[0] = "p" · s[-1] = "n" · s[1:] = "ython"`],['ok',`t[2] = 15 (la 3e case !) · len(t) = 4`]],s:`Correction. s crochet 0 : p. s crochet moins 1 : n. s crochet 1 deux points : ython. t crochet 2 : attention, c'est la troisième case, donc 15. Et len de t vaut 4.`},
+  {c:1,a:[['exo',`Exercice 14`],['p',`Écris <code>compte_voyelles(s)</code> qui compte les voyelles (a, e, i, o, u, y) d'un mot.`]],x:60,s:`Exercice 14. Écris une fonction qui compte les voyelles d'un mot. Indice : c'est un compteur, comme la tirelire.`},
+  {a:[['ok',`Correction`],['code','s14',`def compte_voyelles(s):\n    c = 0\n    for lettre in s:\n        if lettre in "aeiouy":\n            c = c + 1\n    return c`]],s:`Correction. Un compteur c à 0. Pour chaque lettre du mot : si la lettre est dans le texte a, e, i, o, u, y, on ajoute 1. À la fin, on renvoie c. Avec le mot algorithme, ça donne 4.`},
+  {c:1,a:[['exo',`Exercice 15`],['p',`Que vaut cette liste ?`],['code','e15',`[x * 2 for x in range(1, 6) if x % 2 == 1]`]],x:30,s:`Exercice 15, une liste en compréhension. Lis-la comme une phrase : x fois 2, pour chaque x de 1 à 5, si x est impair.`},
+  {a:[['ok',`x impairs de 1 à 5 : 1, 3, 5 → fois 2 → <b>[2, 6, 10]</b>`]],s:`Correction. Les x impairs entre 1 et 5 sont 1, 3 et 5. On les multiplie par 2 : 2, 6, 10.`}
+ ]},
+ {t:`La récursivité (partie 1)`, sc:[
+  {c:1,a:[['h',`7. La récursivité (partie 1)`]],s:`Chapitre 7, le plus important : la récursivité. Pas de panique, on y va doucement.`},
+  {a:[['p',`Une fonction récursive est une fonction qui <b>s'appelle elle-même</b> sur un problème <b>plus petit</b>.`]],s:`Une fonction récursive, c'est une fonction qui s'appelle elle-même, sur un problème plus petit.`},
+  {a:[['p',`La file d'attente : « Tu es à quelle place ? » → je demande à la personne devant moi… jusqu'à la première, qui sait qu'elle est n° 1.`]],s:`Imagine une file d'attente. Tu veux savoir ta place. Tu demandes à la personne devant toi. Elle demande à celle devant elle, et ainsi de suite, jusqu'à la première personne : elle sait qu'elle est numéro 1, sans rien demander. Ensuite, les réponses reviennent : 1, donc 2, donc 3. Chacun ajoute 1.`},
+  {a:[['tip',`2 questions à se poser :<br>1. Quand est-ce que je m'arrête ? → le <b>cas de base</b><br>2. Comment je rends le problème plus petit ? → l'<b>appel récursif</b>`]],s:`Pour écrire une fonction récursive, pose-toi juste deux questions. Un : quand est-ce que je m'arrête ? C'est le cas de base, comme la première personne de la file. Deux : comment je rends le problème plus petit ? C'est l'appel récursif.`},
+  {c:1,a:[['h',`La factorielle`],['p',`fact(4) = 4 × 3 × 2 × 1 = 24`],['p',`fact(4) = 4 × <b>fact(3)</b> !`]],s:`Exemple : la factorielle. Factorielle de 4, c'est 4 fois 3 fois 2 fois 1, ça fait 24. Mais regarde : 3 fois 2 fois 1, c'est factorielle de 3. Donc factorielle de 4 égale 4 fois factorielle de 3. C'est le même problème, en plus petit !`},
+  {a:[['code','c9',`def fact(n):\n    if n == 1:\n        return 1\n    return n * fact(n - 1)`]],s:`Voici le code.`},
+  {h:['c9',2],s:`Lignes 2 et 3, le cas de base : si n vaut 1, la réponse est 1, on la connaît.`},
+  {h:['c9',4],s:`Ligne 4, l'appel récursif : n fois factorielle de n moins 1.`},
+  {c:1,a:[['h',`Que fait fact(3) ?`],['p',`fact(3) = 3 × fact(2) &nbsp;&nbsp;← en attente`]],v:{pile:'fact(3)'},s:`Regardons ce qui se passe avec factorielle de 3. n vaut 3, ce n'est pas 1. Donc il faut calculer 3 fois factorielle de 2. Factorielle de 3 se met en attente.`},
+  {a:[['p',`&nbsp;&nbsp;&nbsp;&nbsp;fact(2) = 2 × fact(1) &nbsp;&nbsp;← en attente`]],v:{pile:'fact(3), fact(2)'},s:`Factorielle de 2 : n vaut 2, ce n'est pas 1. Il faut 2 fois factorielle de 1. Elle se met en attente aussi. Les appels en attente sont rangés dans une pile.`},
+  {a:[['p',`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fact(1) = 1 &nbsp;&nbsp;← cas de base !`]],v:{pile:'fact(3), fact(2), fact(1)'},s:`Factorielle de 1 : n vaut 1, c'est le cas de base ! Elle renvoie 1 directement.`},
+  {a:[['ok',`On remonte : fact(2) = 2 × 1 = 2 → fact(3) = 3 × 2 = <b>6</b>`]],v:{pile:'vide'},o:`6`,s:`Maintenant, on remonte. Factorielle de 2 reçoit 1 : 2 fois 1, ça fait 2. Factorielle de 3 reçoit 2 : 3 fois 2, ça fait 6. Les appels descendent, puis les réponses remontent.`},
+  {a:[['tip',`Sans cas de base → la fonction s'appelle à l'infini → <b>RecursionError</b>`]],s:`Attention : sans cas de base, la fonction s'appellerait à l'infini, et Python s'arrête avec une erreur : RecursionError.`},
+  {c:1,a:[['exo',`Exercice 16`],['p',`Que renvoie f(4) ?`],['code','e16',`def f(n):\n    if n == 0:\n        return 0\n    return n + f(n - 1)`]],x:45,s:`Exercice 16. Que renvoie f de 4 ? Écris la descente des appels, puis la remontée.`},
+  {a:[['ok',`f(4) = 4 + f(3)`],['ok',`= 4 + 3 + f(2)`],['ok',`= 4 + 3 + 2 + f(1)`],['ok',`= 4 + 3 + 2 + 1 + f(0) &nbsp;&nbsp;← f(0) = 0`],['ok',`= <b>10</b>`]],s:`Correction. f de 4 égale 4 plus f de 3. f de 3 égale 3 plus f de 2. Et ainsi de suite, jusqu'à f de 0, qui vaut 0 : c'est le cas de base. Total : 4 plus 3 plus 2 plus 1 plus 0, ça fait 10. Cette fonction fait la somme de 0 à n : c'est la fonction Rr du cours.`},
+  {c:1,a:[['exo',`Exercice 17`],['p',`Écris <code>puissance(x, n)</code> <b>récursive</b> qui calcule xⁿ. Rappel : x⁰ = 1.`]],x:60,s:`Exercice 17. Écris une fonction puissance récursive, qui calcule x puissance n. Rappel : x puissance 0 égale 1. Pose-toi les deux questions.`},
+  {a:[['ok',`1. Quand je m'arrête ? n == 0 → 1`],['ok',`2. Plus petit ? xⁿ = x × xⁿ⁻¹`]],s:`Correction. Quand est-ce que je m'arrête ? Quand n vaut 0, la réponse est 1. Comment rendre plus petit ? x puissance n égale x fois x puissance n moins 1.`},
+  {a:[['code','s17',`def puissance(x, n):\n    if n == 0:\n        return 1\n    return x * puissance(x, n - 1)`]],s:`Ce qui donne ce code. Par exemple, puissance de 2 et 3 : 2 fois 2 fois 2 fois 1, ça fait 8.`}
+ ]},
+ {t:`La récursivité (partie 2) : les modèles`, sc:[
+  {c:1,a:[['h',`8. La récursivité (partie 2) : les modèles`]],s:`Chapitre 8. Bonne nouvelle : toutes les fonctions récursives du cours suivent le même modèle. Il suffit de l'apprendre.`},
+  {a:[['code','m',`def f(n):\n    if n == ...:          # 1. cas de base\n        return ...\n    return ... f(n - 1)   # 2. un morceau + le reste`]],s:`Le modèle : d'abord le cas de base, avec la réponse évidente. Puis on fait un petit morceau du travail, et on demande le reste à la fonction elle-même.`},
+  {c:1,a:[['h',`Un nombre : chiffre par chiffre`],['code','c10',`def somme_chiffre(n):\n    if n < 10:\n        return n\n    return n % 10 + somme_chiffre(n // 10)`]],s:`Premier modèle : travailler chiffre par chiffre. La somme des chiffres d'un nombre. Si n a un seul chiffre, donc n plus petit que 10, la réponse est n. Sinon : le dernier chiffre, n modulo 10, plus la somme des chiffres du reste, n double barre 10.`},
+  {a:[['p',`somme_chiffre(123) = 3 + somme_chiffre(12) = 3 + 2 + somme_chiffre(1) = 3 + 2 + 1 = <b>6</b>`]],s:`Avec 123 : 3 plus somme chiffre de 12. Égale 3 plus 2 plus somme chiffre de 1. Et 1 est plus petit que 10, donc ça vaut 1. Total : 6.`},
+  {c:1,a:[['h',`Une liste : le premier + le reste`],['code','c11',`def produit(tab):\n    if len(tab) == 0:\n        return 1\n    return tab[0] * produit(tab[1:])`]],s:`Deuxième modèle : une liste. On prend le premier élément, tab crochet 0, et on demande le reste à la fonction, avec tab crochet 1 deux points. Le cas de base, c'est la liste vide.`},
+  {a:[['tip',`Liste vide : on renvoie 0 pour une somme, 1 pour un produit (car × 1 ne change rien)`]],s:`Pour la liste vide, on renvoie 1 pour un produit, car multiplier par 1 ne change rien. Pour une somme, on renverrait 0.`},
+  {a:[['p',`produit([1, 8, 5, 4]) = 1 × 8 × 5 × 4 × 1 = <b>160</b>`]],s:`produit de 1, 8, 5, 4 : 1 fois 8 fois 5 fois 4 fois 1, ça fait 160.`},
+  {c:1,a:[['h',`La conversion en binaire`],['code','c12',`def conversion(n):\n    if n == 0:\n        return 0\n    return n % 2 + 10 * conversion(n // 2)`]],s:`Troisième modèle, la conversion en binaire. Le dernier chiffre binaire, c'est n modulo 2. Et le reste, c'est la conversion de n double barre 2, qu'on décale d'un rang en multipliant par 10.`},
+  {a:[['p',`5 % 2 = 1, reste 2 · 2 % 2 = 0, reste 1 · 1 % 2 = 1, reste 0 → stop`],['p',`On lit les restes <b>de bas en haut</b> : 5 = <b>101</b>`]],s:`Avec 5 : 5 modulo 2 donne 1, et il reste 2. 2 modulo 2 donne 0, il reste 1. 1 modulo 2 donne 1, il reste 0, on s'arrête. On lit les restes de bas en haut : 1, 0, 1. 5 s'écrit 101 en binaire.`},
+  {c:1,a:[['h',`Fibonacci : 2 appels`],['code','c13',`def fibo(n):\n    if n == 0 or n == 1:\n        return 1\n    return fibo(n - 1) + fibo(n - 2)`],['p',`1, 1, 2, 3, 5, 8, 13… → fibo(5) = 8`]],s:`Dernier modèle, Fibonacci. Chaque terme est la somme des deux précédents : 1, 1, 2, 3, 5, 8. Ici, la fonction s'appelle deux fois : on parle de récursivité multiple. Dans la convention du prof, fibo de 0 et fibo de 1 valent 1, donc fibo de 5 vaut 8.`},
+  {c:1,a:[['exo',`Exercice 18`],['p',`Que renvoie somme_chiffre(2026) ?`]],x:30,s:`Exercice 18. Que renvoie somme chiffre de 2026 ?`},
+  {a:[['ok',`6 + somme_chiffre(202)`],['ok',`= 6 + 2 + somme_chiffre(20)`],['ok',`= 6 + 2 + 0 + somme_chiffre(2) = 6 + 2 + 0 + 2 = <b>10</b>`]],s:`Correction. 6 plus somme chiffre de 202. Puis 2 plus somme chiffre de 20. Puis 0 plus somme chiffre de 2, qui vaut 2. Total : 6 plus 2 plus 0 plus 2, ça fait 10.`},
+  {c:1,a:[['exo',`Exercice 19`],['p',`Que renvoie conversion(13) ?`]],x:40,s:`Exercice 19. Convertis 13 en binaire avec la fonction conversion.`},
+  {a:[['ok',`13 % 2 = 1 · 13 // 2 = 6`],['ok',`6 % 2 = 0 · 6 // 2 = 3`],['ok',`3 % 2 = 1 · 3 // 2 = 1`],['ok',`1 % 2 = 1 · 1 // 2 = 0 → stop`],['ok',`De bas en haut : <b>1101</b> (8 + 4 + 1 = 13 ✓)`]],s:`Correction. 13 modulo 2 : 1, il reste 6. 6 modulo 2 : 0, il reste 3. 3 modulo 2 : 1, il reste 1. 1 modulo 2 : 1, il reste 0, stop. De bas en haut : 1, 1, 0, 1. Réponse : 1101. Vérification : 8 plus 4 plus 1 égale 13.`},
+  {c:1,a:[['exo',`Exercice 20`],['p',`Écris <code>somme_liste(tab)</code> <b>récursive</b> qui renvoie la somme des éléments d'une liste.`]],x:60,s:`Exercice 20. Écris une fonction récursive qui renvoie la somme des éléments d'une liste. Inspire-toi de produit.`},
+  {a:[['ok',`Correction`],['code','s20',`def somme_liste(tab):\n    if len(tab) == 0:\n        return 0\n    return tab[0] + somme_liste(tab[1:])`]],s:`Correction. Cas de base : la liste vide, la somme vaut 0. Sinon : le premier élément, plus la somme du reste de la liste.`},
+  {c:1,a:[['exo',`Exercice 21`],['p',`Que renvoie mystere("abc") ?`],['code','e21',`def mystere(s):\n    if s == "":\n        return ""\n    return mystere(s[1:]) + s[0]`]],x:45,s:`Exercice 21. Que renvoie mystere de abc ? Attention à l'ordre de l'addition.`},
+  {a:[['ok',`mystere("abc") = mystere("bc") + "a"`],['ok',`= mystere("c") + "b" + "a"`],['ok',`= mystere("") + "c" + "b" + "a" = <b>"cba"</b>`]],s:`Correction. mystere de abc égale mystere de bc, suivi de a. mystere de bc égale mystere de c, suivi de b. mystere de c égale mystere du texte vide, suivi de c. Le texte vide donne le texte vide. On colle : c, b, a. La fonction inverse le mot !`}
+ ]},
+ {t:`La complexité`, sc:[
+  {c:1,a:[['h',`9. La complexité`]],s:`Chapitre 9 : la complexité. La question est simple : si les données deviennent beaucoup plus grandes, combien de travail en plus ?`},
+  {a:[['p',`n = la taille des données (le nombre d'éléments)`],['p',`On note la complexité avec un grand O : O(1), O(n), O(n²)…`]],s:`On appelle n la taille des données, par exemple le nombre d'éléments d'une liste. Et on note la complexité avec un grand O.`},
+  {a:[['tip',`Pas de boucle → <b>O(1)</b><br>Une boucle sur n → <b>O(n)</b><br>Une boucle DANS une boucle → <b>O(n²)</b><br>On coupe en deux à chaque fois → <b>O(log n)</b><br>Récursif, 1 appel avec n − 1 → <b>O(n)</b><br>Récursif, 2 appels (Fibonacci) → <b>O(2ⁿ)</b>`]],s:`Voici la recette : regarde les boucles. Pas de boucle : O de 1, constant. Une boucle sur les n éléments : O de n. Une boucle dans une boucle : O de n carré. Si on coupe en deux à chaque fois, comme la dichotomie : O de log n. Une fonction récursive avec un seul appel sur n moins 1 : O de n. Et avec deux appels, comme Fibonacci : O de 2 puissance n, c'est catastrophique.`},
+  {a:[['p',`Du plus rapide au plus lent :<br>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)`]],s:`Du plus rapide au plus lent : O de 1, O de log n, O de n, O de n log n, O de n carré, et O de 2 puissance n.`},
+  {c:1,a:[['h',`2 règles pour simplifier`],['p',`1. On enlève les nombres : O(3n + 5) → O(n)`],['p',`2. On garde le plus gros terme : O(n² + n) → O(n²)`],['p',`À la suite → on <b>additionne</b> · l'une dans l'autre → on <b>multiplie</b>`]],s:`Deux règles pour simplifier. Un : on enlève les nombres. O de 3 n plus 5 devient O de n. Deux : on garde seulement le plus gros terme. O de n carré plus n devient O de n carré. Et deux boucles à la suite, on additionne. Une boucle dans l'autre, on multiplie.`},
+  {c:1,a:[['h',`Exemple corrigé du TD`],['code','c14',`def foo(array):\n    sum = 0              # O(1)\n    product = 1          # O(1)\n    for i in array:      # O(n)\n        sum = sum + i\n    for i in array:      # O(n)\n        product = product * i\n    print(sum, product)  # O(1)`]],s:`Un exemple du TD. Méthode : on écrit le coût à côté de chaque ligne. Les lignes simples coûtent O de 1. Chaque boucle sur le tableau coûte O de n.`},
+  {a:[['ok',`O(1) + O(1) + O(n) + O(n) + O(1) = O(2n + 3) → <b>O(n)</b>`]],s:`On additionne, car tout est à la suite : 2 n plus 3. On enlève les nombres : O de n.`},
+  {c:1,a:[['exo',`Exercice 22`],['p',`Quelle est la complexité ?`],['code','e22',`for i in tab:\n    for j in tab:\n        print(i, j)`]],x:20,s:`Exercice 22. Quelle est la complexité de ce code ?`},
+  {a:[['ok',`Une boucle dans une boucle : n × n → <b>O(n²)</b>`]],s:`Correction. Une boucle dans une boucle : pour chacun des n tours, on fait n tours. n fois n : O de n carré.`},
+  {c:1,a:[['exo',`Exercice 23`],['p',`Quelle est la complexité ?`],['code','e23',`i = n\nwhile i > 1:\n    i = i // 2`]],x:20,s:`Exercice 23. Et celui-ci ?`},
+  {a:[['ok',`i est divisé par 2 à chaque tour → <b>O(log n)</b>`],['p',`n = 16 → 8 → 4 → 2 → 1 : 4 tours, et log₂(16) = 4`]],s:`Correction. i est divisé par 2 à chaque tour : c'est O de log n. Par exemple avec 16 : 8, 4, 2, 1. Seulement 4 tours.`},
+  {c:1,a:[['exo',`Exercice 24`],['p',`Quelle est la complexité ?`],['code','e24',`for i in range(n):\n    for j in range(10):\n        print(i, j)`]],x:25,s:`Exercice 24. Attention, piège !`},
+  {a:[['ok',`La boucle intérieure fait toujours 10 tours (un nombre fixe) : 10 × n → <b>O(n)</b>`]],s:`Correction. La boucle intérieure fait toujours 10 tours, quel que soit n. Ça fait 10 fois n. On enlève le nombre : O de n, et pas n carré.`},
+  {c:1,a:[['exo',`Exercice 25`],['p',`Complexité de <code>fact(n)</code> récursive ? Et de <code>fibo(n)</code> récursive ?`]],x:30,s:`Exercice 25. Quelle est la complexité de factorielle récursive ? Et de Fibonacci récursif ?`},
+  {a:[['ok',`fact : 1 appel à chaque fois, n appels → <b>O(n)</b>`],['ok',`fibo : 2 appels à chaque fois → le nombre d'appels double à chaque niveau → <b>O(2ⁿ)</b>`]],s:`Correction. Factorielle fait un seul appel à chaque fois, avec n moins 1 : il y a n appels, donc O de n. Fibonacci fait deux appels à chaque fois : le nombre d'appels double à chaque niveau. C'est O de 2 puissance n.`},
+  {c:1,a:[['exo',`Exercice 26`],['p',`Simplifie : O(5n + 100) · O(n² + 3n) · O(2ⁿ + n³)`]],x:30,s:`Exercice 26. Simplifie ces trois complexités.`},
+  {a:[['ok',`O(5n + 100) → <b>O(n)</b>`],['ok',`O(n² + 3n) → <b>O(n²)</b>`],['ok',`O(2ⁿ + n³) → <b>O(2ⁿ)</b> (l'exponentielle gagne toujours)`]],s:`Correction. O de 5 n plus 100 : on enlève les nombres, O de n. O de n carré plus 3 n : on garde le plus gros, O de n carré. O de 2 puissance n plus n cube : l'exponentielle gagne toujours, O de 2 puissance n.`}
+ ]},
+ {t:`Chercher et trier`, sc:[
+  {c:1,a:[['h',`10. Chercher et trier`]],s:`Chapitre 10 : chercher et trier.`},
+  {a:[['p',`<b>Dichotomie</b> = le jeu du nombre mystère : on propose toujours <b>le milieu</b>.`],['p',`Entre 1 et 100 : 50 ? plus grand → 75 ? plus petit → 62 ?… au plus <b>7 essais</b>.`]],s:`La recherche dichotomique, c'est le jeu du nombre mystère. Je pense à un nombre entre 1 et 100. Le plus malin propose toujours le milieu : 50. Plus grand ? Alors 75. Plus petit ? Alors 62. À chaque essai, on élimine la moitié. En 7 essais maximum, on trouve. C'est O de log n.`},
+  {a:[['tip',`Condition obligatoire : la liste doit être <b>triée</b>.`]],s:`Condition obligatoire : la liste doit être triée, sinon on ne sait pas de quel côté chercher.`},
+  {c:1,a:[['h',`Le tri par sélection`],['p',`[5, 1, 4, 2]`]],s:`Le tri par sélection : on cherche le plus petit, on le met devant, et on recommence avec le reste.`},
+  {a:[['p',`Le plus petit est 1 → on l'échange avec la 1re case → [<b>1</b>, 5, 4, 2]`]],s:`5, 1, 4, 2 : le plus petit est 1, on l'échange avec la première case.`},
+  {a:[['p',`Le plus petit du reste est 2 → on l'échange avec la 2e case → [1, <b>2</b>, 4, 5]`],['p',`4 est déjà à sa place → [1, 2, 4, 5] ✓ · O(n²)`]],s:`Puis le plus petit du reste est 2 : on l'échange avec la deuxième case. 4 est déjà à sa place, et c'est trié. Complexité : O de n carré.`},
+  {c:1,a:[['h',`Le tri à bulles`],['p',`On compare les <b>voisins</b>, on échange s'ils sont mal rangés.`],['p',`[5, 1, 4, 2] → [1, 5, 4, 2] → [1, 4, 5, 2] → [1, 4, 2, <b>5</b>]`],['p',`Le plus grand « remonte » au bout, comme une bulle.`]],s:`Le tri à bulles : on compare les voisins deux par deux, et on les échange s'ils sont mal rangés. 5 et 1 : on échange. 5 et 4 : on échange. 5 et 2 : on échange. Le plus grand est remonté au bout, comme une bulle. Puis on recommence. O de n carré aussi.`},
+  {c:1,a:[['h',`Les 5 tris en une phrase`],['p',`Sélection : le plus petit va devant · O(n²)`],['p',`Bulles : on échange les voisins · O(n²)`],['p',`Insertion : comme des cartes en main · O(n²)`],['p',`Fusion : couper en deux, trier, recoller · O(n log n)`],['p',`Rapide : un pivot, les petits à gauche, les grands à droite · O(n log n)`]],s:`Les cinq tris du cours en une phrase. Sélection : le plus petit va devant. Bulles : on échange les voisins. Insertion : comme quand on range des cartes dans sa main. Ces trois-là sont en O de n carré. Fusion : on coupe en deux, on trie chaque moitié, on recolle. Rapide : on choisit un pivot, les petits à gauche, les grands à droite. Ces deux-là sont récursifs, en O de n log n.`},
+  {c:1,a:[['exo',`Exercice 27`],['p',`a) Fais UNE étape du tri par sélection sur [7, 3, 9, 1].<br>b) Fais UN passage du tri à bulles sur [3, 1, 2].`]],x:45,s:`Exercice 27. Fais une étape du tri par sélection sur 7, 3, 9, 1. Puis un passage complet du tri à bulles sur 3, 1, 2.`},
+  {a:[['ok',`a) Le plus petit est 1 → échange avec 7 → <b>[1, 3, 9, 7]</b>`],['ok',`b) 3↔1 → [1, 3, 2] · 3↔2 → <b>[1, 2, 3]</b>`]],s:`Correction. Sélection : le plus petit est 1, on l'échange avec 7 : 1, 3, 9, 7. Bulles : 3 et 1 sont mal rangés, on échange : 1, 3, 2. Puis 3 et 2, on échange : 1, 2, 3.`},
+  {c:1,a:[['exo',`Exercice 28`],['p',`Dichotomie : on cherche 13 dans<br><code>[1, 5, 8, 9, 11, 13, 15, 19, 21]</code> (indices 0 à 8). Quels éléments regarde-t-on ?`]],x:45,s:`Exercice 28. On cherche 13 dans cette liste triée de 9 éléments, avec la dichotomie. Quels éléments regarde-t-on ?`},
+  {a:[['ok',`debut = 0, fin = 8 → milieu 4 → 11 &lt; 13 → à droite : debut = 5`]],s:`Correction. Début 0, fin 8 : le milieu est 4, on regarde 11. 11 est plus petit que 13, donc on cherche à droite : début devient 5.`},
+  {a:[['ok',`debut = 5, fin = 8 → milieu 6 → 15 &gt; 13 → à gauche : fin = 5`],['ok',`debut = 5, fin = 5 → milieu 5 → <b>13 trouvé</b> à l'indice 5, en 3 essais`]],s:`Le milieu entre 5 et 8 est 6 : on regarde 15. C'est trop grand, on va à gauche : fin devient 5. Le milieu est 5 : c'est 13, trouvé en 3 essais !`}
+ ]},
+ {t:`Sujet type corrigé`, sc:[
+  {c:1,a:[['h',`11. Sujet type corrigé`],['p',`Un mini-examen avec tous les types de questions.`]],s:`Dernier chapitre : un sujet type, comme le jour de l'examen. Fais chaque exercice avant de regarder la correction.`},
+  {c:1,a:[['exo',`Question 1 · cours`],['p',`a) Quelle est la différence entre une fonction et une procédure ?<br>b) Que veut dire « Python est un langage interprété » ?`]],x:45,s:`Question de cours. Quelle est la différence entre une fonction et une procédure ? Et que veut dire : Python est un langage interprété ?`},
+  {a:[['ok',`a) Une <b>fonction</b> renvoie un résultat avec <code>return</code>. Une <b>procédure</b> ne renvoie rien : elle fait une action (afficher, modifier).`],['ok',`b) <b>Interprété</b> : les instructions sont exécutées au fur et à mesure. Un langage compilé traduit tout le programme avant de l'exécuter.`]],s:`Correction. Une fonction renvoie un résultat avec return. Une procédure ne renvoie rien, elle fait une action, comme afficher. Interprété veut dire que les instructions sont exécutées au fur et à mesure, une par une. À l'inverse, un langage compilé traduit tout le programme avant de l'exécuter.`},
+  {c:1,a:[['exo',`Question 2 · lecture de code`],['p',`Qu'affiche ce programme ?`],['code','e30',`a = 2\nb = 0\nfor i in range(3):\n    b = b + a\n    a = a + 1\nprint(a, b)`]],x:60,s:`Question 2. Qu'affiche ce programme ? Fais ton tableau : i, a et b.`},
+  {a:[['ok',`Correction`]],h:['e30',2],v:{a:2,b:0},s:`Correction. Au départ, a vaut 2 et b vaut 0.`},
+  {h:['e30',5],v:{i:0,a:3,b:2},s:`i vaut 0 : b égal 0 plus 2, donc 2. Puis a devient 3.`},
+  {v:{i:1,a:4,b:5},s:`i vaut 1 : b égal 2 plus 3, donc 5. a devient 4.`},
+  {h:['e30',6],v:{i:2,a:5,b:9},o:`5 9`,a:[['ok',`Le programme affiche <b>5 9</b>`]],s:`i vaut 2 : b égal 5 plus 4, donc 9. a devient 5. range de 3 s'arrête là. On affiche 5 et 9.`},
+  {c:1,a:[['exo',`Question 3 · récursivité`],['p',`Écris <code>compte(tab, x)</code> <b>récursive</b> qui compte combien de fois x apparaît dans tab. Donne sa complexité.`]],x:90,s:`Question 3. Écris une fonction récursive compte, qui compte combien de fois x apparaît dans la liste tab. Puis donne sa complexité.`},
+  {a:[['ok',`Cas de base : liste vide → 0`],['ok',`Sinon : 1 si tab[0] == x (sinon 0) + le compte du reste`]],s:`Correction. Les deux questions. Quand est-ce que je m'arrête ? Liste vide : x apparaît 0 fois. Comment rendre plus petit ? Je regarde le premier élément : s'il vaut x, je compte 1, et j'ajoute le compte du reste de la liste.`},
+  {a:[['code','s31',`def compte(tab, x):\n    if len(tab) == 0:\n        return 0\n    if tab[0] == x:\n        return 1 + compte(tab[1:], x)\n    return compte(tab[1:], x)`],['ok',`Un appel par élément → <b>O(n)</b> appels`]],s:`Voici le code. Il y a un appel par élément de la liste, donc n appels : la complexité est O de n.`},
+  {c:1,a:[['exo',`Question 4 · algorithme glouton`],['p',`Écris <code>rendu_monnaie(somme)</code> avec les valeurs [500, 200, 100, 50, 20, 10, 5, 2, 1].<br>Exemple : 135 → [100, 20, 10, 5]`]],x:90,s:`Question 4, le rendu de monnaie du TD. Avec les billets et pièces 500, 200, 100, 50, 20, 10, 5, 2 et 1, écris une fonction qui renvoie la liste à rendre. On utilise l'algorithme glouton : à chaque fois, on prend la plus grande valeur possible.`},
+  {a:[['ok',`Correction`],['code','s32',`def rendu_monnaie(somme):\n    rendu = []\n    for v in [500, 200, 100, 50, 20, 10, 5, 2, 1]:\n        while somme >= v:\n            rendu.append(v)\n            somme = somme - v\n    return rendu`]],s:`Correction. On parcourt les valeurs, de la plus grande à la plus petite. Tant que la somme à rendre est plus grande ou égale à la valeur, on ajoute cette valeur à la liste, et on la retire de la somme. Avec 135 : 100, il reste 35. 20, il reste 15. 10, il reste 5. 5, il reste 0. On obtient 100, 20, 10, 5.`},
+  {c:1,a:[['h',`Bravo !`],['p',`Le jour J : lis tout le sujet, commence par ce que tu sais faire, fais des tableaux de variables, et relis les <code>:</code>, les décalages et les <code>return</code>.`]],s:`Bravo, tu as terminé toute la vidéo ! Le jour de l'examen : lis tout le sujet, commence par ce que tu sais faire, fais des tableaux de variables pour lire le code, et relis les deux points, les décalages et les return. Tu peux le faire. Bon courage !`}
+ ]}
+];
+
+/* ---------- lecteur vidéo-cours ---------- */
+const VP = { ch: 0, i: 0, playing: false, token: 0, timer: null, exTimer: null, exLeft: 0, voiceOn: true, speed: 1, voice: null, mounted: false };
+const hasTTS = typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined';
+function pickVoice() {
+  if (!hasTTS) return null;
+  try {
+    const vs = speechSynthesis.getVoices().filter(v => /^fr/i.test(v.lang));
+    VP.voice = vs.find(v => /fr-FR/i.test(v.lang) && /google|amélie|amelie|thomas|denise|henri|audrey|natural/i.test(v.name)) || vs.find(v => /fr-FR/i.test(v.lang)) || vs[0] || null;
+  } catch (e) { VP.voice = null; }
+  const el = $('#vpVoiceName'); if (el) el.textContent = VP.voice ? 'Voix : ' + VP.voice.name : (hasTTS ? 'Voix française du navigateur' : 'Pas de voix disponible : sous-titres seulement');
+  return VP.voice;
+}
+if (hasTTS) { try { speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {} }
+function vpState(ch, upto) {
+  const sc = VIDEO[ch].sc; let st = { blocks: [], hl: null, vars: {}, out: '', fresh: [] };
+  for (let k = 0; k <= upto; k++) {
+    const s = sc[k];
+    if (s.c) st = { blocks: [], hl: null, vars: {}, out: '', fresh: [] };
+    const added = (s.a || []).filter(Boolean);
+    added.forEach(b => st.blocks.push(b));
+    if (k === upto) st.fresh = added;
+    if (s.h) st.hl = s.h;
+    if (s.v) st.vars = s.v;
+    if (s.o !== undefined) st.out = s.o;
+  }
+  return st;
+}
+function vpBlock(b, st, fresh) {
+  const f = fresh ? ' new' : '';
+  if (b[0] === 'h') return `<h3 class="bd-h${f}">${esc(b[1])}</h3>`;
+  if (b[0] === 'p') return `<p class="bd-p${f}">${b[1]}</p>`;
+  if (b[0] === 'exo') return `<div class="bd-exo${f}">${esc(b[1])}</div>`;
+  if (b[0] === 'ok') return `<p class="bd-ok${f}">${b[1]}</p>`;
+  if (b[0] === 'tip') return `<p class="bd-tip${f}">${b[1]}</p>`;
+  if (b[0] === 'code') {
+    const lines = b[2].split('\n');
+    return `<div class="bd-code${f}">${lines.map((l, n) => `<div class="${st.hl && st.hl[0] === b[1] && st.hl[1] === n + 1 ? 'cur' : ''}"><span class="no">${n + 1}</span><span>${hl(l) || ' '}</span></div>`).join('')}</div>`;
+  }
+  return '';
+}
+function vpRender() {
+  const C = VIDEO[VP.ch], s = C.sc[VP.i], st = vpState(VP.ch, VP.i);
+  const board = $('#vpBoard');
+  board.innerHTML = st.blocks.map(b => vpBlock(b, st, st.fresh.includes(b))).join('');
+  const cur = $('.bd-code .cur', board), last = board.lastElementChild;
+  const target = st.fresh.length ? last : (cur || last);
+  if (target) { const top = target.offsetTop + target.offsetHeight - board.clientHeight + 24; if (top > board.scrollTop || target.offsetTop < board.scrollTop) board.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); }
+  const vars = Object.entries(st.vars);
+  $('#vpVars').innerHTML = vars.length ? vars.map(([n, v]) => `<div class="vbox"><span>${esc(n)}</span><b>${esc(v)}</b></div>`).join('') : '<span class="vempty">vide</span>';
+  $('#vpOut').textContent = st.out || ' ';
+  $('#vpSub').textContent = s.s;
+  $('#vpChapTitle').textContent = (VP.ch + 1) + '. ' + C.t;
+  $('#vpCount').textContent = 'Scène ' + (VP.i + 1) + ' / ' + C.sc.length;
+  $('#vpProg').innerHTML = C.sc.map((x, k) => `<button type="button" data-k="${k}" class="${k < VP.i ? 'past' : ''} ${k === VP.i ? 'now' : ''} ${x.x ? 'ex' : ''}" aria-label="Scène ${k + 1}${x.x ? ' (exercice)' : ''}"></button>`).join('');
+  $('#vpExo').hidden = true;
+  $('#vpEnd').hidden = true;
+  $$('#vpChapters button').forEach(b => b.classList.toggle('on', +b.dataset.ch === VP.ch));
+  try { store.set('vidPos', { ch: VP.ch, i: VP.i }); } catch (e) {}
+}
+function vpEstimate(text) { return (text.length * 62) / VP.speed + 700; }
+function vpTalk(on) { const t = $('#vpTeacher'); if (t) t.classList.toggle('talking', on); }
+function vpStopAudio() {
+  VP.token++; clearTimeout(VP.timer); clearInterval(VP.exTimer); vpTalk(false);
+  if (hasTTS) { try { speechSynthesis.cancel(); } catch (e) {} }
+}
+function vpSpeak() {
+  vpStopAudio();
+  const tok = VP.token, s = VIDEO[VP.ch].sc[VP.i];
+  const done = () => { if (tok !== VP.token) return; vpTalk(false); vpAfter(); };
+  const est = vpEstimate(s.s);
+  if (VP.voiceOn && hasTTS) {
+    const parts = s.s.match(/[^.!?]+[.!?]*/g) || [s.s];
+    let n = 0;
+    parts.forEach((p, k) => {
+      const u = new SpeechSynthesisUtterance(p.trim());
+      u.lang = 'fr-FR'; if (VP.voice) u.voice = VP.voice; u.rate = 0.95 * VP.speed;
+      u.onstart = () => { if (tok === VP.token) vpTalk(true); };
+      u.onend = u.onerror = () => { n++; if (n === parts.length) done(); };
+      try { speechSynthesis.speak(u); } catch (e) { done(); }
+    });
+    VP.timer = setTimeout(done, est * 2.2 + 4000);   // filet de sécurité si la voix ne répond pas
+  } else {
+    vpTalk(true);
+    VP.timer = setTimeout(done, est);
+  }
+}
+function vpAfter() {
+  if (!VP.playing) return;
+  const s = VIDEO[VP.ch].sc[VP.i];
+  if (s.x) return vpExercise(s.x);
+  VP.timer = setTimeout(() => { if (VP.playing) vpNext(true); }, 650);
+}
+function vpExercise(sec) {
+  VP.exLeft = sec;
+  const box = $('#vpExo'); box.hidden = false;
+  const draw = () => { $('#vpExoT').textContent = Math.floor(VP.exLeft / 60) + ':' + String(VP.exLeft % 60).padStart(2, '0'); };
+  draw(); clearInterval(VP.exTimer);
+  VP.exTimer = setInterval(() => { if (!VP.playing) return; VP.exLeft--; draw(); if (VP.exLeft <= 0) { clearInterval(VP.exTimer); vpNext(true); } }, 1000);
+}
+function vpNext(auto) {
+  const C = VIDEO[VP.ch];
+  vpStopAudio();
+  if (VP.i < C.sc.length - 1) { VP.i++; vpRender(); if (VP.playing) vpSpeak(); return; }
+  const d = store.get('vidDone', []); if (!d.includes(VP.ch)) { d.push(VP.ch); store.set('vidDone', d); }
+  vpChapters();
+  if (VP.ch < VIDEO.length - 1) {
+    $('#vpEnd').hidden = false;
+    $('#vpEndTxt').textContent = 'Chapitre ' + (VP.ch + 1) + ' terminé. Suivant : ' + VIDEO[VP.ch + 1].t;
+    if (auto && VP.playing) VP.timer = setTimeout(() => { if (VP.playing) vpGoto(VP.ch + 1, 0); }, 5000);
+  } else { vpSetPlaying(false); $('#vpEnd').hidden = false; $('#vpEndTxt').textContent = 'Vidéo terminée. Bravo ! Passe au quiz ou à l\'examen blanc.'; $('#vpEndNext').hidden = true; }
+}
+function vpPrev() { vpStopAudio(); if (VP.i > 0) VP.i--; else if (VP.ch > 0) { VP.ch--; VP.i = VIDEO[VP.ch].sc.length - 1; } vpRender(); if (VP.playing) vpSpeak(); }
+function vpGoto(ch, i) { vpStopAudio(); VP.ch = ch; VP.i = i; $('#vpEndNext').hidden = false; vpRender(); if (VP.playing) vpSpeak(); }
+function vpSetPlaying(p) {
+  VP.playing = p;
+  const b = $('#vpPlay'); b.textContent = p ? 'Pause' : 'Lecture'; b.setAttribute('aria-label', p ? 'Mettre en pause' : 'Lancer la vidéo');
+  $('#vpBig').hidden = p;
+  if (!p) vpStopAudio();
+}
+function vpToggle() {
+  if (VP.playing) { vpSetPlaying(false); return; }
+  vpSetPlaying(true);
+  if (!$('#vpExo').hidden && VP.exLeft > 0) { vpExercise(VP.exLeft); return; }   // reprise d'un exercice en pause
+  if (!$('#vpEnd').hidden) { vpGoto(Math.min(VP.ch + 1, VIDEO.length - 1), 0); return; }
+  vpSpeak();
+}
+function vpChapters() {
+  const d = store.get('vidDone', []);
+  $('#vpChapters').innerHTML = VIDEO.map((C, k) => {
+    const ex = C.sc.filter(s => s.x).length;
+    const mins = Math.round(C.sc.reduce((a, s) => a + vpEstimate(s.s) / 1000 + (s.x || 0), 0) / 60);
+    return `<button type="button" data-ch="${k}" class="${k === VP.ch ? 'on' : ''}"><span class="dot ${d.includes(k) ? 'done' : ''}"></span><span class="ct"><b>${k + 1}. ${esc(C.t)}</b><small>${ex} exercice${ex > 1 ? 's' : ''} · ≈ ${mins} min</small></span></button>`;
+  }).join('');
+  $$('#vpChapters button').forEach(b => b.addEventListener('click', () => { vpGoto(+b.dataset.ch, 0); $('#vpWrap').scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+}
+function mountVideo() {
+  if (VP.mounted) return; VP.mounted = true;
+  const pos = store.get('vidPos', null);
+  if (pos && VIDEO[pos.ch] && VIDEO[pos.ch].sc[pos.i]) { VP.ch = pos.ch; VP.i = pos.i; }
+  VP.voiceOn = store.get('vidVoice', true) && hasTTS;
+  $('#vpVoice').setAttribute('aria-pressed', VP.voiceOn); $('#vpVoice').textContent = VP.voiceOn ? 'Voix : oui' : 'Voix : non';
+  if (!hasTTS) $('#vpVoice').disabled = true;
+  pickVoice(); vpChapters(); vpRender();
+  const total = VIDEO.reduce((a, C) => a + C.sc.filter(s => s.x).length, 0);
+  $('#vpTotal').textContent = VIDEO.length + ' chapitres · ' + total + ' exercices corrigés';
+  $('#vpPlay').addEventListener('click', vpToggle);
+  $('#vpBig').addEventListener('click', vpToggle);
+  $('#vpNext').addEventListener('click', () => vpNext(false));
+  $('#vpPrev').addEventListener('click', vpPrev);
+  $('#vpRestart').addEventListener('click', () => vpGoto(VP.ch, 0));
+  $('#vpShow').addEventListener('click', () => vpNext(false));
+  $('#vpMore').addEventListener('click', () => { VP.exLeft += 30; $('#vpExoT').textContent = Math.floor(VP.exLeft / 60) + ':' + String(VP.exLeft % 60).padStart(2, '0'); });
+  $('#vpEndNext').addEventListener('click', () => vpGoto(Math.min(VP.ch + 1, VIDEO.length - 1), 0));
+  $('#vpProg').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) vpGoto(VP.ch, +b.dataset.k); });
+  $('#vpSpeed').addEventListener('change', e => { VP.speed = +e.target.value; if (VP.playing) vpSpeak(); });
+  $('#vpVoice').addEventListener('click', () => { VP.voiceOn = !VP.voiceOn; store.set('vidVoice', VP.voiceOn); $('#vpVoice').setAttribute('aria-pressed', VP.voiceOn); $('#vpVoice').textContent = VP.voiceOn ? 'Voix : oui' : 'Voix : non'; if (VP.playing) vpSpeak(); });
+  $('#vpFull').addEventListener('click', () => { const w = $('#vpWrap'); try { if (document.fullscreenElement) document.exitFullscreen(); else if (w.requestFullscreen) w.requestFullscreen().catch(() => {}); } catch (e) {} });
+  document.addEventListener('keydown', e => {
+    if ($('#v-video').hidden || /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === ' ') { e.preventDefault(); vpToggle(); } else if (e.key === 'ArrowRight') vpNext(false); else if (e.key === 'ArrowLeft') vpPrev();
+  });
+}
+
+/* =====================================================================
    Navigation, thème, démarrage
    ===================================================================== */
-const VIEWS = ['accueil', 'debutant', 'cours', 'pratique', 'quiz', 'examen', 'memo'];
+const VIEWS = ['accueil', 'video', 'debutant', 'cours', 'pratique', 'quiz', 'examen', 'memo'];
 function route() {
   const v = (location.hash || '#accueil').slice(1);
   const cur = VIEWS.includes(v) ? v : 'accueil';
@@ -2476,6 +2993,7 @@ function route() {
   $$('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.v === cur ? 'page' : 'false'));
   if (cur === 'pratique') { if (!curExo) openExo(EXOS[0].id); ensurePy().catch(() => {}); }
   if (cur === 'examen') renderExam();
+  if (cur === 'video') mountVideo(); else if (VP.playing) vpSetPlaying(false);
   if (cur === 'debutant' && !curLesson) openLesson(store.get('curLesson', LESSONS[0].id));
   if (cur === 'accueil') renderStats();
   try { store.set('lastView', cur); } catch (e) {}
