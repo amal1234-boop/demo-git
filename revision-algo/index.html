@@ -200,9 +200,56 @@ textarea.editor:focus{outline:none}
 .memo ul{padding-left:1.1rem;margin:.4rem 0;font-size:.92rem}
 .memo pre{margin:.4rem 0;font-size:.8rem;background:var(--code-bg);border-radius:8px;padding:8px 10px;overflow-x:auto;font-family:var(--f-mono)}
 
+/* ---------- Débutant ---------- */
+.start-band{margin-top:22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--accent-soft);border-radius:var(--r);padding:16px 20px}
+.start-band p{margin:0;max-width:62ch}
+.deb{display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;align-items:start}
+.lessonv{max-width:80ch;min-width:0}
+.lessonv h4{margin-top:1.4rem}
+.rule{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--r);padding:12px 16px;margin:14px 0}
+.strip{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0}
+.strip div{display:grid;justify-items:center;min-width:46px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:6px 4px}
+.strip b{font-family:var(--f-mono);font-size:1.15rem}
+.strip span{font-family:var(--f-mono);font-size:.72rem;color:var(--prompt)}
+.strip span+span{color:var(--muted)}
+.tr{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin:14px 0;overflow:hidden}
+.tr-h{font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:10px 0 6px}
+.tr-h small{text-transform:none;letter-spacing:0;font-weight:400}
+.tr-code{background:var(--code-bg);padding:2px 0 10px;border-right:1px solid var(--line);min-width:0;overflow-x:auto}
+.tr-code .tr-h{padding:0 14px}
+.ln{display:grid;grid-template-columns:30px 1fr;font-family:var(--f-mono);font-size:.86rem;line-height:1.7;padding-right:14px;border-left:4px solid transparent;white-space:pre;color:var(--code-ink)}
+.ln .no{color:var(--com);text-align:right;padding-right:10px;user-select:none}
+.ln.cur{background:var(--accent-soft);border-left-color:var(--accent)}
+.tr-side{padding:2px 14px 12px;min-width:0}
+.boxes{display:flex;flex-wrap:wrap;gap:8px}
+.box{display:grid;border:1px solid var(--line);border-radius:8px;padding:4px 10px;min-width:64px;background:var(--surface);transition:background .25s}
+.box span{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.box b{font-family:var(--f-mono);font-size:1.05rem;overflow-wrap:anywhere}
+.box.chg{background:var(--warn-soft);border-color:var(--warn)}
+.empty{font-size:.85rem;color:var(--muted);font-style:italic}
+.screen{font-family:var(--f-mono);font-size:.86rem;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-height:34px;white-space:pre-wrap;color:var(--ok)}
+.pile{display:grid;gap:4px}
+.pile div{font-family:var(--f-mono);font-size:.82rem;border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--surface-2)}
+.pile div.top{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.tr-note{grid-column:1/-1;padding:12px 16px;border-top:1px solid var(--line);background:var(--surface);min-height:52px}
+.tr-ctl{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);background:var(--surface-2)}
+.tr-count{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.sortv{grid-template-columns:1fr}
+.cards{display:flex;gap:10px;flex-wrap:wrap;padding:18px 16px;background:var(--code-bg)}
+.card{display:grid;justify-items:center;width:58px;padding:10px 0 6px;border:2px solid var(--line);border-radius:10px;background:var(--surface);transition:all .25s}
+.card b{font-family:var(--f-display);font-size:1.5rem}
+.card span{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.card.hi{border-color:var(--warn);background:var(--warn-soft);transform:translateY(-4px)}
+.card.done{border-color:var(--ok);background:var(--ok-soft)}
+.cx-calc select{font:inherit;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.lesson-end{margin-top:10px}
+a.btn{text-decoration:none;display:inline-block}
+
 @media (max-width:900px){
   .hero,.grid2{grid-template-columns:1fr}
-  .course,.prac{grid-template-columns:1fr}
+  .course,.prac,.deb{grid-template-columns:1fr}
+  .tr{grid-template-columns:1fr}
+  .tr-code{border-right:0;border-bottom:1px solid var(--line)}
   .toc,.exlist{position:static;max-height:none}
   .toc{display:flex;overflow-x:auto;gap:4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
   .toc a{display:block;white-space:nowrap}
@@ -225,6 +272,7 @@ textarea.editor:focus{outline:none}
     <div class="brand">Algo B2 <span class="tag">In [ ]:</span></div>
     <nav class="tabs" aria-label="Sections">
       <a href="#accueil" data-v="accueil">Plan</a>
+      <a href="#debutant" data-v="debutant">Débutant</a>
       <a href="#cours" data-v="cours">Cours</a>
       <a href="#pratique" data-v="pratique">Pratique</a>
       <a href="#quiz" data-v="quiz">Quiz</a>
@@ -262,10 +310,16 @@ fact(5)
     </div>
   </div>
 
+  <div class="start-band">
+    <p><b>Tu as l'impression de ne rien comprendre ?</b> Commence par l'onglet Débutant : 11 leçons en mots simples, avec un mode pas à pas qui montre ce que fait l'ordinateur à chaque ligne.</p>
+    <a class="btn primary" href="#debutant">Commencer la leçon 1</a>
+  </div>
+
   <div class="grid2">
     <div class="panel">
       <h3>Parcours conseillé</h3>
       <ol class="steps">
+        <li><div><b>Onglet Débutant : les 11 leçons dans l'ordre</b><small>utilise le bouton Suivant du pas à pas et réponds aux questions. ≈ 2 h</small></div></li>
         <li><div><b>Fiches 1 à 7 : bases Python et algos du TD</b><small>types, //, %, boucles, listes, compréhensions, glouton, Syracuse. ≈ 40 min</small></div></li>
         <li><div><b>Fiche 8 : récursivité</b><small>les 3 étapes, la pile, toutes les fonctions du notebook B2. ≈ 30 min</small></div></li>
         <li><div><b>Fiches 9 et 10 : tris, dichotomie, complexité</b><small>règles de calcul Big O et exemples corrigés du TD. ≈ 30 min</small></div></li>
@@ -291,6 +345,14 @@ fact(5)
     <h3>Je sais… <span class="history" id="ckCount"></span></h3>
     <div class="bar"><i id="ckBar" style="width:0"></i></div>
     <ul class="checklist" id="checklist"></ul>
+  </div>
+</div>
+
+<!-- =========================================================== DÉBUTANT -->
+<div class="view" id="v-debutant" hidden>
+  <div class="deb">
+    <nav class="exlist" id="leslist" aria-label="Leçons"></nav>
+    <article class="lessonv" id="lesson"></article>
   </div>
 </div>
 
@@ -1680,7 +1742,7 @@ function openExo(id) {
    ===================================================================== */
 const norm = s => String(s).trim().replace(/"/g, "'").replace(/\s+/g, ' ').replace(/\s*([,\[\]\(\)])\s*/g, '$1').toLowerCase();
 function questionHtml(q, idx, label) {
-  let h = `<div class="qcard" data-i="${idx}"><div class="qn">${esc(label)} · ${esc(THEMES[q.th])}</div><div class="qt">${esc(q.q)}</div>`;
+  let h = `<div class="qcard" data-i="${idx}"><div class="qn">${esc(label)} · ${esc(THEMES[q.th] || 'Vérifie')}</div><div class="qt">${esc(q.q)}</div>`;
   if (q.c) h += `<div class="cell" style="margin:8px 0 12px"><pre class="py">${esc(q.c)}</pre></div>`;
   if (q.t === 'qcm') h += '<div class="opts">' + q.ch.map((c, k) => `<button type="button" class="opt" data-k="${k}"><span class="k">${'ABCD'[k]}</span><span>${esc(c)}</span></button>`).join('') + '</div>';
   else h += `<input class="ansin" type="text" id="ans${idx}" autocomplete="off" spellcheck="false" placeholder="Ta réponse"> `;
@@ -1846,9 +1908,567 @@ async function gradeExam() {
 }
 
 /* =====================================================================
+   Débutant : leçons pas à pas
+   ===================================================================== */
+const TRACES = {
+ var: { code: `a = 5
+b = a + 2
+a = a * 3
+print(a, b)`, steps: [
+  [0, {a:5}, '', 'On range 5 dans la boîte a.'],
+  [1, {a:5, b:7}, '', 'À droite du = on calcule : a + 2 = 5 + 2 = 7. On range 7 dans une nouvelle boîte b.'],
+  [2, {a:15, b:7}, '', 'À droite : a * 3 = 5 * 3 = 15. On REMPLACE le contenu de a. b ne bouge pas : il vaut toujours 7 !'],
+  [3, {a:15, b:7}, '15 7', 'print affiche le contenu des boîtes à l\'écran.']
+ ]},
+ bonbons: { code: `bonbons = 17
+enfants = 5
+chacun = bonbons // enfants
+reste = bonbons % enfants
+print(chacun, reste)`, steps: [
+  [0, {bonbons:17}, '', '17 bonbons à partager…'],
+  [1, {bonbons:17, enfants:5}, '', '… entre 5 enfants.'],
+  [2, {bonbons:17, enfants:5, chacun:3}, '', '17 // 5 : combien de fois 5 rentre dans 17 ? 3 fois (5 + 5 + 5 = 15). Chaque enfant a 3 bonbons.'],
+  [3, {bonbons:17, enfants:5, chacun:3, reste:2}, '', '17 % 5 : ce qui RESTE après le partage : 17 − 15 = 2.'],
+  [4, {bonbons:17, enfants:5, chacun:3, reste:2}, '3 2', 'Résultat : 3 chacun, il en reste 2.']
+ ]},
+ si: { code: `note = 14
+if note >= 16:
+    print("Très bien")
+elif note >= 12:
+    print("Bien")
+else:
+    print("Insuffisant")
+print("Fin")`, steps: [
+  [0, {note:14}, '', 'On range 14 dans note.'],
+  [1, {note:14}, '', 'Test : 14 >= 16 ? FAUX. On saute le bloc décalé juste en dessous.'],
+  [3, {note:14}, '', 'Test suivant : 14 >= 12 ? VRAI. On entre dans ce bloc.'],
+  [4, {note:14}, 'Bien', 'On affiche « Bien ».'],
+  [7, {note:14}, 'Bien\nFin', 'Le else est ignoré, car une condition a déjà été vraie. On reprend après tout le bloc if.']
+ ]},
+ pour: { code: `total = 0
+for i in range(1, 5):
+    total = total + i
+print(total)`, steps: [
+  [0, {total:0}, '', 'La tirelire est vide : total = 0. Elle est créée AVANT la boucle.'],
+  [1, {total:0, i:1}, '', 'range(1, 5) donne 1, 2, 3, 4. Premier tour : i = 1.'],
+  [2, {total:1, i:1}, '', 'total = 0 + 1 = 1'],
+  [1, {total:1, i:2}, '', 'Tour suivant : i = 2.'],
+  [2, {total:3, i:2}, '', 'total = 1 + 2 = 3'],
+  [1, {total:3, i:3}, '', 'i = 3'],
+  [2, {total:6, i:3}, '', 'total = 3 + 3 = 6'],
+  [1, {total:6, i:4}, '', 'i = 4 (dernier : range s\'arrête AVANT 5)'],
+  [2, {total:10, i:4}, '', 'total = 6 + 4 = 10'],
+  [3, {total:10, i:4}, '10', 'La boucle est finie. On affiche total : 10.']
+ ]},
+ tantque: { code: `prix = 2
+annee = 2024
+while prix < 5:
+    prix = prix * 1.5
+    annee = annee + 1
+print(annee)`, steps: [
+  [0, {prix:2}, '', 'Le prix de départ.'],
+  [1, {prix:2, annee:2024}, '', 'L\'année de départ.'],
+  [2, {prix:2, annee:2024}, '', 'Test : 2 < 5 ? VRAI → on fait un tour.'],
+  [3, {prix:3, annee:2024}, '', 'prix = 2 × 1.5 = 3'],
+  [4, {prix:3, annee:2025}, '', 'annee = 2025'],
+  [2, {prix:3, annee:2025}, '', 'On REVIENT au while. 3 < 5 ? VRAI → encore un tour.'],
+  [3, {prix:4.5, annee:2025}, '', 'prix = 3 × 1.5 = 4.5'],
+  [4, {prix:4.5, annee:2026}, '', 'annee = 2026'],
+  [2, {prix:4.5, annee:2026}, '', '4.5 < 5 ? VRAI → encore un tour.'],
+  [3, {prix:6.75, annee:2026}, '', 'prix = 4.5 × 1.5 = 6.75'],
+  [4, {prix:6.75, annee:2027}, '', 'annee = 2027'],
+  [2, {prix:6.75, annee:2027}, '', '6.75 < 5 ? FAUX → on SORT de la boucle.'],
+  [5, {prix:6.75, annee:2027}, '2027', 'On affiche 2027.']
+ ]},
+ fonction: { code: `def aire(longueur, largeur):
+    resultat = longueur * largeur
+    return resultat
+
+x = aire(10, 5)
+print(x + 1)`, steps: [
+  [0, {}, '', 'Python lit la recette « aire »… mais ne l\'exécute PAS encore. Il la garde en mémoire.'],
+  [4, {}, '', 'Ici on APPELLE la recette : aire(10, 5). On saute dans la fonction avec longueur = 10 et largeur = 5.'],
+  [1, {longueur:10, largeur:5, resultat:50}, '', 'resultat = 10 × 5 = 50'],
+  [2, {longueur:10, largeur:5, resultat:50}, '', 'return renvoie 50 à l\'endroit où on a appelé la fonction. Les boîtes de la fonction disparaissent.'],
+  [4, {x:50}, '', 'aire(10, 5) est remplacé par 50, donc x reçoit 50.'],
+  [5, {x:50}, '51', 'On affiche x + 1 = 51.']
+ ]},
+ max: { code: `notes = [12, 17, 9]
+m = notes[0]
+for n in notes:
+    if n > m:
+        m = n
+print(m)`, steps: [
+  [0, {notes:'[12, 17, 9]'}, '', 'Une liste de 3 notes.'],
+  [1, {notes:'[12, 17, 9]', m:12}, '', 'On suppose que le plus grand est la première note : m = notes[0] = 12.'],
+  [2, {notes:'[12, 17, 9]', m:12, n:12}, '', '1er tour : n = 12'],
+  [3, {notes:'[12, 17, 9]', m:12, n:12}, '', '12 > 12 ? FAUX, on ne change rien.'],
+  [2, {notes:'[12, 17, 9]', m:12, n:17}, '', '2e tour : n = 17'],
+  [3, {notes:'[12, 17, 9]', m:12, n:17}, '', '17 > 12 ? VRAI'],
+  [4, {notes:'[12, 17, 9]', m:17, n:17}, '', 'On a trouvé plus grand : m = 17'],
+  [2, {notes:'[12, 17, 9]', m:17, n:9}, '', '3e tour : n = 9'],
+  [3, {notes:'[12, 17, 9]', m:17, n:9}, '', '9 > 17 ? FAUX'],
+  [5, {notes:'[12, 17, 9]', m:17, n:9}, '17', 'Plus d\'éléments. On affiche le maximum : 17.']
+ ]},
+ fact: { code: `def fact(n):
+    if n == 1:
+        return 1
+    return n * fact(n - 1)
+
+print(fact(3))`, steps: [
+  [5, {}, '', 'On appelle fact(3).', ['fact(3)']],
+  [1, {n:3}, '', 'Dans fact(3), n = 3. Est-ce que n == 1 ? NON.', ['fact(3)']],
+  [3, {n:3}, '', 'Il faut calculer 3 × fact(2). fact(3) se met EN ATTENTE et appelle fact(2).', ['fact(3) attend : 3 × ?', 'fact(2)']],
+  [1, {n:2}, '', 'Dans fact(2), n = 2. n == 1 ? NON.', ['fact(3) attend : 3 × ?', 'fact(2)']],
+  [3, {n:2}, '', 'Il faut 2 × fact(1). fact(2) se met en attente aussi.', ['fact(3) attend : 3 × ?', 'fact(2) attend : 2 × ?', 'fact(1)']],
+  [1, {n:1}, '', 'Dans fact(1), n == 1 ? OUI ! C\'est le cas de base : on connaît la réponse.', ['fact(3) attend : 3 × ?', 'fact(2) attend : 2 × ?', 'fact(1)']],
+  [2, {n:1}, '', 'fact(1) renvoie 1. On le retire de la pile, et fact(2) reçoit sa réponse.', ['fact(3) attend : 3 × ?', 'fact(2) attend : 2 × 1']],
+  [3, {n:2}, '', 'fact(2) peut finir : 2 × 1 = 2. Il renvoie 2 à fact(3).', ['fact(3) attend : 3 × 2']],
+  [3, {n:3}, '', 'fact(3) peut finir : 3 × 2 = 6. Il renvoie 6.', []],
+  [5, {}, '6', 'print affiche 6. Les appels sont descendus (3, 2, 1), puis les réponses sont remontées (1, 2, 6).', []]
+ ]},
+ dicho: { code: `tab = [1, 5, 8, 9, 11, 13, 15, 19, 21]
+debut, fin = 0, 8
+while debut <= fin:
+    milieu = (debut + fin) // 2
+    if tab[milieu] == 9:
+        print("trouvé à l'indice", milieu)
+        break
+    elif tab[milieu] < 9:
+        debut = milieu + 1
+    else:
+        fin = milieu - 1`, steps: [
+  [1, {debut:0, fin:8}, '', 'On cherche 9 dans une liste TRIÉE. Zone de recherche : indices 0 à 8.'],
+  [3, {debut:0, fin:8, milieu:4}, '', 'milieu = (0 + 8) // 2 = 4. tab[4] = 11.'],
+  [4, {debut:0, fin:8, milieu:4}, '', '11 == 9 ? NON.'],
+  [7, {debut:0, fin:8, milieu:4}, '', '11 < 9 ? NON.'],
+  [10, {debut:0, fin:3, milieu:4}, '', 'Donc 9 est à GAUCHE : fin = 4 − 1 = 3. La moitié droite est éliminée d\'un coup.'],
+  [3, {debut:0, fin:3, milieu:1}, '', 'milieu = (0 + 3) // 2 = 1. tab[1] = 5.'],
+  [7, {debut:0, fin:3, milieu:1}, '', '5 < 9 ? OUI : 9 est à DROITE.'],
+  [8, {debut:2, fin:3, milieu:1}, '', 'debut = 1 + 1 = 2.'],
+  [3, {debut:2, fin:3, milieu:2}, '', 'milieu = (2 + 3) // 2 = 2. tab[2] = 8.'],
+  [8, {debut:3, fin:3, milieu:2}, '', '8 < 9 : debut = 3.'],
+  [3, {debut:3, fin:3, milieu:3}, '', 'milieu = 3. tab[3] = 9.'],
+  [5, {debut:3, fin:3, milieu:3}, "trouvé à l'indice 3", '9 == 9 : trouvé en 4 essais au lieu de 9 en regardant case par case.']
+ ]}
+};
+const SORTS = {
+ sel: [
+  {t:[5,1,4,2], h:[], d:[], note:'Tri par sélection. On veut ranger [5, 1, 4, 2] du plus petit au plus grand.'},
+  {t:[5,1,4,2], h:[1], d:[], note:'Étape 1 : on cherche le plus petit de toute la liste → c\'est 1.'},
+  {t:[1,5,4,2], h:[0,1], d:[0], note:'On l\'échange avec la 1re case. La 1re case est définitivement rangée.'},
+  {t:[1,5,4,2], h:[3], d:[0], note:'Étape 2 : plus petit parmi le reste [5, 4, 2] → c\'est 2.'},
+  {t:[1,2,4,5], h:[1,3], d:[0,1], note:'On l\'échange avec la 2e case.'},
+  {t:[1,2,4,5], h:[2], d:[0,1,2], note:'Étape 3 : plus petit parmi [4, 5] → 4, déjà à sa place.'},
+  {t:[1,2,4,5], h:[], d:[0,1,2,3], note:'Trié ! Pour chaque case on a parcouru le reste : une boucle dans une boucle → O(n²).'}
+ ],
+ bul: [
+  {t:[5,1,4,2], h:[], d:[], note:'Tri à bulles : on compare les VOISINS deux par deux.'},
+  {t:[5,1,4,2], h:[0,1], d:[], note:'5 et 1 sont mal rangés → on les échange.'},
+  {t:[1,5,4,2], h:[1,2], d:[], note:'5 et 4 sont mal rangés → on les échange.'},
+  {t:[1,4,5,2], h:[2,3], d:[], note:'5 et 2 sont mal rangés → on les échange.'},
+  {t:[1,4,2,5], h:[], d:[3], note:'Fin du 1er passage : le plus grand (5) est « remonté » au bout, comme une bulle.'},
+  {t:[1,4,2,5], h:[0,1], d:[3], note:'2e passage. 1 et 4 sont bien rangés : on ne touche à rien.'},
+  {t:[1,4,2,5], h:[1,2], d:[3], note:'4 et 2 sont mal rangés → on les échange.'},
+  {t:[1,2,4,5], h:[], d:[2,3], note:'4 est à sa place.'},
+  {t:[1,2,4,5], h:[0,1], d:[0,1,2,3], note:'3e passage : 1 et 2 bien rangés, plus aucun échange. Trié ! O(n²).'}
+ ]
+};
+
+const LESSONS = [
+ {id:'l1', t:'Les boîtes (variables) et les calculs', body:`
+<p>Un programme manipule des <b>valeurs</b> : des nombres, des textes… Pour s'en souvenir, il les range dans des <b>boîtes qui ont un nom</b>. Ces boîtes s'appellent des <b>variables</b>.</p>
+<p><code>a = 5</code> se lit « <b>a reçoit 5</b> », et pas « a égale 5 ». Le signe <code>=</code> veut dire <b>ranger</b>. Pour <b>comparer</b> deux valeurs, on écrit <code>==</code> (deux signes égal).</p>
+<div class="rule"><b>La règle d'or.</b> Python lit <b>de haut en bas, une ligne à la fois</b>. Sur une ligne avec <code>=</code>, il calcule d'abord la partie à droite avec ce qu'il y a <b>maintenant</b> dans les boîtes, puis il range le résultat dans la boîte de gauche. L'ancien contenu est effacé.</div>
+<p>Clique sur <b>Suivant</b> pour voir l'ordinateur travailler :</p>
+<div data-trace="var"></div>
+<h4>Les calculs</h4>
+<div class="tbl"><table>
+<tr><th>Écriture</th><th>Exemple</th><th>En français</th></tr>
+<tr><td><code>+ - *</code></td><td><code>7 * 2</code> → 14</td><td>plus, moins, fois</td></tr>
+<tr><td><code>/</code></td><td><code>7 / 2</code> → 3.5 et <code>4 / 2</code> → 2.0</td><td>division normale : TOUJOURS un nombre à virgule</td></tr>
+<tr><td><code>//</code></td><td><code>17 // 5</code> → 3</td><td>combien de fois 5 rentre dans 17</td></tr>
+<tr><td><code>%</code></td><td><code>17 % 5</code> → 2</td><td>ce qui reste (le « reste »)</td></tr>
+<tr><td><code>**</code></td><td><code>2 ** 3</code> → 8</td><td>puissance : 2 × 2 × 2</td></tr>
+</table></div>
+<p>Pour <code>//</code> et <code>%</code>, pense à des bonbons qu'on partage :</p>
+<div data-trace="bonbons"></div>
+<div class="rule"><b>Les 3 astuces qui tombent à chaque examen</b><br>
+<code>n % 2 == 0</code> → n est <b>pair</b> (le reste de la division par 2 est 0)<br>
+<code>n % 10</code> → le <b>dernier chiffre</b> de n (1234 % 10 = 4)<br>
+<code>n // 10</code> → n <b>sans son dernier chiffre</b> (1234 // 10 = 123)</div>`,
+  qs:[
+   {t:'val', q:'Que vaut b à la fin ?', c:'a = 3\nb = a * 2\na = 10', acc:['6'], sol:'6', ex:'b a été calculé quand a valait 3 : b = 6. Changer a ensuite ne change pas b.'},
+   {t:'val', q:'Que vaut cette expression ?', c:'23 // 5', acc:['4'], sol:'4', ex:'5 rentre 4 fois dans 23 (5 × 4 = 20).'},
+   {t:'val', q:'Que vaut cette expression ?', c:'23 % 5', acc:['3'], sol:'3', ex:'23 − 20 = 3 : c\'est le reste.'},
+   {t:'qcm', q:'Que fait la ligne x = x + 1 ?', ch:['Une erreur : x ne peut pas être égal à x + 1','Elle ajoute 1 au contenu de la boîte x','Elle compare x et x + 1'], a:1, ex:'On calcule à droite (ancien x + 1), puis on range dans x.'},
+   {t:'val', q:'Que vaut cette expression ?', c:'4567 % 10', acc:['7'], sol:'7', ex:'% 10 donne le dernier chiffre.'}
+  ]},
+ {id:'l2', t:'Les types : nombres, texte, vrai/faux', body:`
+<p>Chaque valeur a un <b>type</b>. Le type dit ce qu'on a le droit de faire avec.</p>
+<div class="tbl"><table>
+<tr><th>Type</th><th>C'est quoi</th><th>Exemples</th></tr>
+<tr><td><code>int</code></td><td>nombre entier</td><td><code>3</code>, <code>-12</code>, <code>2024</code></td></tr>
+<tr><td><code>float</code></td><td>nombre à virgule (avec un point !)</td><td><code>3.5</code>, <code>2.0</code></td></tr>
+<tr><td><code>str</code></td><td>du texte, entre guillemets</td><td><code>'Campus'</code>, <code>"12"</code></td></tr>
+<tr><td><code>bool</code></td><td>vrai ou faux</td><td><code>True</code>, <code>False</code></td></tr>
+</table></div>
+<div class="rule"><b>Attention :</b> <code>12</code> est un nombre, <code>'12'</code> est du texte.<br>
+<code>3 + 4</code> → 7 (on additionne) · <code>'3' + '4'</code> → <code>'34'</code> (on colle les textes) · <code>3 + '4'</code> → <b>erreur</b> (TypeError : on ne mélange pas)<br>
+<code>3 * 'ab'</code> → <code>'ababab'</code> (on répète le texte)</div>
+<h4>Changer de type (transtypage)</h4>
+<p><code>int('12')</code> → 12 (texte vers nombre) · <code>str(12)</code> → <code>'12'</code> (nombre vers texte) · <code>int(3.9)</code> → 3 (on <b>coupe</b> la virgule, on n'arrondit pas) · <code>int('bonjour')</code> → erreur (ValueError).</p>
+<h4>Le texte est une suite de cases numérotées à partir de 0</h4>
+<div class="strip">${'Campus'.split('').map((c, i) => `<div><b>${c}</b><span>${i}</span><span>${i - 6}</span></div>`).join('')}</div>
+<p style="font-size:.9rem;color:var(--muted)">En haut le caractère, puis sa position en partant du début, puis en partant de la fin.</p>
+<div class="cell"><pre class="py">s = 'Campus'
+print(s[0])     # 'C' : la PREMIÈRE case est la case 0
+print(s[-1])    # 's' : -1 = la dernière case
+print(s[1:])    # 'ampus' : tout SAUF le premier caractère
+print(s[1:4])   # 'amp' : de la case 1 jusqu'à la case 4 NON comprise
+print(len(s))   # 6 : le nombre de caractères</pre></div>`,
+  qs:[
+   {t:'val', q:'Que vaut s[0] ?', c:"s = 'python'", acc:["'p'",'p'], sol:"'p'", ex:'La première case est la case 0.'},
+   {t:'val', q:'Que vaut s[-1] ?', c:"s = 'python'", acc:["'n'",'n'], sol:"'n'", ex:'-1 désigne la dernière case.'},
+   {t:'val', q:'Que vaut s[1:] ?', c:"s = 'python'", acc:["'ython'",'ython'], sol:"'ython'", ex:'Tout sauf le premier caractère. Ce morceau sert énormément en récursivité.'},
+   {t:'qcm', q:"Que donne '5' + '5' ?", ch:["10","'55'","Une erreur"], a:1, ex:'Ce sont des textes : + les colle.'},
+   {t:'qcm', q:'Que donne int(7.8) ?', ch:['8','7','7.8'], a:1, ex:'int coupe la partie après la virgule. Pour arrondir, on utilise round.'}
+  ]},
+ {id:'l3', t:'Si… sinon : les conditions', body:`
+<p>Une condition est une question dont la réponse est <code>True</code> (vrai) ou <code>False</code> (faux).</p>
+<div class="tbl"><table>
+<tr><th>On écrit</th><th>On lit</th></tr>
+<tr><td><code>a == b</code></td><td>a est égal à b ?</td></tr>
+<tr><td><code>a != b</code></td><td>a est différent de b ?</td></tr>
+<tr><td><code>a &lt; b</code>, <code>a &lt;= b</code></td><td>plus petit, plus petit ou égal</td></tr>
+<tr><td><code>a > b</code>, <code>a >= b</code></td><td>plus grand, plus grand ou égal</td></tr>
+<tr><td><code>and</code>, <code>or</code>, <code>not</code></td><td>et (les deux vrais), ou (au moins un vrai), le contraire</td></tr>
+</table></div>
+<p><code>if</code> = « si », <code>elif</code> = « sinon si », <code>else</code> = « sinon ». La ligne se termine par <b>deux-points</b> <code>:</code> et ce qui est dedans est <b>décalé vers la droite</b> (indentation).</p>
+<div class="rule"><b>Comment Python décide :</b> il teste les conditions dans l'ordre, entre dans le <b>PREMIER</b> bloc vrai, puis ignore tous les autres.</div>
+<div data-trace="si"></div>`,
+  qs:[
+   {t:'val', q:'Qu\'affiche ce code ?', c:"x = 7\nif x > 5:\n    print('A')\nelif x > 3:\n    print('B')\nelse:\n    print('C')", acc:['A',"'A'"], sol:'A', ex:'7 > 5 est vrai : on entre dans le premier bloc. Le elif n\'est même pas testé, même si 7 > 3 est vrai aussi.'},
+   {t:'val', q:'Et si x = 4 ?', c:"x = 4\nif x > 5:\n    print('A')\nelif x > 3:\n    print('B')\nelse:\n    print('C')", acc:['B',"'B'"], sol:'B', ex:'4 > 5 faux, 4 > 3 vrai → B.'},
+   {t:'qcm', q:'Que vaut 7 % 2 == 0 ?', ch:['True','False'], a:1, ex:'7 % 2 = 1, et 1 == 0 est faux : 7 est impair.'},
+   {t:'qcm', q:'Que vaut (3 > 1) and (2 > 5) ?', ch:['True','False'], a:1, ex:'and veut les deux vrais. 2 > 5 est faux.'}
+  ]},
+ {id:'l4', t:'Répéter : la boucle for', body:`
+<p>Une boucle répète des lignes. <code>for i in range(1, 5):</code> veut dire : « pour i qui vaut 1, puis 2, puis 3, puis 4, fais ce qui est décalé en dessous ».</p>
+<div class="tbl"><table>
+<tr><th>On écrit</th><th>i prend les valeurs</th></tr>
+<tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4 (5 valeurs, on part de 0)</td></tr>
+<tr><td><code>range(1, 5)</code></td><td>1, 2, 3, 4 (<b>le 5 n'est jamais atteint</b>)</td></tr>
+<tr><td><code>range(0, 10, 2)</code></td><td>0, 2, 4, 6, 8 (de 2 en 2)</td></tr>
+<tr><td><code>range(1, n+1)</code></td><td>1 jusqu'à n compris</td></tr>
+</table></div>
+<h4>Le modèle « tirelire » (accumulateur)</h4>
+<p>C'est LE modèle le plus utilisé : 1) on crée la tirelire <b>avant</b> la boucle, 2) on ajoute dedans <b>pendant</b> la boucle, 3) on regarde le résultat <b>après</b> la boucle.</p>
+<div data-trace="pour"></div>
+<p>On peut aussi parcourir directement un texte ou une liste :</p>
+<div class="cell"><pre class="py">for lettre in 'abc':
+    print(lettre)        # a, puis b, puis c
+
+compteur = 0
+for lettre in 'banana':
+    if lettre == 'a':
+        compteur = compteur + 1
+print(compteur)          # 3</pre></div>`,
+  qs:[
+   {t:'val', q:'Combien de fois « bonjour » est-il affiché ?', c:"for i in range(3):\n    print('bonjour')", acc:['3'], sol:'3', ex:'range(3) donne 0, 1, 2 : trois tours.'},
+   {t:'val', q:'Quelles valeurs prend i ? (sépare par des espaces)', c:'for i in range(2, 6):\n    print(i)', acc:['2 3 4 5','2,3,4,5'], sol:'2 3 4 5', ex:'De 2 jusqu\'à 6 NON compris.'},
+   {t:'val', q:'Que vaut total à la fin ?', c:'total = 0\nfor i in range(1, 4):\n    total = total + i * 2', acc:['12'], sol:'12', ex:'i = 1, 2, 3 → on ajoute 2, 4, 6 → 12.'},
+   {t:'qcm', q:'Pourquoi écrit-on total = 0 AVANT la boucle et pas dedans ?', ch:['Pour aller plus vite','Sinon la tirelire serait remise à 0 à chaque tour','Python l\'exige toujours'], a:1, ex:'Dans la boucle, total serait vidé à chaque tour et on perdrait la somme.'}
+  ]},
+ {id:'l5', t:'Répéter tant que : la boucle while', body:`
+<div class="rule"><b>for</b> = on sait combien de fois (« fais 10 pompes »).<br><b>while</b> = on répète <b>tant que</b> la condition est vraie (« cours tant que tu n'es pas fatigué »).</div>
+<p>À chaque tour, Python <b>revient</b> à la ligne du <code>while</code> et refait le test. Dès qu'il est faux, il sort.</p>
+<div data-trace="tantque"></div>
+<div class="trap">Si rien ne change dans la boucle, la condition reste vraie pour toujours : c'est une <b>boucle infinie</b>. Il faut toujours modifier, dans la boucle, une variable du test.</div>
+<p>C'est exactement le TD de l'inflation (2 € qui augmentent de 4 % par an, donc ×1.04) et la suite de Syracuse (tant que n ≠ 1 : si pair n // 2, sinon 3n + 1).</p>`,
+  qs:[
+   {t:'val', q:'Que vaut c à la fin ?', c:'n = 10\nc = 0\nwhile n > 1:\n    n = n // 2\n    c = c + 1', acc:['3'], sol:'3', ex:'n : 10 → 5 → 2 → 1. Trois tours, puis 1 > 1 est faux.'},
+   {t:'qcm', q:'Que se passe-t-il ?', c:'x = 0\nwhile x < 5:\n    print(x)', ch:['Affiche 0 1 2 3 4','Boucle infinie : affiche 0 sans fin','Erreur'], a:1, ex:'x ne change jamais, donc x < 5 reste toujours vrai.'},
+   {t:'qcm', q:'Pour « redemander un nombre jusqu\'à ce que l\'utilisateur trouve », on utilise…', ch:['for','while'], a:1, ex:'On ne sait pas à l\'avance combien d\'essais il faudra.'}
+  ]},
+ {id:'l6', t:'Les fonctions (des recettes)', body:`
+<p>Une fonction est une <b>recette</b> : on l'écrit une fois, puis on peut la « cuisiner » autant de fois qu'on veut.</p>
+<ul>
+<li><code>def</code> = « j'écris une recette ». Elle n'est pas exécutée tout de suite.</li>
+<li>Les <b>paramètres</b> entre parenthèses = les ingrédients qu'on reçoit.</li>
+<li><code>return</code> = le plat qu'on rend. La fonction s'arrête immédiatement.</li>
+</ul>
+<div data-trace="fonction"></div>
+<div class="rule"><b>print ou return ?</b><br><code>print</code> affiche à l'écran pour l'humain. La valeur est perdue pour le programme.<br><code>return</code> rend la valeur au programme, qui peut la ranger dans une boîte ou calculer avec.<br>Une fonction sans <code>return</code> renvoie <code>None</code> (rien).<br>Une <b>procédure</b> est une fonction sans <code>return</code> : elle fait juste une action, comme afficher.</div>
+<div class="tip">Pour écrire une fonction à l'examen : 1) qu'est-ce que je reçois ? (les paramètres) 2) qu'est-ce que je dois rendre ? 3) j'écris <code>def nom(paramètres):</code> 4) je calcule 5) je termine par <code>return</code>.</div>`,
+  qs:[
+   {t:'val', q:'Que renvoie f(3) ?', c:'def f(x):\n    return x * x + 1', acc:['10'], sol:'10', ex:'3 × 3 + 1 = 10.'},
+   {t:'qcm', q:'Que vaut r ?', c:'def g(x):\n    print(x * 2)\n\nr = g(5)', ch:['10','None','5'], a:1, ex:'g affiche 10 mais ne fait pas de return : r reçoit None.'},
+   {t:'qcm', q:'Quelle est la différence entre une fonction et une procédure ?', ch:['La fonction renvoie un résultat avec return, la procédure non','La procédure a des paramètres, la fonction non','Aucune'], a:0, ex:'Définition du cours.'}
+  ]},
+ {id:'l7', t:'Les listes', body:`
+<p>Une liste est une <b>rangée de casiers numérotés à partir de 0</b>.</p>
+<div class="strip">${[12, 17, 9].map((c, i) => `<div><b>${c}</b><span>${i}</span><span>${i - 3}</span></div>`).join('')}</div>
+<div class="cell"><pre class="py">notes = [12, 17, 9]
+print(notes[0])      # 12 : premier casier
+print(notes[-1])     # 9  : dernier casier
+print(len(notes))    # 3  : nombre d'éléments
+notes.append(15)     # ajoute 15 À LA FIN  → [12, 17, 9, 15]
+x = notes.pop()      # retire le DERNIER et le donne → x = 15
+y = notes.pop(0)     # retire le PREMIER → y = 12
+print(notes, x, y)   # [17, 9] 15 12</pre></div>
+<div class="rule"><b>pop()</b> retire le dernier, comme une <b>pile d'assiettes</b> : on prend celle du dessus (PILE).<br><b>pop(0)</b> retire le premier, comme une <b>file d'attente</b> : le premier arrivé part en premier (FILE).</div>
+<h4>Trouver le plus grand : le modèle « champion »</h4>
+<p>On déclare la première note championne, puis chaque note vient la défier.</p>
+<div data-trace="max"></div>
+<h4>Construire une liste en une ligne (compréhension)</h4>
+<div class="cell"><pre class="py">print([x * 2 for x in [1, 2, 3]])               # [2, 4, 6] : « x*2 pour chaque x »
+print([x for x in range(10) if x % 2 == 0])     # [0, 2, 4, 6, 8] : seulement les pairs</pre></div>`,
+  qs:[
+   {t:'val', q:'Que vaut t[1] ?', c:'t = [4, 8, 15]', acc:['8'], sol:'8', ex:'Le casier 1 est le DEUXIÈME élément.'},
+   {t:'val', q:'Que vaut len(t) à la fin ?', c:'t = [4, 8, 15]\nt.append(16)', acc:['4'], sol:'4', ex:'On a ajouté un élément.'},
+   {t:'val', q:'Que vaut x ?', c:'t = [4, 8, 15]\nx = t.pop()', acc:['15'], sol:'15', ex:'pop() retire et renvoie le dernier.'},
+   {t:'val', q:'Que vaut cette liste ?', c:'[x + 1 for x in [1, 2, 3]]', acc:['[2, 3, 4]'], sol:'[2, 3, 4]', ex:'On ajoute 1 à chaque élément.'}
+  ]},
+ {id:'l8', t:'La récursivité, enfin claire', body:`
+<p>Une fonction <b>récursive</b> est une fonction qui <b>s'appelle elle-même</b> sur un problème <b>plus petit</b>.</p>
+<div class="rule"><b>L'exemple de la file d'attente.</b> Tu es dans une file et tu veux connaître ta place. Tu demandes à la personne devant toi : « tu es à quelle place ? ». Elle pose la même question à la personne devant elle, et ainsi de suite… jusqu'à la <b>première personne</b>, qui sait qu'elle est n° 1 sans rien demander. Puis les réponses reviennent : 1, donc 2, donc 3… Chacun ajoute 1 à la réponse reçue.</div>
+<p>Pour écrire une fonction récursive, il suffit de répondre à <b>2 questions</b> :</p>
+<ol>
+<li><b>Quand est-ce que je m'arrête ?</b> C'est le <b>cas de base</b> : le cas si petit qu'on connaît la réponse (la première personne de la file).</li>
+<li><b>Comment je rapetisse le problème ?</b> C'est l'<b>appel récursif</b> : je fais un petit morceau du travail et je demande le reste à la fonction elle-même, en plus petit (n − 1).</li>
+</ol>
+<p>Exemple : fact(3) = 3 × 2 × 1. On remarque que fact(3) = 3 × fact(2). Regarde la <b>pile</b> des appels en attente se remplir puis se vider :</p>
+<div data-trace="fact"></div>
+<h4>Le modèle à recopier</h4>
+<div class="cell"><pre class="plain">def f(n):
+    if n == ...:            # 1. cas de base : la réponse évidente
+        return ...
+    return ... f(n - 1)     # 2. un petit morceau + le reste demandé à f</pre></div>
+<p>Toutes les fonctions du cours suivent ce modèle :</p>
+<div class="tbl"><table>
+<tr><th>Fonction</th><th>Cas de base</th><th>Petit morceau + le reste</th></tr>
+<tr><td>fact(n) = n!</td><td><code>n == 1</code> → 1</td><td><code>n * fact(n-1)</code></td></tr>
+<tr><td>puissance(x, n) = xⁿ</td><td><code>n == 0</code> → 1</td><td><code>x * puissance(x, n-1)</code></td></tr>
+<tr><td>Rr(n) = 0 + 1 + … + n</td><td><code>n == 0</code> → 0</td><td><code>n + Rr(n-1)</code></td></tr>
+<tr><td>somme des chiffres</td><td><code>n &lt; 10</code> → n</td><td><code>n % 10 + f(n // 10)</code> (dernier chiffre + le reste)</td></tr>
+<tr><td>produit d'une liste</td><td>liste vide → 1</td><td><code>tab[0] * f(tab[1:])</code> (premier × le reste)</td></tr>
+<tr><td>conversion en binaire</td><td><code>n == 0</code> → 0</td><td><code>n % 2 + 10 * f(n // 2)</code></td></tr>
+<tr><td>fibo(n) (prof)</td><td><code>n == 0 or n == 1</code> → 1</td><td><code>fibo(n-1) + fibo(n-2)</code> (2 appels)</td></tr>
+</table></div>
+<div class="tip">Pour trouver le cas de base d'une liste ou d'un texte : la liste vide <code>[]</code> ou le texte vide <code>''</code>. Pour l'addition on renvoie 0, pour la multiplication on renvoie 1.</div>
+<p>Exemple déroulé à la main (c'est ce qu'on attend de toi à l'examen) :</p>
+<div class="term">somme_chiffre(123) = 3 + somme_chiffre(12)
+                   = 3 + 2 + somme_chiffre(1)
+                   = 3 + 2 + 1            ← 1 &lt; 10 : cas de base
+                   = 6</div>
+<div class="trap">Sans cas de base, la fonction s'appelle à l'infini → <b>RecursionError</b>.</div>`,
+  qs:[
+   {t:'val', q:'Que renvoie f(3) ?', c:'def f(n):\n    if n == 0:\n        return 0\n    return n + f(n - 1)', acc:['6'], sol:'6', ex:'f(3) = 3 + f(2) = 3 + 2 + f(1) = 3 + 2 + 1 + f(0) = 6 + 0 = 6.'},
+   {t:'val', q:'Que renvoie g(3) ?', c:'def g(n):\n    if n == 0:\n        return 1\n    return 2 * g(n - 1)', acc:['8'], sol:'8', ex:'g(3) = 2 × g(2) = 2 × 2 × g(1) = 2 × 2 × 2 × g(0) = 8 × 1 = 8. C\'est 2³.'},
+   {t:'qcm', q:'Dans fact, quel est le cas de base ?', c:'def fact(n):\n    if n == 1:\n        return 1\n    return n * fact(n - 1)', ch:['return n * fact(n - 1)','if n == 1: return 1','def fact(n):'], a:1, ex:'C\'est le cas où on connaît la réponse sans s\'appeler.'},
+   {t:'qcm', q:'Que se passe-t-il si on oublie le cas de base ?', ch:['La fonction renvoie 0','La fonction s\'appelle sans fin → RecursionError','Python le devine'], a:1, ex:'Rien n\'arrête les appels.'},
+   {t:'val', q:'Que renvoie somme_chiffre(405) ?', c:'def somme_chiffre(n):\n    if n < 10:\n        return n\n    return n % 10 + somme_chiffre(n // 10)', acc:['9'], sol:'9', ex:'5 + somme_chiffre(40) = 5 + 0 + somme_chiffre(4) = 5 + 0 + 4 = 9.'}
+  ]},
+ {id:'l9', t:'La complexité : compter les tours', body:`
+<p>La complexité répond à une question : <b>si les données deviennent beaucoup plus grandes, combien de travail en plus ?</b> On note ça avec un grand O. Le n représente la taille des données (par exemple le nombre d'éléments d'une liste).</p>
+<div class="rule"><b>La recette pour trouver la complexité : regarde les boucles.</b><br>
+Pas de boucle (juste des calculs) → <b>O(1)</b>, constant<br>
+Une boucle qui parcourt les n éléments → <b>O(n)</b><br>
+Une boucle DANS une boucle → <b>O(n²)</b> (n tours, chacun fait n tours)<br>
+On coupe en deux à chaque tour (dichotomie, n // 2) → <b>O(log n)</b><br>
+Une fonction récursive qui s'appelle 1 fois avec n − 1 → <b>O(n)</b><br>
+Une fonction récursive qui s'appelle 2 fois (Fibonacci) → <b>O(2ⁿ)</b></div>
+<p>Choisis une taille n pour voir à quel point les écarts deviennent énormes :</p>
+<div class="cx-calc"><label for="cxn">Taille des données n :</label> <select id="cxn"><option>10</option><option selected>100</option><option>1000</option><option>1000000</option></select><div class="tbl" id="cxtab"></div></div>
+<h4>Deux règles pour simplifier</h4>
+<ul>
+<li><b>On enlève les nombres fixes</b> : O(3n) → O(n), O(n + 5) → O(n), une boucle de 100 000 tours fixes → O(1).</li>
+<li><b>On garde seulement le plus gros terme</b> : O(n² + n) → O(n²).</li>
+</ul>
+<h4>Deux boucles : à la suite ou l'une dans l'autre ?</h4>
+<div class="cell"><pre class="plain">for a in A:           # deux boucles À LA SUITE
+    print(a)          # → on ADDITIONNE : O(A + B)
+for b in B:
+    print(b)
+
+for a in A:           # une boucle DANS une autre
+    for b in B:       # → on MULTIPLIE : O(A × B)
+        print(a, b)</pre></div>
+<div class="tip">À l'examen, écris à côté de chaque ligne son coût, comme dans le TD : O(1) pour une ligne simple, O(n) pour une boucle… puis additionne ou multiplie, et simplifie.</div>`,
+  qs:[
+   {t:'qcm', q:'Complexité de ce code ?', c:'def premier(tab):\n    return tab[0]', ch:['O(1)','O(n)','O(n²)'], a:0, ex:'Aucune boucle : le travail ne dépend pas de la taille.'},
+   {t:'qcm', q:'Complexité de ce code ?', c:'for x in tab:\n    print(x)', ch:['O(1)','O(n)','O(n²)'], a:1, ex:'Une boucle sur les n éléments.'},
+   {t:'qcm', q:'Complexité de ce code ?', c:'for x in tab:\n    for y in tab:\n        print(x, y)', ch:['O(n)','O(2n)','O(n²)'], a:2, ex:'Une boucle dans une boucle : n × n.'},
+   {t:'qcm', q:'Simplifie O(4n + 7)', ch:['O(4n)','O(n)','O(1)'], a:1, ex:'On enlève les nombres fixes.'},
+   {t:'qcm', q:'Complexité de ce code ?', c:'for x in tab:\n    print(x)\nfor x in tab:\n    print(x * 2)', ch:['O(n)','O(n²)','O(2ⁿ)'], a:0, ex:'À la suite : n + n = 2n → O(n).'}
+  ]},
+ {id:'l10', t:'Chercher et trier', body:`
+<h4>La recherche dichotomique = le jeu du nombre mystère</h4>
+<p>« Je pense à un nombre entre 1 et 100. » Le plus malin propose <b>toujours le milieu</b> : 50 → « plus grand » → 75 → « plus petit » → 62… À chaque essai, la moitié des possibilités disparaît. Il suffit d'au plus <b>7 essais</b> pour 100 nombres, au lieu de 100. C'est O(log n). Condition obligatoire : la liste doit être <b>triée</b>.</p>
+<div data-trace="dicho"></div>
+<h4>Trier : 5 méthodes à connaître</h4>
+<p><b>Tri par sélection</b> : on cherche le plus petit et on le met devant, puis on recommence avec le reste.</p>
+<div data-sort="sel"></div>
+<p><b>Tri à bulles</b> : on compare les voisins et on les échange s'ils sont mal rangés.</p>
+<div data-sort="bul"></div>
+<div class="tbl"><table>
+<tr><th>Tri</th><th>Idée en une phrase</th><th>Complexité</th></tr>
+<tr><td>Sélection</td><td>le plus petit va devant, puis on recommence</td><td>O(n²)</td></tr>
+<tr><td>Bulles</td><td>on échange les voisins mal rangés</td><td>O(n²)</td></tr>
+<tr><td>Insertion</td><td>comme des cartes en main : on glisse chaque carte à sa place</td><td>O(n²), O(n) si déjà trié</td></tr>
+<tr><td>Fusion</td><td>on coupe en deux jusqu'à 1 élément, puis on recolle dans l'ordre</td><td>O(n log n)</td></tr>
+<tr><td>Rapide</td><td>on choisit un pivot : les petits à gauche, les grands à droite, et on recommence de chaque côté</td><td>O(n log n), pire cas O(n²)</td></tr>
+</table></div>
+<p>Fusion et rapide sont <b>récursifs</b> et utilisent « diviser pour régner » : <b>diviser</b> le problème, le <b>régner</b> (résoudre chaque morceau), <b>combiner</b> les résultats.</p>`,
+  qs:[
+   {t:'qcm', q:'Quelle condition faut-il pour la recherche dichotomique ?', ch:['La liste doit être triée','La liste doit être courte','Aucune'], a:0, ex:'Sinon on ne sait pas de quel côté chercher.'},
+   {t:'val', q:'Après la 1re étape du tri par sélection, que devient [7, 3, 9, 1] ?', acc:['[1, 3, 9, 7]'], sol:'[1, 3, 9, 7]', ex:'Le plus petit (1) est échangé avec le premier (7).'},
+   {t:'val', q:'Après le 1er passage du tri à bulles, que devient [3, 1, 2] ?', acc:['[1, 2, 3]'], sol:'[1, 2, 3]', ex:'3↔1 → [1, 3, 2], puis 3↔2 → [1, 2, 3].'},
+   {t:'qcm', q:'Quel tri ressemble à ranger des cartes dans sa main ?', ch:['Sélection','Insertion','Fusion'], a:1, ex:'On glisse chaque carte à sa place parmi celles déjà rangées.'}
+  ]},
+ {id:'l11', t:'Le jour J : les méthodes', body:`
+<h4>« Que renvoie / qu'affiche ce code ? »</h4>
+<p>Ne devine jamais : <b>fais exactement comme le mode pas à pas</b>. Sur ton brouillon, dessine un tableau avec une colonne par variable, et avance ligne par ligne.</p>
+<div class="tbl"><table>
+<tr><th>Ligne</th><th>total</th><th>i</th><th>Écran</th></tr>
+<tr><td><code>total = 0</code></td><td>0</td><td></td><td></td></tr>
+<tr><td>tour 1</td><td>1</td><td>1</td><td></td></tr>
+<tr><td>tour 2</td><td>3</td><td>2</td><td></td></tr>
+<tr><td>tour 3</td><td>6</td><td>3</td><td></td></tr>
+<tr><td><code>print(total)</code></td><td>6</td><td>3</td><td>6</td></tr>
+</table></div>
+<p>Pour une fonction récursive, écris la descente puis la remontée : <code>f(3) = 3 + f(2) = 3 + 2 + f(1) = …</code></p>
+<h4>« Écris une fonction… »</h4>
+<ol>
+<li>Recopie le nom et les paramètres demandés : <code>def nom(…):</code></li>
+<li>Itératif : choisis ton modèle (tirelire, compteur, champion, while).</li>
+<li>Récursif : écris d'abord le <b>cas de base</b>, puis l'<b>appel plus petit</b>.</li>
+<li>Termine par <code>return</code>.</li>
+<li>Teste dans ta tête avec un petit exemple (n = 2 ou une liste de 2 éléments).</li>
+</ol>
+<h4>« Quelle est la complexité ? »</h4>
+<p>Compte les boucles imbriquées, cherche une division par 2, compte les appels récursifs. Puis enlève les nombres fixes et garde le plus gros terme.</p>
+<h4>Les erreurs qui coûtent des points</h4>
+<ul>
+<li>Oublier les <code>:</code> à la fin de <code>def</code>, <code>if</code>, <code>for</code>, <code>while</code>.</li>
+<li>Mal décaler (indenter) les lignes.</li>
+<li>Écrire <code>=</code> au lieu de <code>==</code> dans un test.</li>
+<li>Oublier que <code>range(1, 5)</code> s'arrête à 4.</li>
+<li>Mettre <code>print</code> au lieu de <code>return</code> dans une fonction.</li>
+<li>Utiliser <code>/</code> au lieu de <code>//</code> (donne un nombre à virgule).</li>
+<li>Oublier le cas de base d'une fonction récursive.</li>
+</ul>
+<div class="tip">Ensuite : fais le quiz par thème, quelques exercices de l'onglet Pratique (commence par Parité, Maximum, Factorielle, RecursiveRange), puis un examen blanc.</div>`,
+  qs:[
+   {t:'val', q:'Qu\'affiche ce code ? Fais le tableau des variables.', c:'a = 2\nb = 0\nfor i in range(3):\n    b = b + a\n    a = a + 1\nprint(b)', acc:['9'], sol:'9', ex:'Tour 1 : b = 0 + 2 = 2, a = 3. Tour 2 : b = 2 + 3 = 5, a = 4. Tour 3 : b = 5 + 4 = 9, a = 5.'},
+   {t:'val', q:'Que renvoie p(2, 3) ?', c:'def p(x, n):\n    if n == 0:\n        return 1\n    return x * p(x, n - 1)', acc:['8'], sol:'8', ex:'p(2, 3) = 2 × p(2, 2) = 2 × 2 × p(2, 1) = 2 × 2 × 2 × p(2, 0) = 8 × 1.'}
+  ]}
+];
+
+/* ---------- moteur pas à pas ---------- */
+function mountTrace(el, key) {
+  const T = TRACES[key]; const lines = T.code.split('\n'); let k = 0;
+  const hasPile = T.steps.some(s => s[4]);
+  el.className = 'tr';
+  el.innerHTML = `<div class="tr-code"><div class="tr-h">Code</div><div class="tr-lines">${lines.map((l, i) => `<div class="ln" data-l="${i}"><span class="no">${i + 1}</span><span class="tx">${hl(l) || ' '}</span></div>`).join('')}</div></div>
+  <div class="tr-side"><div class="tr-h">Boîtes (variables)</div><div class="boxes"></div>${hasPile ? '<div class="tr-h">Pile des appels en attente <small>(le haut = l\'appel en cours)</small></div><div class="pile"></div>' : ''}<div class="tr-h">Écran</div><div class="screen"></div></div>
+  <div class="tr-note" aria-live="polite"></div>
+  <div class="tr-ctl"><button type="button" class="btn" data-a="prev">◀ Précédent</button><button type="button" class="btn primary" data-a="next">Suivant ▶</button><button type="button" class="btn" data-a="reset">Recommencer</button><span class="tr-count"></span></div>`;
+  const draw = () => {
+    const s = T.steps[k], prev = k > 0 ? T.steps[k - 1][1] : {};
+    $$('.ln', el).forEach(d => d.classList.toggle('cur', +d.dataset.l === s[0]));
+    const vars = Object.entries(s[1]);
+    $('.boxes', el).innerHTML = vars.length ? vars.map(([n, v]) => `<div class="box ${String(prev[n]) !== String(v) ? 'chg' : ''}"><span>${esc(n)}</span><b>${esc(v)}</b></div>`).join('') : '<span class="empty">aucune boîte pour l\'instant</span>';
+    if (hasPile) { const p = s[4] || []; $('.pile', el).innerHTML = p.length ? p.slice().reverse().map((x, i) => `<div class="${i === 0 ? 'top' : ''}">${esc(x)}</div>`).join('') : '<span class="empty">vide</span>'; }
+    $('.screen', el).textContent = s[2] || ' ';
+    $('.tr-note', el).innerHTML = '<b>Étape ' + (k + 1) + '.</b> ' + esc(s[3]);
+    $('.tr-count', el).textContent = (k + 1) + ' / ' + T.steps.length;
+    $('[data-a=prev]', el).disabled = k === 0; $('[data-a=next]', el).disabled = k === T.steps.length - 1;
+  };
+  el.addEventListener('click', e => { const a = e.target.closest('[data-a]'); if (!a) return; if (a.dataset.a === 'next' && k < T.steps.length - 1) k++; else if (a.dataset.a === 'prev' && k > 0) k--; else if (a.dataset.a === 'reset') k = 0; draw(); });
+  draw();
+}
+function mountSort(el, key) {
+  const S = SORTS[key]; let k = 0;
+  el.className = 'tr sortv';
+  el.innerHTML = `<div class="cards"></div><div class="tr-note" aria-live="polite"></div><div class="tr-ctl"><button type="button" class="btn" data-a="prev">◀ Précédent</button><button type="button" class="btn primary" data-a="next">Suivant ▶</button><button type="button" class="btn" data-a="reset">Recommencer</button><span class="tr-count"></span></div>`;
+  const draw = () => {
+    const s = S[k];
+    $('.cards', el).innerHTML = s.t.map((v, i) => `<div class="card ${s.h.includes(i) ? 'hi' : ''} ${s.d.includes(i) ? 'done' : ''}"><b>${v}</b><span>${i}</span></div>`).join('');
+    $('.tr-note', el).innerHTML = '<b>Étape ' + (k + 1) + '.</b> ' + esc(s.note);
+    $('.tr-count', el).textContent = (k + 1) + ' / ' + S.length;
+    $('[data-a=prev]', el).disabled = k === 0; $('[data-a=next]', el).disabled = k === S.length - 1;
+  };
+  el.addEventListener('click', e => { const a = e.target.closest('[data-a]'); if (!a) return; if (a.dataset.a === 'next' && k < S.length - 1) k++; else if (a.dataset.a === 'prev' && k > 0) k--; else if (a.dataset.a === 'reset') k = 0; draw(); });
+  draw();
+}
+function fmtBig(x) {
+  if (!isFinite(x) || x > 1e15) { const e = Math.floor(x === Infinity ? 0 : Math.log10(x)); return x === Infinity ? 'plus que le nombre d\'atomes de l\'univers' : '≈ 10^' + e; }
+  return Math.round(x).toLocaleString('fr-FR');
+}
+function fmtTime(ops) {
+  const s = ops / 1e6;
+  if (!isFinite(s) || s > 3.15e7 * 1e9) return 'des milliards d\'années';
+  if (s < 0.001) return 'instantané';
+  if (s < 1) return Math.round(s * 1000) + ' ms';
+  if (s < 60) return s.toFixed(1).replace('.', ',') + ' s';
+  if (s < 3600) return Math.round(s / 60) + ' min';
+  if (s < 86400) return Math.round(s / 3600) + ' h';
+  if (s < 3.15e7) return Math.round(s / 86400) + ' jours';
+  return fmtBig(s / 3.15e7) + ' ans';
+}
+function mountCx(root) {
+  const sel = $('#cxn', root); if (!sel) return;
+  const draw = () => {
+    const n = +sel.value, lg = Math.log2(n);
+    const rows = [['O(1)', 'pas de boucle', 1], ['O(log n)', 'on coupe en deux', Math.ceil(lg)], ['O(n)', 'une boucle', n], ['O(n log n)', 'tri fusion', n * lg], ['O(n²)', 'boucle dans une boucle', n * n], ['O(2ⁿ)', 'double appel récursif', Math.pow(2, n)]];
+    $('#cxtab', root).innerHTML = '<table><tr><th>Complexité</th><th>Exemple</th><th class="num">Opérations</th><th>Temps (1 million d\'opérations/s)</th></tr>' + rows.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td class="num">${fmtBig(r[2])}</td><td>${fmtTime(r[2])}</td></tr>`).join('') + '</table>';
+  };
+  sel.addEventListener('change', draw); draw();
+}
+
+let curLesson = null;
+function renderLessonList() {
+  const done = store.get('debDone', []);
+  $('#leslist').innerHTML = '<h4>Leçons · ' + done.length + '/' + LESSONS.length + '</h4>' + LESSONS.map((l, i) => `<button type="button" data-id="${l.id}" class="${curLesson === l.id ? 'on' : ''}"><span class="dot ${done.includes(l.id) ? 'done' : ''}"></span><span>${i + 1}. ${esc(l.t)}</span><span class="lvl"></span></button>`).join('');
+  $$('#leslist button').forEach(b => b.addEventListener('click', () => { openLesson(b.dataset.id); $('#lesson').scrollIntoView({ behavior: 'smooth' }); }));
+}
+function openLesson(id) {
+  curLesson = id; store.set('curLesson', id); renderLessonList();
+  const i = LESSONS.findIndex(l => l.id === id), L = LESSONS[i];
+  const next = LESSONS[i + 1];
+  $('#lesson').innerHTML = `<div class="eyebrow">Leçon ${i + 1} sur ${LESSONS.length}</div><h2 style="margin:.3rem 0 .6rem">${esc(L.t)}</h2>${L.body}
+  <h3>Vérifie que tu as compris</h3><div id="lq"></div>
+  <div class="lesson-end" id="lend"></div>`;
+  enhanceCells($('#lesson'));
+  $$('#lesson [data-trace]').forEach(el => mountTrace(el, el.dataset.trace));
+  $$('#lesson [data-sort]').forEach(el => mountSort(el, el.dataset.sort));
+  mountCx($('#lesson'));
+  $('#lq').innerHTML = L.qs.map((q, k) => questionHtml(q, 'L' + k, 'Question ' + (k + 1))).join('');
+  enhanceCells($('#lq'));
+  let answered = 0, good = 0;
+  const finish = () => {
+    const d = store.get('debDone', []); if (!d.includes(L.id)) { d.push(L.id); store.set('debDone', d); }
+    renderLessonList();
+    $('#lend').innerHTML = `<div class="qcard"><b>${good}/${L.qs.length} bonnes réponses.</b> ${good === L.qs.length ? 'Parfait, tu as compris cette leçon.' : 'Relis l\'explication des questions ratées, et refais le pas à pas si besoin.'}<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">${next ? `<button class="btn primary" type="button" id="lnext">Leçon suivante : ${esc(next.t)}</button>` : '<a class="btn primary" href="#quiz">Passer au quiz</a>'}<button class="btn" type="button" id="lagain">Refaire les questions</button></div></div>`;
+    if (next) $('#lnext').addEventListener('click', () => { openLesson(next.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    $('#lagain').addEventListener('click', () => openLesson(L.id));
+  };
+  const answer = (card, q, v) => { if (card.dataset.ans) return; card.dataset.ans = '1'; if (showFeedback(card, q, v)) good++; answered++; if (answered === L.qs.length) finish(); };
+  $$('#lq .qcard').forEach(card => {
+    const q = L.qs[+card.dataset.i.slice(1)];
+    if (q.t === 'qcm') $$('.opt', card).forEach(o => o.addEventListener('click', () => answer(card, q, +o.dataset.k)));
+    else { const inp = $('.ansin', card); const b = document.createElement('button'); b.className = 'btn'; b.type = 'button'; b.textContent = 'Valider'; b.style.marginLeft = '6px'; inp.after(b);
+      const go = () => { if (inp.value.trim()) { answer(card, q, inp.value); b.remove(); } };
+      b.addEventListener('click', go); inp.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); }
+  });
+}
+
+/* =====================================================================
    Navigation, thème, démarrage
    ===================================================================== */
-const VIEWS = ['accueil', 'cours', 'pratique', 'quiz', 'examen', 'memo'];
+const VIEWS = ['accueil', 'debutant', 'cours', 'pratique', 'quiz', 'examen', 'memo'];
 function route() {
   const v = (location.hash || '#accueil').slice(1);
   const cur = VIEWS.includes(v) ? v : 'accueil';
@@ -1856,6 +2476,7 @@ function route() {
   $$('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.v === cur ? 'page' : 'false'));
   if (cur === 'pratique') { if (!curExo) openExo(EXOS[0].id); ensurePy().catch(() => {}); }
   if (cur === 'examen') renderExam();
+  if (cur === 'debutant' && !curLesson) openLesson(store.get('curLesson', LESSONS[0].id));
   if (cur === 'accueil') renderStats();
   try { store.set('lastView', cur); } catch (e) {}
 }
